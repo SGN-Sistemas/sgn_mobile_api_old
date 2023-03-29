@@ -1,0 +1,116 @@
+{
+    "/usuario/login": {
+        "post": {
+            "sumary": "Login",
+            "description": "This route is responsible for login",
+            "tags": [
+                "User"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/UserRequest"
+                        },
+                        "examples": {
+                            "user": {
+                                "value": {
+                                    "USUA_SIGLA": "TESTE",
+                                    "USUA_SENHA_APP": "Teste@123456"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "400": {
+                    "description": " Known bug "
+                },
+                "200": {
+                    "description": "Logged",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "$ref": "#/components/schemas/LoginResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/usuario": {
+        "patch": {
+            "sumary": "Trade password",
+            "description": "This route is responsible for trade password",
+            "tags": [
+                "User"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/UserRequest"
+                        },
+                        "examples": {
+                            "user": {
+                                "value": {
+                                    "USUA_SIGLA": "TESTE",
+                                    "USUA_SENHA_APP": "Teste@123456"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "400": {
+                    "description": " Known bug "
+                },
+                "200": {
+                    "description": "Logged",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "$ref": "#/components/schemas/TradePasswordResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/usuario/acessToken": {
+        "get": {
+            "sumary": "Generate acessToken",
+            "description": "This route is responsible for generate acesstoken",
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "User"
+            ],
+            "responses": {
+                "400": {
+                    "description": " Known bug "
+                },
+                "200": {
+                    "description": "Logged",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "$ref": "#/components/schemas/AcessTokenResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
