@@ -1,8 +1,8 @@
-import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories'
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
+import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
-dotenv.config()
+dotenv.config();
 
 interface IdecodeAcessToken {
   sigla: string,
@@ -10,23 +10,23 @@ interface IdecodeAcessToken {
 
 export class GenerateTokenService {
   public async execute (TOKEN:string): Promise<string> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+    const secretAcess = process.env.TOKEN_SECRET_ACESS + '';
 
-    const secretRefresh = process.env.TOKEN_SECRET_REFRESH + ''
+    const secretRefresh = process.env.TOKEN_SECRET_REFRESH + '';
 
-    const decodeToken = jwt.verify(TOKEN, secretRefresh) as IdecodeAcessToken
+    const decodeToken = jwt.verify(TOKEN, secretRefresh) as IdecodeAcessToken;
 
-    const USUA_SIGLA = decodeToken.sigla
+    const USUA_SIGLA = decodeToken.sigla;
 
-    const existsUser = await UsuarioRepository.findOneBy({ USUA_SIGLA })
+    const existsUser = await UsuarioRepository.findOneBy({ USUA_SIGLA });
 
-    const refreshToken = TOKEN
+    const refreshToken = TOKEN;
 
     if (!existsUser) {
-      return 'usuario invalido'
+      return 'usuario invalido';
     }
 
-    const codUser = existsUser.USUA_COD
+    const codUser = existsUser.USUA_COD;
 
     const acessToken = jwt.sign(
       {
@@ -36,10 +36,10 @@ export class GenerateTokenService {
       },
       secretAcess,
       {
-        expiresIn: '180s'
+        expiresIn: '1h'
       }
-    )
+    );
 
-    return acessToken
+    return acessToken;
   }
 }

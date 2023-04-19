@@ -1,9 +1,9 @@
-import bcrypt from 'bcrypt'
-import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories'
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
+import bcrypt from 'bcrypt';
+import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
-dotenv.config()
+dotenv.config();
 
 interface Ilogin {
   USUA_SIGLA: string,
@@ -25,7 +25,7 @@ export class LoginService {
       USUA_SENHA_APP
     } : Ilogin
   ): Promise<ILoginReturn> {
-    const existsUser = await UsuarioRepository.findOneBy({ USUA_SIGLA })
+    const existsUser = await UsuarioRepository.findOneBy({ USUA_SIGLA });
 
     if (!existsUser) {
       return ({
@@ -33,10 +33,10 @@ export class LoginService {
         error: true,
         status: 400,
         refreshToken: ''
-      })
+      });
     }
 
-    const Tokenuuid = process.env.TOKEN_SECRET_REFRESH + ''
+    const Tokenuuid = process.env.TOKEN_SECRET_REFRESH + '';
 
     if (!existsUser.USUA_SENHA_APP || existsUser.USUA_SENHA_APP === '') {
       return ({
@@ -44,14 +44,14 @@ export class LoginService {
         error: true,
         status: 400,
         refreshToken: ''
-      })
+      });
     }
 
-    const passwordBD = existsUser.USUA_SENHA_APP
+    const passwordBD = existsUser.USUA_SENHA_APP;
 
-    const sigla = existsUser.USUA_SIGLA
+    const sigla = existsUser.USUA_SIGLA;
 
-    const comparePassword = await bcrypt.compare(USUA_SENHA_APP, passwordBD)
+    const comparePassword = await bcrypt.compare(USUA_SENHA_APP, passwordBD);
 
     if (!comparePassword) {
       return ({
@@ -59,7 +59,7 @@ export class LoginService {
         error: true,
         status: 400,
         refreshToken: ''
-      })
+      });
     }
 
     if (existsUser.USUA_BLOQ !== 'N') {
@@ -68,7 +68,7 @@ export class LoginService {
         error: true,
         status: 400,
         refreshToken: ''
-      })
+      });
     }
     const refreshToken = jwt.sign(
       {
@@ -78,13 +78,13 @@ export class LoginService {
       {
         expiresIn: '1d'
       }
-    )
+    );
 
     return ({
       message: 'Login efetuado',
       error: false,
       status: 200,
       refreshToken
-    })
+    });
   }
 }
