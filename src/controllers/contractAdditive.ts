@@ -10,42 +10,32 @@ interface IAdcsArray {
 }
 
 export class ContractAdditive {
-  public async list (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization;
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' });
-    }
-    const [, acessToken] = authHeader.split(' ');
+  public async list(request: Request, response: Response): Promise<Response> {
+
+    const userId = request.user.USUA_COD;
 
     const listServiceContractAdditive = new ListServiceContractAdditive();
 
-    const listServiceContractAdditiveExecute = await listServiceContractAdditive.execute(acessToken);
+    const listServiceContractAdditiveExecute =
+      await listServiceContractAdditive.execute(userId);
 
     return response.json(listServiceContractAdditiveExecute);
   }
 
   public async listCod (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization;
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' });
-    }
-    const [, acessToken] = authHeader.split(' ');
+    const userId = request.user.USUA_COD;
 
     const { cod } = request.params;
 
     const listCodServiceContractAdditive = new ListCodServiceContractAdditive();
 
-    const listCodServiceContractAdditiveExec = await listCodServiceContractAdditive.execute(acessToken, cod + '');
+    const listCodServiceContractAdditiveExec = await listCodServiceContractAdditive.execute(userId, cod + '');
 
     return response.json(listCodServiceContractAdditiveExec);
   }
 
   public async approval (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization;
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' });
-    }
-    const [, acessToken] = authHeader.split(' ');
+    const userId = request.user.USUA_COD;
 
     const { password, arrayAdcs } = request.body;
 
@@ -56,7 +46,7 @@ export class ContractAdditive {
     arrayAdcs.forEach(async (item: IAdcsArray[]) => {
       msgAdcs = `${msgAdcs} ${item[1]}`;
       await approvalServiceContract.execute(
-        acessToken, item[1] + '', item[0] + '', password
+        userId, item[1] + '', item[0] + '', password
       );
     });
 

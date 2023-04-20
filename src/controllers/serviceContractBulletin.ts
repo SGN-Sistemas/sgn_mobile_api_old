@@ -1,7 +1,7 @@
-import { Request, Response } from 'express'
-import { ServiceContractBulletinService } from '../services/serviceContractBulletin/listServiceContractBulletin'
-import { ListDetailsBulletin } from '../services/serviceContractBulletin/listDetailsService'
-import { ApprovalBulletinService } from '../services/serviceContractBulletin/approvalService'
+import { Request, Response } from 'express';
+import { ServiceContractBulletinService } from '../services/serviceContractBulletin/listServiceContractBulletin';
+import { ListDetailsBulletin } from '../services/serviceContractBulletin/listDetailsService';
+import { ApprovalBulletinService } from '../services/serviceContractBulletin/approvalService';
 
 interface IBocsArray {
   cod: string;
@@ -10,56 +10,46 @@ interface IBocsArray {
 
 export class ServiceContractBulletinController {
   public async list (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
 
-    const serviceContractBulletinService = new ServiceContractBulletinService()
+    const userId = request.user.USUA_COD;
 
-    const result = await serviceContractBulletinService.execute(acessToken)
+    const serviceContractBulletinService = new ServiceContractBulletinService();
 
-    return response.json(result)
+    const result = await serviceContractBulletinService.execute(userId);
+
+    return response.json(result);
   }
 
-  public async listDetails (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const listDetailsBulletin = new ListDetailsBulletin()
+  public async listDetails(request: Request, response: Response): Promise<Response> {
 
-    const { cod } = request.params
+    const listDetailsBulletin = new ListDetailsBulletin();
 
-    const result = await listDetailsBulletin.execute(cod)
+    const { cod } = request.params;
 
-    return response.json(result)
+    const result = await listDetailsBulletin.execute(cod);
+
+    return response.json(result);
   }
 
-  public async approval (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
+  public async approval(request: Request, response: Response): Promise<Response> {
+    const userId = request.user.USUA_COD;
 
-    const approvalBulletinService = new ApprovalBulletinService()
+    const approvalBulletinService = new ApprovalBulletinService();
 
-    const { password, arrayBoletimC } = request.body
+    const { password, arrayBoletimC } = request.body;
 
-    let msgCocs = ''
+    let msgCocs = '';
 
     arrayBoletimC.forEach(async (item: IBocsArray[]) => {
-      msgCocs = `${msgCocs} ${item[0]}`
+      msgCocs = `${msgCocs} ${item[0]}`;
       await approvalBulletinService.execute(
-        acessToken,
+        userId,
         item[0] + '',
         item[1] + '',
         password
-      )
-    })
+      );
+    });
 
-    return response.json(msgCocs)
+    return response.json(msgCocs);
   }
 }

@@ -1,56 +1,39 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
-import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories'
-import { selectSoliCompSetorCompras } from '../../queries/purchaseOrder'
-
-dotenv.config()
-
-interface IdecodeAcessToken {
-    refreshToken: string,
-    USUA_SIGLA: string,
-    codUser: string
-}
-
+import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories';
+import { selectSoliCompSetorCompras } from '../../queries/purchaseOrder';
 interface IRequestBD {
-    SOCO_COD: number,
-    SOCO_DTSOLI: string,
-    SOCO_OBS: string,
-    SOCO_ASSINATURA_1: string,
-    SOCO_USUA_COD_ASS_1: number,
-    SOCO_NUMERO: string,
-    SOCO_QTD_NECE: number,
-    SOCO_ALMO_COD: number,
-    SOCO_MATE_COD: number,
-    ESTO_CUSTO_MEDIO: number,
-    valor_total: number,
-    ASS: string
+  SOCO_COD: number,
+  SOCO_DTSOLI: string,
+  SOCO_OBS: string,
+  SOCO_ASSINATURA_1: string,
+  SOCO_USUA_COD_ASS_1: number,
+  SOCO_NUMERO: string,
+  SOCO_QTD_NECE: number,
+  SOCO_ALMO_COD: number,
+  SOCO_MATE_COD: number,
+  ESTO_CUSTO_MEDIO: number,
+  valor_total: number,
+  ASS: string
 }
 
 export class ListPurchaseOrderPurchasingSector {
-  public async execute (token: string, secoDesc:string): Promise<IRequestBD[]> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+  public async execute (userId: number, secoDesc:string): Promise<IRequestBD[]> {
 
-    const decodeToken = jwt.verify(token, secretAcess) as IdecodeAcessToken
+    const query2 = selectSoliCompSetorCompras(userId, secoDesc, '1');
+    const query1 = selectSoliCompSetorCompras(userId, secoDesc, '2');
 
-    const cod = parseInt(decodeToken.codUser)
+    const listPurchaseOrder1 = await PedidoEstoqueRepository.query(query1);
+    const listPurchaseOrder2 = await PedidoEstoqueRepository.query(query2);
 
-    const query2 = selectSoliCompSetorCompras(cod, secoDesc, '1')
-    const query1 = selectSoliCompSetorCompras(cod, secoDesc, '2')
-
-    const listPurchaseOrder1 = await PedidoEstoqueRepository.query(query1)
-    const listPurchaseOrder2 = await PedidoEstoqueRepository.query(query2)
-
-    const orderArray: IRequestBD[] = []
+    const orderArray: IRequestBD[] = [];
 
     if (listPurchaseOrder1.length > 0) {
-      listPurchaseOrder1.map((pos: any) => orderArray.push(pos))
+      listPurchaseOrder1.map((pos: any) => orderArray.push(pos));
     }
 
     if (listPurchaseOrder2.length > 0) {
-      listPurchaseOrder2.map((pos: any) => orderArray.push(pos))
+      listPurchaseOrder2.map((pos: any) => orderArray.push(pos));
     }
 
-    return orderArray
+    return orderArray;
   }
 }

@@ -1,4 +1,4 @@
-import { USUARIO } from '../typeorm/entities/usuario'
+import { USUARIO } from '../typeorm/entities/usuario';
 
 declare global {
   namespace Express {

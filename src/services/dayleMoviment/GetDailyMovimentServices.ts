@@ -1,16 +1,6 @@
-import dotenv from 'dotenv'
-import { MovimentoDiarioRepository } from '../../typeorm/repository/movimentoDiarioRepositories'
-import jwt from 'jsonwebtoken'
-import { selectMovimentacao } from '../../queries/movDiaria'
-
-dotenv.config()
-
-interface IdecodeAcessToken {
-  refreshToken: string,
-  USUA_SIGLA: string,
-  codUser: string
-}
-
+import 'dotenv/config';
+import { MovimentoDiarioRepository } from '../../typeorm/repository/movimentoDiarioRepositories';
+import { selectMovimentacao } from '../../queries/movDiaria';
 interface IResponse {
   DEBITO: number,
   CREDITO: number,
@@ -20,16 +10,11 @@ interface IResponse {
 }
 
 export class GetDailyMovimentServices {
-  public async execute (TOKEN: string): Promise<IResponse> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+  public async execute(userSigla: string): Promise<IResponse> {
 
-    const decodeToken = jwt.verify(TOKEN, secretAcess) as IdecodeAcessToken
+    const sql = selectMovimentacao(userSigla);
 
-    const USUA_SIGLA = decodeToken.USUA_SIGLA
-
-    const sql = selectMovimentacao(USUA_SIGLA)
-    console.log(sql)
-    const usersTableMeta = await MovimentoDiarioRepository.query(sql)
-    return usersTableMeta
+    const usersTableMeta = await MovimentoDiarioRepository.query(sql);
+    return usersTableMeta;
   }
 }

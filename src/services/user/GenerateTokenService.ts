@@ -1,6 +1,7 @@
 import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import AppError from '../../errors/AppError';
 
 dotenv.config();
 
@@ -23,7 +24,9 @@ export class GenerateTokenService {
     const refreshToken = TOKEN;
 
     if (!existsUser) {
-      return 'usuario invalido';
+
+      throw new AppError('usuario invalido');
+
     }
 
     const codUser = existsUser.USUA_COD;

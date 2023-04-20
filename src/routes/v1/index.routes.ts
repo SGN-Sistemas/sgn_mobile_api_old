@@ -24,6 +24,7 @@ routerV1.use('/dataConnection', routerDataConnection);
 routerV1.use('/usuario', routerUser);
 
 routerV1.use(Authenticated);
+
 routerV1.use('/planilhaCompra', planilhaCompraRoute);
 
 routerV1.use('/dailyMoviment', routerDailyMoviment);

@@ -1,16 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
-import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories'
-import { selectSoliCompData } from '../../queries/purchaseOrder'
+import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories';
+import { selectSoliCompData } from '../../queries/purchaseOrder';
 
-dotenv.config()
-
-interface IdecodeAcessToken {
-    refreshToken: string,
-    USUA_SIGLA: string,
-    codUser: string
-}
 
 interface IRequestBD {
     SOCO_COD: number,
@@ -28,29 +18,24 @@ interface IRequestBD {
 }
 
 export class ListPurchaseOrderDateService {
-  public async execute (token: string, date: string): Promise<IRequestBD[]> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+  public async execute(userId: number, date: string): Promise<IRequestBD[]> {
 
-    const decodeToken = jwt.verify(token, secretAcess) as IdecodeAcessToken
+    const query2 = selectSoliCompData(userId, date, '1');
+    const query1 = selectSoliCompData(userId, date, '2');
 
-    const cod = parseInt(decodeToken.codUser)
+    const listPurchaseOrder1 = await PedidoEstoqueRepository.query(query1);
+    const listPurchaseOrder2 = await PedidoEstoqueRepository.query(query2);
 
-    const query2 = selectSoliCompData(cod, date, '1')
-    const query1 = selectSoliCompData(cod, date, '2')
-
-    const listPurchaseOrder1 = await PedidoEstoqueRepository.query(query1)
-    const listPurchaseOrder2 = await PedidoEstoqueRepository.query(query2)
-
-    const orderArray: IRequestBD[] = []
+    const orderArray: IRequestBD[] = [];
 
     if (listPurchaseOrder1.length > 0) {
-      listPurchaseOrder1.map((pos: any) => orderArray.push(pos))
+      listPurchaseOrder1.map((pos: any) => orderArray.push(pos));
     }
 
     if (listPurchaseOrder2.length > 0) {
-      listPurchaseOrder2.map((pos: any) => orderArray.push(pos))
+      listPurchaseOrder2.map((pos: any) => orderArray.push(pos));
     }
 
-    return orderArray
+    return orderArray;
   }
 }

@@ -9,15 +9,15 @@ export const selectUsuaCrParametros = (cod:string, cereCod:string) => {
         USCR_USUA_COD = ${cod}
     AND
         USCR_CERE_COD = ${cereCod}
-  `
-}
+  `;
+};
 
-export const selectUsuaCr = (cod:string) => {
+export const selectUsuaCr = (cod: number) => {
   return `
     SELECT
         USCR_CERE_COD
     FROM
         USUARIO_CR
     WHERE
-        USCR_USUA_COD = ${cod}`
-}
+        USCR_USUA_COD = ${cod}`;
+};

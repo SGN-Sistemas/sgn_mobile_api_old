@@ -1,4 +1,4 @@
-import user from './user.json'
+import user from './user.json';
 export const swaggerJson = {
   explorer: true,
   swaggerOptions: {
@@ -344,4 +344,4 @@ export const swaggerJson = {
       }
     }
   }
-}
+};

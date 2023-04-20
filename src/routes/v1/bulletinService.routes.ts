@@ -1,11 +1,11 @@
-import express from 'express'
-import isAuthenticatedAcess from '../../middlewares/isAuthenticatedAcess'
-import { ServiceContractBulletinController } from '../../controllers/serviceContractBulletin'
 
-export const routerBulletin = express.Router()
+import { Router } from 'express';
+import { ServiceContractBulletinController } from '../../controllers/serviceContractBulletin';
 
-const bulletin = new ServiceContractBulletinController()
+export const routerBulletin = Router();
 
-routerBulletin.get('/', isAuthenticatedAcess, bulletin.list)
-routerBulletin.get('/:cod', isAuthenticatedAcess, bulletin.listDetails)
-routerBulletin.patch('/', isAuthenticatedAcess, bulletin.approval)
+const bulletin = new ServiceContractBulletinController();
+
+routerBulletin.get('/',  bulletin.list);
+routerBulletin.get('/:cod', bulletin.listDetails);
+routerBulletin.patch('/', bulletin.approval);

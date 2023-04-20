@@ -1,15 +1,8 @@
-import dotenv from 'dotenv'
-import { MovimentoDiarioRepository } from '../../typeorm/repository/movimentoDiarioRepositories'
-import jwt from 'jsonwebtoken'
-import { selectMovimentDetailsData, selectMovimentDetailsDataAndApl } from '../../queries/movDiaria'
+import { MovimentoDiarioRepository } from '../../typeorm/repository/movimentoDiarioRepositories';
+import { selectMovimentDetailsData, selectMovimentDetailsDataAndApl } from '../../queries/movDiaria';
+import AppError from '../../errors/AppError';
 
-dotenv.config()
 
-interface IdecodeAcessToken {
-    refreshToken: string,
-    USUA_SIGLA: string,
-    codUser: string
-}
 interface IResponse {
     DEBITO: number,
     CREDITO: number,
@@ -19,24 +12,23 @@ interface IResponse {
 }
 
 export class DetailsMoivmentService {
-  public async execute (TOKEN: string, data: string, aplicacao: string): Promise<IResponse> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+  public async execute (userSigla: string, data: string, aplicacao: string): Promise<IResponse> {
 
-    const decodeToken = jwt.verify(TOKEN, secretAcess) as IdecodeAcessToken
-
-    const USUA_SIGLA = decodeToken.USUA_SIGLA
-
-    if (aplicacao === '') {
-      const sql = selectMovimentDetailsData(USUA_SIGLA, data)
-      const movimentQuery = await MovimentoDiarioRepository.query(sql)
-
-      return movimentQuery
+    if (!data) {
+      throw new AppError('Data is missing');
     }
 
-    const sql = selectMovimentDetailsDataAndApl(USUA_SIGLA, data, aplicacao)
+    if (aplicacao === '') {
+      const sql = selectMovimentDetailsData(userSigla, data);
+      const movimentQuery = await MovimentoDiarioRepository.query(sql);
 
-    const movimentQuery = await MovimentoDiarioRepository.query(sql)
+      return movimentQuery;
+    }
 
-    return movimentQuery
+    const sql = selectMovimentDetailsDataAndApl(userSigla, data, aplicacao);
+
+    const movimentQuery = await MovimentoDiarioRepository.query(sql);
+
+    return movimentQuery;
   }
 }

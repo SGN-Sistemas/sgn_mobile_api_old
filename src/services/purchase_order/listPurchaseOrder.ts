@@ -1,16 +1,5 @@
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
-import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories'
-import { selectSoliComp1, selectSoliComp2 } from '../../queries/purchaseOrder'
-
-dotenv.config()
-
-interface IdecodeAcessToken {
-    refreshToken: string,
-    USUA_SIGLA: string,
-    codUser: string
-}
-
+import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories';
+import { selectSoliComp1, selectSoliComp2 } from '../../queries/purchaseOrder';
 interface IRequestBD {
   SOCO_COD: number,
   SOCO_DTSOLI: string,
@@ -27,29 +16,23 @@ interface IRequestBD {
 }
 
 export class ListPurchaseOrderService {
-  public async execute (token: string): Promise<IRequestBD[]> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+  public async execute (userId: number): Promise<IRequestBD[]> {
+    const query2 = selectSoliComp2(userId);
+    const query1 = selectSoliComp1(userId);
 
-    const decodeToken = jwt.verify(token, secretAcess) as IdecodeAcessToken
+    const listPurchaseOrder1 = await PedidoEstoqueRepository.query(query1);
+    const listPurchaseOrder2 = await PedidoEstoqueRepository.query(query2);
 
-    const cod = parseInt(decodeToken.codUser)
-
-    const query2 = selectSoliComp2(cod)
-    const query1 = selectSoliComp1(cod)
-
-    const listPurchaseOrder1 = await PedidoEstoqueRepository.query(query1)
-    const listPurchaseOrder2 = await PedidoEstoqueRepository.query(query2)
-
-    const orderArray: IRequestBD[] = []
+    const orderArray: IRequestBD[] = [];
 
     if (listPurchaseOrder1.length > 0) {
-      listPurchaseOrder1.map((pos: IRequestBD) => orderArray.push(pos))
+      listPurchaseOrder1.map((pos: IRequestBD) => orderArray.push(pos));
     }
 
     if (listPurchaseOrder2.length > 0) {
-      listPurchaseOrder2.map((pos: IRequestBD) => orderArray.push(pos))
+      listPurchaseOrder2.map((pos: IRequestBD) => orderArray.push(pos));
     }
 
-    return orderArray
+    return orderArray;
   }
 }

@@ -1,8 +1,8 @@
-import express from 'express'
-import { DataConnectionControllers } from '../../controllers/dataConnection'
+import {Router} from 'express';
+import { DataConnectionControllers } from '../../controllers/dataConnection';
 
-export const routerDataConnection = express.Router()
+export const routerDataConnection = Router();
 
-const dataConnectionControllers = new DataConnectionControllers()
+const dataConnectionControllers = new DataConnectionControllers();
 
-routerDataConnection.get('/:cnpj', dataConnectionControllers.list)
+routerDataConnection.get('/:cnpj', dataConnectionControllers.list);

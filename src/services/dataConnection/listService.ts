@@ -1,6 +1,7 @@
-import { MovimentoDiarioRepository } from '../../typeorm/repository/movimentoDiarioRepositories'
+import { MovimentoDiarioRepository } from '../../typeorm/repository/movimentoDiarioRepositories';
 
-import { selectDataConnectionCompany } from '../../queries/dataConnection'
+import { selectDataConnectionCompany } from '../../queries/dataConnection';
+import AppError from '../../errors/AppError';
 interface IPessPefiPeju {
     DACO_COD: string;
     DACO_CNPJ: string;
@@ -18,31 +19,21 @@ interface IResponse {
 export class ListDataConnectionService {
   public async execute (cnpj: string): Promise<IResponse> {
     try {
-      const sqlSelectDataConnectionCompany = selectDataConnectionCompany(cnpj)
+      const sqlSelectDataConnectionCompany = selectDataConnectionCompany(cnpj);
 
-      const listSelectDataConnectionCompany = await MovimentoDiarioRepository.query(sqlSelectDataConnectionCompany)
-      console.log('====================================')
-      console.log(listSelectDataConnectionCompany[0])
-      console.log('====================================')
+      const listSelectDataConnectionCompany = await MovimentoDiarioRepository.query(sqlSelectDataConnectionCompany);
+
       if (listSelectDataConnectionCompany[0] === undefined) {
-        return {
-          message: 'CNPJ não cadastrado',
-          error: true,
-          status: 400
-        }
+        throw new AppError('CNPJ não cadastrado');
       }
 
       return {
         message: listSelectDataConnectionCompany[0],
         error: false,
         status: 200
-      }
+      };
     } catch (e) {
-      return {
-        message: `Error = ${e}`,
-        error: true,
-        status: 500
-      }
+      throw new AppError(e.message);
     }
   }
 }

@@ -1,12 +1,5 @@
-import jwt from 'jsonwebtoken'
-import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories'
-import { selectServiceContract1, selectServiceContract2, selectServiceContract3, selectServiceContract4 } from '../../queries/serviceContract'
-
-interface IdecodeAcessToken {
-  refreshToken: string,
-  USUA_SIGLA: string,
-  codUser: string
-}
+import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories';
+import { selectServiceContract1, selectServiceContract2, selectServiceContract3, selectServiceContract4 } from '../../queries/serviceContract';
 
 interface ICocs{
   COCS_DT_INICIO:string
@@ -30,39 +23,35 @@ interface ICocs{
 }
 
 export class ListServiceContractServices {
-  public async execute (token: string, queryString: string): Promise<ICocs[]> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+  public async execute (userId: number, queryString: string): Promise<ICocs[]> {
 
-    const decodeToken = jwt.verify(token, secretAcess) as IdecodeAcessToken
+    const sql = selectServiceContract1(userId + '', queryString);
+    const sql2 = selectServiceContract2(userId + '', queryString);
+    const sql3 = selectServiceContract3(userId + '', queryString);
+    const sql4 = selectServiceContract4(userId + '', queryString);
 
-    const cod = parseInt(decodeToken.codUser)
-    const sql = selectServiceContract1(cod + '', queryString)
-    const sql2 = selectServiceContract2(cod + '', queryString)
-    const sql3 = selectServiceContract3(cod + '', queryString)
-    const sql4 = selectServiceContract4(cod + '', queryString)
-
-    const array: ICocs[] = []
-    const listContract1 = await PedidoEstoqueRepository.query(sql)
-    const listContract2 = await PedidoEstoqueRepository.query(sql2)
-    const listContract3 = await PedidoEstoqueRepository.query(sql3)
-    const listContract4 = await PedidoEstoqueRepository.query(sql4)
+    const array: ICocs[] = [];
+    const listContract1 = await PedidoEstoqueRepository.query(sql);
+    const listContract2 = await PedidoEstoqueRepository.query(sql2);
+    const listContract3 = await PedidoEstoqueRepository.query(sql3);
+    const listContract4 = await PedidoEstoqueRepository.query(sql4);
 
     if (listContract1.length > 0) {
-      listContract1.map((pos: ICocs) => array.push(pos))
+      listContract1.map((pos: ICocs) => array.push(pos));
     }
 
     if (listContract2.length > 0) {
-      listContract2.map((pos: ICocs) => array.push(pos))
+      listContract2.map((pos: ICocs) => array.push(pos));
     }
 
     if (listContract3.length > 0) {
-      listContract3.map((pos: ICocs) => array.push(pos))
+      listContract3.map((pos: ICocs) => array.push(pos));
     }
 
     if (listContract4.length > 0) {
-      listContract4.map((pos: ICocs) => array.push(pos))
+      listContract4.map((pos: ICocs) => array.push(pos));
     }
 
-    return array
+    return array;
   }
 }

@@ -1,16 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
-import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories'
-import { selectSoliCompNumero } from '../../queries/purchaseOrder'
-
-dotenv.config()
-
-interface IdecodeAcessToken {
-    refreshToken: string,
-    USUA_SIGLA: string,
-    codUser: string
-}
+import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories';
+import { selectSoliCompNumero } from '../../queries/purchaseOrder';
 
 interface IRequestBD {
     SOCO_COD: number,
@@ -28,29 +17,23 @@ interface IRequestBD {
 }
 
 export class ListPurchaseOrderNumberService {
-  public async execute (token: string, socoNUMERO:string): Promise<IRequestBD[]> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+  public async execute (userId: number, socoNUMERO:string): Promise<IRequestBD[]> {
+    const query2 = selectSoliCompNumero(userId, socoNUMERO, '1');
+    const query1 = selectSoliCompNumero(userId, socoNUMERO, '2');
 
-    const decodeToken = jwt.verify(token, secretAcess) as IdecodeAcessToken
+    const listPurchaseOrder1 = await PedidoEstoqueRepository.query(query1);
+    const listPurchaseOrder2 = await PedidoEstoqueRepository.query(query2);
 
-    const cod = parseInt(decodeToken.codUser)
-
-    const query2 = selectSoliCompNumero(cod, socoNUMERO, '1')
-    const query1 = selectSoliCompNumero(cod, socoNUMERO, '2')
-
-    const listPurchaseOrder1 = await PedidoEstoqueRepository.query(query1)
-    const listPurchaseOrder2 = await PedidoEstoqueRepository.query(query2)
-
-    const orderArray: IRequestBD[] = []
+    const orderArray: IRequestBD[] = [];
 
     if (listPurchaseOrder1.length > 0) {
-      listPurchaseOrder1.map((pos: any) => orderArray.push(pos))
+      listPurchaseOrder1.map((pos: any) => orderArray.push(pos));
     }
 
     if (listPurchaseOrder2.length > 0) {
-      listPurchaseOrder2.map((pos: any) => orderArray.push(pos))
+      listPurchaseOrder2.map((pos: any) => orderArray.push(pos));
     }
 
-    return orderArray
+    return orderArray;
   }
 }

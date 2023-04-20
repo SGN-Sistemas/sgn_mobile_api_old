@@ -1,11 +1,10 @@
-import express from 'express'
-import CompanyController from '../../controllers/empresaController'
-import isAuthenticatedAcess from '../../middlewares/isAuthenticatedAcess'
+import { Router } from 'express';
+import CompanyController from '../../controllers/empresaController';
 
-const routerCompany = express.Router()
+const routerCompany = Router();
 
-const company = new CompanyController()
+const company = new CompanyController();
 
-routerCompany.get('/', isAuthenticatedAcess, company.list)
+routerCompany.get('/', company.list);
 
-export default routerCompany
+export default routerCompany;

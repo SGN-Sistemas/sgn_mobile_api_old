@@ -1,17 +1,9 @@
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories';
 import bcrypt from 'bcrypt';
 import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories';
 import { countNumAprovaPedido, updatePedidoASS } from '../../queries/request';
+import AppError from '../../errors/AppError';
 
-dotenv.config();
-
-interface IdecodeAcessToken {
-    refreshToken: string,
-    USUA_SIGLA: string,
-    codUser: string
-}
 
 interface IResponse{
   message: string,
@@ -20,21 +12,12 @@ interface IResponse{
 }
 
 export class ApprovalRequestService {
-  public async execute (TOKEN: string, USUA_SENHA_APP: string, posUsuaCod: string, pediCod: string, pediNumero: string): Promise<IResponse> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + '';
+  public async execute (userId: number, USUA_SENHA_APP: string, posUsuaCod: string, pediCod: string, pediNumero: string): Promise<IResponse> {
 
-    const decodeToken = jwt.verify(TOKEN, secretAcess) as IdecodeAcessToken;
-
-    const cod = parseInt(decodeToken.codUser);
-
-    const existsUser = await UsuarioRepository.findOneBy({ USUA_COD: cod });
+    const existsUser = await UsuarioRepository.findOneBy({ USUA_COD: userId });
 
     if (!existsUser) {
-      return ({
-        message: 'Codigo incorreto',
-        error: true,
-        status: 400
-      });
+      throw new AppError('usuario ou senha incorreto');
     }
 
     const passwordBD = existsUser.USUA_SENHA_APP;
@@ -42,11 +25,7 @@ export class ApprovalRequestService {
     const comparePassword = await bcrypt.compare(USUA_SENHA_APP, passwordBD);
 
     if (!comparePassword) {
-      return ({
-        message: 'Senha incorreta',
-        error: true,
-        status: 400
-      });
+      throw new AppError('usuario ou senha incorreto');
     }
 
     let sqlQuery = '';

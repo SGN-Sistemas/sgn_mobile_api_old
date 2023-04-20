@@ -1,152 +1,112 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Request, Response } from 'express'
-import { ListPurchaseOrderService } from '../services/purchase_order/listPurchaseOrder'
-import { ApprovalPurchaseOrderService } from '../services/purchase_order/approvalPurchaseOrder'
-import { ListPurchaseOrderNumberService } from '../services/purchase_order/listPurchaseOrderNumber'
-import { ListPurchaseOrderWarehouseService } from '../services/purchase_order/listPurchaseOrderAlmoxa'
-import { ListPurchaseOrderPurchasingSector } from '../services/purchase_order/listPurchaseOrderPurchasingSector'
-import { ListPurchaseOrderCrService } from '../services/purchase_order/listPurchaseOrderCR'
-import { ListPurchaseOrderDateService } from '../services/purchase_order/listPurchaseOrderDate'
+import { Request, Response } from 'express';
+import { ListPurchaseOrderService } from '../services/purchase_order/listPurchaseOrder';
+import { ApprovalPurchaseOrderService } from '../services/purchase_order/approvalPurchaseOrder';
+import { ListPurchaseOrderNumberService } from '../services/purchase_order/listPurchaseOrderNumber';
+import { ListPurchaseOrderWarehouseService } from '../services/purchase_order/listPurchaseOrderAlmoxa';
+import { ListPurchaseOrderPurchasingSector } from '../services/purchase_order/listPurchaseOrderPurchasingSector';
+import { ListPurchaseOrderCrService } from '../services/purchase_order/listPurchaseOrderCR';
+import { ListPurchaseOrderDateService } from '../services/purchase_order/listPurchaseOrderDate';
 
 export class PurchaseOrderController {
   public async list (request: Request, response: Response) {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
+    const userId = request.user.USUA_COD;
 
-    const listPurchaseOrderService = new ListPurchaseOrderService()
+    const listPurchaseOrderService = new ListPurchaseOrderService();
 
-    const listPurchaseOrderServiceExec = await listPurchaseOrderService.execute(acessToken)
+    const listPurchaseOrderServiceExec = await listPurchaseOrderService.execute(userId);
 
-    response.json(listPurchaseOrderServiceExec)
+    response.json(listPurchaseOrderServiceExec);
   }
 
   public async approvalOrderPurchase (request: Request, response: Response) {
-    const authHeader = request.headers.authorization
+    const userId = request.user.USUA_COD;
 
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-
-    const [, acessToken] = authHeader.split(' ')
-
-    const approvalPurchaseOrderService = new ApprovalPurchaseOrderService()
+    const approvalPurchaseOrderService = new ApprovalPurchaseOrderService();
 
     const {
       USUA_SENHA_APP,
       arraySolicitacaoCompra
-    } = request.body
+    } = request.body;
 
-    let soliCompraTxt = ''
+    let soliCompraTxt = '';
 
     arraySolicitacaoCompra.forEach(async (item: any) => {
-      soliCompraTxt = `${soliCompraTxt} ${item[2]}`
+      soliCompraTxt = `${soliCompraTxt} ${item[2]}`;
 
       await approvalPurchaseOrderService.execute(
-        acessToken,
+        userId,
         USUA_SENHA_APP,
         item[1],
         item[0],
         item[3]
-      )
-    })
+      );
+    });
 
     return response.status(200).json({
       message: 'Solicitações aprovadas com sucesso',
       error: false,
       status: 200
-    })
+    });
   }
 
   public async listFilerNumber (request: Request, response: Response) {
-    const authHeader = request.headers.authorization
+    const userId = request.user.USUA_COD;
 
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
+    const { numeroSoco } = request.params;
 
-    const [, acessToken] = authHeader.split(' ')
+    const listPurchaseOrderNumberService = new ListPurchaseOrderNumberService();
 
-    const { numeroSoco } = request.params
+    const listPurchaseOrderNumberServiceExec = await listPurchaseOrderNumberService.execute(userId, numeroSoco);
 
-    const listPurchaseOrderNumberService = new ListPurchaseOrderNumberService()
-
-    const listPurchaseOrderNumberServiceExec = await listPurchaseOrderNumberService.execute(acessToken, numeroSoco)
-
-    response.json(listPurchaseOrderNumberServiceExec)
+    response.json(listPurchaseOrderNumberServiceExec);
   }
 
   public async listFilerWarehouse (request: Request, response: Response) {
-    const authHeader = request.headers.authorization
+    const userId = request.user.USUA_COD;
+    const { almoDesc } = request.params;
 
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
+    const listPurchaseOrderWarehouseService = new ListPurchaseOrderWarehouseService();
 
-    const [, acessToken] = authHeader.split(' ')
+    const listPurchaseOrderWarehouseServiceExec =
+      await listPurchaseOrderWarehouseService
+        .execute(userId, almoDesc);
 
-    const { almoDesc } = request.params
-
-    const listPurchaseOrderWarehouseService = new ListPurchaseOrderWarehouseService()
-
-    const listPurchaseOrderWarehouseServiceExec = await listPurchaseOrderWarehouseService.execute(acessToken, almoDesc)
-
-    response.json(listPurchaseOrderWarehouseServiceExec)
+    response.json(listPurchaseOrderWarehouseServiceExec);
   }
 
   public async listFilerPurchasingSector (request: Request, response: Response) {
-    const authHeader = request.headers.authorization
+    const userId = request.user.USUA_COD;
 
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
+    const { secoDesc } = request.params;
 
-    const [, acessToken] = authHeader.split(' ')
+    const listPurchaseOrderPurchasingSector = new ListPurchaseOrderPurchasingSector();
 
-    const { secoDesc } = request.params
+    const listPurchaseOrderPurchasingSectorExec = await listPurchaseOrderPurchasingSector.execute(userId, secoDesc);
 
-    const listPurchaseOrderPurchasingSector = new ListPurchaseOrderPurchasingSector()
-
-    const listPurchaseOrderPurchasingSectorExec = await listPurchaseOrderPurchasingSector.execute(acessToken, secoDesc)
-
-    response.json(listPurchaseOrderPurchasingSectorExec)
+    response.json(listPurchaseOrderPurchasingSectorExec);
   }
 
   public async listFilerCr (request: Request, response: Response) {
-    const authHeader = request.headers.authorization
+    const userId = request.user.USUA_COD;
 
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
+    const { cereDesc } = request.params;
 
-    const [, acessToken] = authHeader.split(' ')
+    const listPurchaseOrderCrService = new ListPurchaseOrderCrService();
 
-    const { cereDesc } = request.params
+    const listPurchaseOrderCrServiceExec = await listPurchaseOrderCrService.execute(userId, cereDesc);
 
-    const listPurchaseOrderCrService = new ListPurchaseOrderCrService()
-
-    const listPurchaseOrderCrServiceExec = await listPurchaseOrderCrService.execute(acessToken, cereDesc)
-
-    response.json(listPurchaseOrderCrServiceExec)
+    response.json(listPurchaseOrderCrServiceExec);
   }
 
-  public async listFilerDate (request: Request, response: Response) {
-    const authHeader = request.headers.authorization
+  public async listFilerDate(request: Request, response: Response) {
+    const userId = request.user.USUA_COD;
 
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
+    const { data } = request.params;
 
-    const [, acessToken] = authHeader.split(' ')
+    const listPurchaseOrderDateService = new ListPurchaseOrderDateService();
 
-    const { data } = request.params
+    const listPurchaseOrderDateServiceExec = await listPurchaseOrderDateService.execute(userId, data);
 
-    const listPurchaseOrderDateService = new ListPurchaseOrderDateService()
-
-    const listPurchaseOrderDateServiceExec = await listPurchaseOrderDateService.execute(acessToken, data)
-
-    response.json(listPurchaseOrderDateServiceExec)
+    response.json(listPurchaseOrderDateServiceExec);
   }
 }

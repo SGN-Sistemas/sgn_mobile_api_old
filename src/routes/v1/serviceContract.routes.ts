@@ -1,16 +1,15 @@
-import express from 'express'
-import isAuthenticatedAcess from '../../middlewares/isAuthenticatedAcess'
-import { ServiceContract } from '../../controllers/serviceContract'
+import { Router } from 'express';
+import { ServiceContract } from '../../controllers/serviceContract';
 
-export const routerServiceContract = express.Router()
+export const routerServiceContract = Router();
 
-const serviceContract = new ServiceContract()
+const serviceContract = new ServiceContract();
 
-routerServiceContract.get('/', isAuthenticatedAcess, serviceContract.list)
-routerServiceContract.get('/cod/:cod', isAuthenticatedAcess, serviceContract.listCode)
-routerServiceContract.get('/detalhes/:cod', isAuthenticatedAcess, serviceContract.listDetails)
-routerServiceContract.get('/empr/:empr', isAuthenticatedAcess, serviceContract.listEmpr)
-routerServiceContract.get('/fili/:fili', isAuthenticatedAcess, serviceContract.listFili)
-routerServiceContract.get('/forn/:forn', isAuthenticatedAcess, serviceContract.listForn)
-routerServiceContract.get('/local/:local', isAuthenticatedAcess, serviceContract.listLocal)
-routerServiceContract.patch('/', isAuthenticatedAcess, serviceContract.approval)
+routerServiceContract.get('/', serviceContract.list);
+routerServiceContract.get('/cod/:cod', serviceContract.listCode);
+routerServiceContract.get('/detalhes/:cod', serviceContract.listDetails);
+routerServiceContract.get('/empr/:empr', serviceContract.listEmpr);
+routerServiceContract.get('/fili/:fili', serviceContract.listFili);
+routerServiceContract.get('/forn/:forn', serviceContract.listForn);
+routerServiceContract.get('/local/:local', serviceContract.listLocal);
+routerServiceContract.patch('/', serviceContract.approval);

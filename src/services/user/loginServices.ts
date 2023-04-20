@@ -1,9 +1,8 @@
 import bcrypt from 'bcrypt';
 import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import AppError from '../../errors/AppError';
 
-dotenv.config();
 
 interface Ilogin {
   USUA_SIGLA: string,
@@ -28,24 +27,11 @@ export class LoginService {
     const existsUser = await UsuarioRepository.findOneBy({ USUA_SIGLA });
 
     if (!existsUser) {
-      return ({
-        message: 'Login incorreto',
-        error: true,
-        status: 400,
-        refreshToken: ''
-      });
+      throw new AppError('usuario ou senha incorreto!');
     }
 
     const Tokenuuid = process.env.TOKEN_SECRET_REFRESH + '';
 
-    if (!existsUser.USUA_SENHA_APP || existsUser.USUA_SENHA_APP === '') {
-      return ({
-        message: 'Úsuario sem senha cadastrada',
-        error: true,
-        status: 400,
-        refreshToken: ''
-      });
-    }
 
     const passwordBD = existsUser.USUA_SENHA_APP;
 
@@ -53,22 +39,12 @@ export class LoginService {
 
     const comparePassword = await bcrypt.compare(USUA_SENHA_APP, passwordBD);
 
-    if (!comparePassword) {
-      return ({
-        message: 'Senha incorreta',
-        error: true,
-        status: 400,
-        refreshToken: ''
-      });
+    if (!comparePassword || !existsUser.USUA_SENHA_APP || existsUser.USUA_SENHA_APP === '') {
+      throw new AppError('usuario ou senha incorreto!');
     }
 
     if (existsUser.USUA_BLOQ !== 'N') {
-      return ({
-        message: 'Úsuario bloqueado',
-        error: true,
-        status: 400,
-        refreshToken: ''
-      });
+      throw new AppError('Usuario bloqueado!');
     }
     const refreshToken = jwt.sign(
       {
@@ -79,6 +55,7 @@ export class LoginService {
         expiresIn: '1d'
       }
     );
+
 
     return ({
       message: 'Login efetuado',

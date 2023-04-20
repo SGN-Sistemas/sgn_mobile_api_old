@@ -1,6 +1,6 @@
 export const selectSoliComp1 = (usuaCod: number) => {
   return `
-    SELECT 
+    SELECT
       SOCO_COD,
       SOCO_DTSOLI,
       SOCO_OBS,
@@ -12,7 +12,7 @@ export const selectSoliComp1 = (usuaCod: number) => {
       SOCO_MATE_COD,
       ESTO_CUSTO_MEDIO,
       (
-        SELECT 
+        SELECT
           (ISNULL(ESTO_CUSTO_MEDIO,0) * SOCO_QTD_NECE)
       ) as valor_total,
       '1' AS ASS,
@@ -42,15 +42,15 @@ export const selectSoliComp1 = (usuaCod: number) => {
       UNMA_DESC
     FROM
       SOLICITACAO_COMPRA
-    INNER JOIN 
+    INNER JOIN
       ESTOQUE
     ON
       ESTO_ALMO_COD = SOCO_ALMO_COD
-    INNER JOIN 
+    INNER JOIN
       CENTRO_RESULTADO
     ON
       CERE_COD = SOCO_CERE_COD
-    INNER JOIN 
+    INNER JOIN
       PESSOAL
     ON
       PESS_COD = SOCO_PESS_COD
@@ -70,20 +70,20 @@ export const selectSoliComp1 = (usuaCod: number) => {
       ESTO_ALMO_COD = SOCO_ALMO_COD
     AND
       ESTO_MATE_COD = SOCO_MATE_COD
-    AND 
+    AND
       SOCO_ASSINATURA_1 != 'S'
     AND
       SOCO_STATUS = ''
-    OR  
+    OR
       SOCO_STATUS = NULL
-    AND 
+    AND
       SOCO_USUA_COD_ASS_1 = ${usuaCod}
-  `
-}
+  `;
+};
 
 export const selectSoliComp2 = (usuaCod: number) => {
   return `
-    SELECT 
+    SELECT
       SOCO_COD,
       SOCO_DTSOLI,
       SOCO_OBS,
@@ -95,7 +95,7 @@ export const selectSoliComp2 = (usuaCod: number) => {
       SOCO_MATE_COD,
       ESTO_CUSTO_MEDIO,
       (
-        SELECT 
+        SELECT
           (ISNULL(ESTO_CUSTO_MEDIO,0) * SOCO_QTD_NECE)
       ) as valor_total,
       '2' AS ASS,
@@ -125,15 +125,15 @@ export const selectSoliComp2 = (usuaCod: number) => {
       UNMA_DESC
     FROM
       SOLICITACAO_COMPRA
-    INNER JOIN 
+    INNER JOIN
       ESTOQUE
     ON
       ESTO_ALMO_COD = SOCO_ALMO_COD
-    INNER JOIN 
+    INNER JOIN
       CENTRO_RESULTADO
     ON
       CERE_COD = SOCO_CERE_COD
-    INNER JOIN 
+    INNER JOIN
       PESSOAL
     ON
       PESS_COD = SOCO_PESS_COD
@@ -153,22 +153,22 @@ export const selectSoliComp2 = (usuaCod: number) => {
       ESTO_ALMO_COD = SOCO_ALMO_COD
     AND
       ESTO_MATE_COD = SOCO_MATE_COD
-    AND   
+    AND
       SOCO_ASSINATURA_2 != 'S'
     AND
       SOCO_STATUS = ''
-    OR  
+    OR
       SOCO_STATUS = NULL
-    AND 
+    AND
       SOCO_ASSINATURA_1 = 'S'
-    AND 
+    AND
       SOCO_USUA_COD_ASS_2 = ${usuaCod}
-  `
-}
+  `;
+};
 
 export const selectSoliCompNumero = (usuaCod: number, socoNUMERO: string, pos: string) => {
   return `
-    SELECT 
+    SELECT
       SOCO_COD,
       SOCO_DTSOLI,
       SOCO_OBS,
@@ -180,7 +180,7 @@ export const selectSoliCompNumero = (usuaCod: number, socoNUMERO: string, pos: s
       SOCO_MATE_COD,
       ESTO_CUSTO_MEDIO,
       (
-        SELECT 
+        SELECT
           (ISNULL(ESTO_CUSTO_MEDIO,0) * SOCO_QTD_NECE)
       ) as valor_total,
       '${pos}' AS ASS,
@@ -210,15 +210,15 @@ export const selectSoliCompNumero = (usuaCod: number, socoNUMERO: string, pos: s
       UNMA_DESC
     FROM
       SOLICITACAO_COMPRA
-    INNER JOIN 
+    INNER JOIN
       ESTOQUE
     ON
       ESTO_ALMO_COD = SOCO_ALMO_COD
-    INNER JOIN 
+    INNER JOIN
       CENTRO_RESULTADO
     ON
       CERE_COD = SOCO_CERE_COD
-    INNER JOIN 
+    INNER JOIN
       PESSOAL
     ON
       PESS_COD = SOCO_PESS_COD
@@ -238,22 +238,22 @@ export const selectSoliCompNumero = (usuaCod: number, socoNUMERO: string, pos: s
       ESTO_ALMO_COD = SOCO_ALMO_COD
     AND
       ESTO_MATE_COD = SOCO_MATE_COD
-    AND 
+    AND
       SOCO_ASSINATURA_${pos} != 'S'
-    AND 
+    AND
       SOCO_USUA_COD_ASS_${pos} = ${usuaCod}
-    AND 
+    AND
       SOCO_NUMERO = '${socoNUMERO}'
     AND
       SOCO_STATUS = ''
-    OR  
+    OR
       SOCO_STATUS = NULL
-  `
-}
+  `;
+};
 
 export const selectSoliCompAlmoxarifado = (usuaCod: number, almoDesc: string, pos: string) => {
   return `
-    SELECT 
+    SELECT
       SOCO_COD,
       SOCO_DTSOLI,
       SOCO_OBS,
@@ -265,7 +265,7 @@ export const selectSoliCompAlmoxarifado = (usuaCod: number, almoDesc: string, po
       SOCO_MATE_COD,
       ESTO_CUSTO_MEDIO,
       (
-        SELECT 
+        SELECT
           (ISNULL(ESTO_CUSTO_MEDIO,0) * SOCO_QTD_NECE)
       ) as valor_total,
       '${pos}' AS ASS,
@@ -295,15 +295,15 @@ export const selectSoliCompAlmoxarifado = (usuaCod: number, almoDesc: string, po
       UNMA_DESC
     FROM
       SOLICITACAO_COMPRA
-    INNER JOIN 
+    INNER JOIN
       ESTOQUE
     ON
       ESTO_ALMO_COD = SOCO_ALMO_COD
-    INNER JOIN 
+    INNER JOIN
       CENTRO_RESULTADO
     ON
       CERE_COD = SOCO_CERE_COD
-    INNER JOIN 
+    INNER JOIN
       PESSOAL
     ON
       PESS_COD = SOCO_PESS_COD
@@ -323,22 +323,22 @@ export const selectSoliCompAlmoxarifado = (usuaCod: number, almoDesc: string, po
       ESTO_ALMO_COD = SOCO_ALMO_COD
     AND
       ESTO_MATE_COD = SOCO_MATE_COD
-    AND 
+    AND
       SOCO_ASSINATURA_${pos} != 'S'
-    AND 
+    AND
       SOCO_USUA_COD_ASS_${pos} = ${usuaCod}
-    AND 
+    AND
       ALMO_DESC LIKE '%${almoDesc}%'
     AND
       SOCO_STATUS = ''
-    OR  
+    OR
       SOCO_STATUS = NULL
-  `
-}
+  `;
+};
 
 export const selectSoliCompCR = (usuaCod: number, cereNome: string, pos: string) => {
   return `
-    SELECT 
+    SELECT
       SOCO_COD,
       SOCO_DTSOLI,
       SOCO_OBS,
@@ -350,7 +350,7 @@ export const selectSoliCompCR = (usuaCod: number, cereNome: string, pos: string)
       SOCO_MATE_COD,
       ESTO_CUSTO_MEDIO,
       (
-        SELECT 
+        SELECT
           (ISNULL(ESTO_CUSTO_MEDIO,0) * SOCO_QTD_NECE)
       ) as valor_total,
       '${pos}' AS ASS,
@@ -380,15 +380,15 @@ export const selectSoliCompCR = (usuaCod: number, cereNome: string, pos: string)
       UNMA_DESC
     FROM
       SOLICITACAO_COMPRA
-    INNER JOIN 
+    INNER JOIN
       ESTOQUE
     ON
       ESTO_ALMO_COD = SOCO_ALMO_COD
-    INNER JOIN 
+    INNER JOIN
       CENTRO_RESULTADO
     ON
       CERE_COD = SOCO_CERE_COD
-    INNER JOIN 
+    INNER JOIN
       PESSOAL
     ON
       PESS_COD = SOCO_PESS_COD
@@ -408,22 +408,22 @@ export const selectSoliCompCR = (usuaCod: number, cereNome: string, pos: string)
       ESTO_ALMO_COD = SOCO_ALMO_COD
     AND
       ESTO_MATE_COD = SOCO_MATE_COD
-    AND 
+    AND
       SOCO_ASSINATURA_${pos} != 'S'
-    AND 
+    AND
       SOCO_USUA_COD_ASS_${pos} = ${usuaCod}
-    AND 
+    AND
       CERE_NOME LIKE '%${cereNome}%'
     AND
       SOCO_STATUS = ''
-    OR  
+    OR
       SOCO_STATUS = NULL
-  `
-}
+  `;
+};
 
 export const selectSoliCompSetorCompras = (usuaCod: number, SECO_DESC: string, pos: string) => {
   return `
-    SELECT 
+    SELECT
       SOCO_COD,
       SOCO_DTSOLI,
       SOCO_OBS,
@@ -435,7 +435,7 @@ export const selectSoliCompSetorCompras = (usuaCod: number, SECO_DESC: string, p
       SOCO_MATE_COD,
       ESTO_CUSTO_MEDIO,
       (
-        SELECT 
+        SELECT
           (ISNULL(ESTO_CUSTO_MEDIO,0) * SOCO_QTD_NECE)
       ) as valor_total,
       '${pos}' AS ASS,
@@ -465,15 +465,15 @@ export const selectSoliCompSetorCompras = (usuaCod: number, SECO_DESC: string, p
       UNMA_DESC
     FROM
       SOLICITACAO_COMPRA
-    INNER JOIN 
+    INNER JOIN
       ESTOQUE
     ON
       ESTO_ALMO_COD = SOCO_ALMO_COD
-    INNER JOIN 
+    INNER JOIN
       CENTRO_RESULTADO
     ON
       CERE_COD = SOCO_CERE_COD
-    INNER JOIN 
+    INNER JOIN
       PESSOAL
     ON
       PESS_COD = SOCO_PESS_COD
@@ -493,22 +493,22 @@ export const selectSoliCompSetorCompras = (usuaCod: number, SECO_DESC: string, p
       ESTO_ALMO_COD = SOCO_ALMO_COD
     AND
       ESTO_MATE_COD = SOCO_MATE_COD
-    AND 
+    AND
       SOCO_ASSINATURA_${pos} != 'S'
-    AND 
+    AND
       SOCO_USUA_COD_ASS_${pos} = ${usuaCod}
     AND
       SOCO_STATUS = ''
-    OR  
+    OR
       SOCO_STATUS = NULL
-    AND 
+    AND
       SECO_DESC LIKE '%${SECO_DESC}%'
-  `
-}
+  `;
+};
 
 export const selectSoliCompData = (usuaCod: number, SOCO_DTSOLI: string, pos: string) => {
   return `
-    SELECT 
+    SELECT
       SOCO_COD,
       SOCO_DTSOLI,
       SOCO_OBS,
@@ -520,7 +520,7 @@ export const selectSoliCompData = (usuaCod: number, SOCO_DTSOLI: string, pos: st
       SOCO_MATE_COD,
       ESTO_CUSTO_MEDIO,
       (
-        SELECT 
+        SELECT
           (ISNULL(ESTO_CUSTO_MEDIO,0) * SOCO_QTD_NECE)
       ) as valor_total,
       '${pos}' AS ASS,
@@ -550,15 +550,15 @@ export const selectSoliCompData = (usuaCod: number, SOCO_DTSOLI: string, pos: st
       UNMA_DESC
     FROM
       SOLICITACAO_COMPRA
-    INNER JOIN 
+    INNER JOIN
       ESTOQUE
     ON
       ESTO_ALMO_COD = SOCO_ALMO_COD
-    INNER JOIN 
+    INNER JOIN
       CENTRO_RESULTADO
     ON
       CERE_COD = SOCO_CERE_COD
-    INNER JOIN 
+    INNER JOIN
       PESSOAL
     ON
       PESS_COD = SOCO_PESS_COD
@@ -578,22 +578,22 @@ export const selectSoliCompData = (usuaCod: number, SOCO_DTSOLI: string, pos: st
       ESTO_ALMO_COD = SOCO_ALMO_COD
     AND
       ESTO_MATE_COD = SOCO_MATE_COD
-    AND 
+    AND
       SOCO_ASSINATURA_${pos} != 'S'
-    AND 
+    AND
       SOCO_USUA_COD_ASS_${pos} = ${usuaCod}
     AND
       SOCO_STATUS = ''
-    OR  
+    OR
       SOCO_STATUS = NULL
-    AND 
+    AND
       SOCO_DTSOLI = '${SOCO_DTSOLI}'
-  `
-}
+  `;
+};
 
 export const updateASSSolicitacao = (socoCod: string, posCod: string, sqlQuery: string) => {
   return `
-    UPDATE 
+    UPDATE
         SOLICITACAO_COMPRA
     SET
         SOCO_ASSINATURA_${posCod} = 'S',
@@ -602,13 +602,13 @@ export const updateASSSolicitacao = (socoCod: string, posCod: string, sqlQuery: 
 
     WHERE
         SOCO_COD = ${socoCod}
-  `
-}
+  `;
+};
 
 export const countNumAprovaSoliCompra = (cod: string) => {
   return `
     SELECT
-      (      
+      (
         (
         SELECT
           COUNT(SOCO_USUA_COD_ASS_1)
@@ -616,11 +616,11 @@ export const countNumAprovaSoliCompra = (cod: string) => {
           SOLICITACAO_COMPRA
         WHERE
           SOCO_COD = ${cod}
-        AND 
-          SOCO_ASSINATURA_1 = 'S' 
+        AND
+          SOCO_ASSINATURA_1 = 'S'
         )
           +
-        ( 
+        (
           SELECT
             COUNT(SOCO_USUA_COD_ASS_2)
           FROM
@@ -635,5 +635,5 @@ export const countNumAprovaSoliCompra = (cod: string) => {
       SOLICITACAO_COMPRA
     WHERE
       SOCO_COD = ${cod}
-  `
-}
+  `;
+};

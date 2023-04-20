@@ -1,11 +1,10 @@
-import express from 'express';
-import isAuthenticatedAcess from '../../middlewares/isAuthenticatedAcess';
+import { Router } from 'express';
 import { ContractAdditive } from '../../controllers/contractAdditive';
 
-export const routerContractAdditive = express.Router();
+export const routerContractAdditive = Router();
 
 const contractAdditive = new ContractAdditive();
 
-routerContractAdditive.get('/', isAuthenticatedAcess, contractAdditive.list);
-routerContractAdditive.patch('/', isAuthenticatedAcess, contractAdditive.approval);
-routerContractAdditive.get('/:cod', isAuthenticatedAcess, contractAdditive.listCod);
+routerContractAdditive.get('/', contractAdditive.list);
+routerContractAdditive.patch('/', contractAdditive.approval);
+routerContractAdditive.get('/:cod', contractAdditive.listCod);
