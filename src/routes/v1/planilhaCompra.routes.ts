@@ -14,7 +14,7 @@ planilhaCompraRoute.get(
 );
 
 planilhaCompraRoute.patch(
-  '/',
+  '/:planilhaId',
   new AprovaPlanilhaCompraController().handle
 );
 

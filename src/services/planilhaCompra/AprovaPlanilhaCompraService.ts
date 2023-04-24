@@ -1,28 +1,35 @@
-import { PlanilhaCompraRepository } from '../../typeorm/repository/PlanilhaCompraRepository';
+import { PlanilhaCompraRepository } from "../../typeorm/repository/PlanilhaCompraRepository";
 
 interface IRequest {
   userId: number;
-  planilhaId : string
+  planilhaId: string;
 }
 
 class AprovaPlanilhaCompraService {
-  async execute ({ userId, planilhaId }: IRequest) {
+  async execute({ userId, planilhaId }: IRequest) {
     try {
-
       const getPlanilhaUsua1 =
-        await PlanilhaCompraRepository.createQueryBuilder('PLANILHA_COMPRA')
-          .where('PLAC_STATUS = :status', { status: 'A' })
-          .andWhere('PLAC_USUA_COD_ASS_1 = :id', { id: userId })
-          .andWhere('PLAC_COD = :idPlanilha ', { idPlanilha: Number(planilhaId) })
-          .andWhere('(PLAC_ASSINATURA_1 IS NULL OR PLAC_ASSINATURA_1 != \'S\' or PLAC_ASSINATURA_1 = \'\')')
+        await PlanilhaCompraRepository.createQueryBuilder("PLANILHA_COMPRA")
+          .where("PLAC_STATUS = 'A'")
+          .andWhere("PLAC_USUA_COD_ASS_1 = :id", { id: userId })
+          .andWhere("PLAC_COD = :idPlanilha ", {
+            idPlanilha: Number(planilhaId),
+          })
+          .andWhere(
+            `(PLAC_ASSINATURA_1 IS NULL OR PLAC_ASSINATURA_1 != 'S' or PLAC_ASSINATURA_1 = '')`
+          )
           .getRawOne();
 
       const getPlanilhaUsua2 =
-        await PlanilhaCompraRepository.createQueryBuilder('PLANILHA_COMPRA')
-          .where('PLAC_STATUS = :status', { status: 'A' })
-          .andWhere('PLAC_USUA_COD_ASS_2 = :id', { id: userId })
-          .andWhere('PLAC_COD = :idPlanilha ', { idPlanilha: Number(planilhaId) })
-          .andWhere('(PLAC_ASSINATURA_2 IS NULL OR PLAC_ASSINATURA_2 != \'S\' or PLAC_ASSINATURA_2 = \'\')')
+        await PlanilhaCompraRepository.createQueryBuilder("PLANILHA_COMPRA")
+          .where("PLAC_STATUS = 'A'")
+          .andWhere("PLAC_USUA_COD_ASS_2 = :id", { id: userId })
+          .andWhere("PLAC_COD = :idPlanilha ", {
+            idPlanilha: Number(planilhaId),
+          })
+          .andWhere(
+            `(PLAC_ASSINATURA_2 IS NULL OR PLAC_ASSINATURA_2 != 'S' or PLAC_ASSINATURA_2 = '')`
+          )
           .getRawOne();
 
       // parametros
@@ -32,8 +39,7 @@ class AprovaPlanilhaCompraService {
 
       if (
         paramsAprovacao[0].PAG2_NUM_APROVACOES_PLAC === 2 &&
-        paramsAprovacao[0].PAG2_TODAS_APROVACOES_PLAC === 'S'
-
+        paramsAprovacao[0].PAG2_TODAS_APROVACOES_PLAC === "S"
       ) {
         if (getPlanilhaUsua1) {
           if (
@@ -62,10 +68,12 @@ class AprovaPlanilhaCompraService {
         `);
 
         if (
-          planilhaUsua[0].PLAC_ASSINATURA_1 === 'S' &&
-          planilhaUsua[0].PLAC_ASSINATURA_2 === 'S'
+          planilhaUsua[0].PLAC_ASSINATURA_1 === "S" &&
+          planilhaUsua[0].PLAC_ASSINATURA_2 === "S"
         ) {
-          await PlanilhaCompraRepository.query(`UPDATE PLANILHA_COMPRA SET PLAC_STATUS = 'P' WHERE PLAC_COD = ${planilhaId}`);
+          await PlanilhaCompraRepository.query(
+            `UPDATE PLANILHA_COMPRA SET PLAC_STATUS = 'P' WHERE PLAC_COD = ${planilhaId}`
+          );
         }
       } else {
         if (getPlanilhaUsua1) {
@@ -76,7 +84,6 @@ class AprovaPlanilhaCompraService {
             PLAC_DATA_APROVACAO1 = getDate(),  PLAC_STATUS = 'P' WHERE PLAC_USUA_COD_ASS_1 = ${userId}
             and PLAC_COD = ${planilhaId}
         `);
-
           }
         }
 
@@ -97,9 +104,9 @@ class AprovaPlanilhaCompraService {
       }
 
       return {
-        message: 'Planilha aprovada com sucesso',
+        message: "Planilha aprovada com sucesso",
         error: false,
-        status: 200
+        status: 200,
       };
     } catch (error) {
       return error;

@@ -3,7 +3,7 @@ import AprovaPlanilhaCompraService from '../../services/planilhaCompra/AprovaPla
 
 export default class AprovaPlanilhaCompraController {
   async handle (request: Request, response: Response) {
-    const { planilhaId } = request.body;
+    const { planilhaId } = request.params;
     const userId = request.user.USUA_COD;
 
     const aprovaPlanilhaCompraService = new AprovaPlanilhaCompraService();
