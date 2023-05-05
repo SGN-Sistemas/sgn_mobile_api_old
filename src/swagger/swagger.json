@@ -1,0 +1,1420 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "API Mobile SGN Connect ",
+        "contact": {
+            "email": "desenvolvimento@sgnsistemas.com.br",
+            "phone": "(71) 99410-2220"
+        },
+        "description": "API Mobile SGN Connect - Uma solução poderosa para a integração entre sistemas móveis e desktops. Essa API foi especialmente projetada para permitir uma perfeita conexão entre o sistema móvel e o sistema desktop do SGN da Inova 3G. Com ela, você pode desfrutar de uma integração eficiente e confiável, permitindo que os dois sistemas trabalhem juntos de forma harmoniosa.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://129.148.50.73:9005/v1",
+            "description": "Url de produção"
+        }
+    ],
+    "paths": {
+        "/usuario/login": {
+            "post": {
+                "sumary": "Login",
+                "description": "End point responsavel pelo login",
+                "tags": [
+                    "usuario"
+                ],
+                "requestBody": {
+                    "description": "Dados para ser realizado o login",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "USUA_SIGLA": {
+                                        "type": "string",
+                                        "description": "Sigla do usuario",
+                                        "required": "true"
+                                    },
+                                    "USUA_SENHA_APP": {
+                                        "type": "string",
+                                        "description": "Senha do usuario para o aplicaitvo",
+                                        "required": "true"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "USUA_SENHA_APP": "123456789@Abc",
+                                "USUA_SIGLA": "TESTE"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna o token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "refreshToken": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/usuario/": {
+            "patch": {
+                "sumary": "Troca de senha",
+                "description": "End point responsavel pela troca de sena",
+                "tags": [
+                    "usuario"
+                ],
+                "requestBody": {
+                    "description": "Dados para ser realizada a troca da senha",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "USUA_SIGLA": {
+                                        "type": "string",
+                                        "description": "Sigla do usuario",
+                                        "required": "true"
+                                    },
+                                    "USUA_SENHA_APP": {
+                                        "type": "string",
+                                        "description": "Senha do usuario para o aplicaitvo",
+                                        "required": "true"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "USUA_SENHA_APP": "123456789@Abc",
+                                "USUA_SIGLA": "TESTE"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna o token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/usuario/acessToken": {
+            "get": {
+                "sumary": "Gerar acess token",
+                "description": "End point responsavel por gerar o acess token para as requições do sistema",
+                "tags": [
+                    "usuario"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna o token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "acessToken": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/usuario/setTokenApp": {
+            "patch": {
+                "sumary": "Cadastro expo token ",
+                "description": "End point responsavel por fazer o cadastro do token do expo para serem viavel o envio do token",
+                "tags": [
+                    "usuario"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Dados para ser realizada a troca da senha",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "USUA_SIGLA": {
+                                        "type": "string",
+                                        "description": "Sigla do usuario",
+                                        "required": "true"
+                                    },
+                                    "USUA_APP_TOKEN": {
+                                        "type": "string",
+                                        "description": "Expo token para ser cadastrado no sistema",
+                                        "required": "true"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "USUA_APP_TOKEN": "435t3e6e4567465756urttyjhur5674567uertbnher@Abc",
+                                "USUA_SIGLA": "TESTE"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": " Known bug "
+                    },
+                    "200": {
+                        "description": "Token cadastrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/usuario/usuarioAprovSolic": {
+            "get": {
+                "sumary": "Pegar usuarios aprovador de solicitação",
+                "description": "End point responsavel por listar todos os usuarios aprovadores de solicitação",
+                "tags": [
+                    "usuario"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os usuarios com o parametros de aprovação de solicitação marcado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object",
+                                            "properties": {
+                                                "USUA_COD": {
+                                                    "type": "string"
+                                                },
+                                                "USUA_SIGLA": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/solicitacaoCompra": {
+            "get": {
+                "sumary": "Listar todas as solicitações que o usuario tem para poder aprovar",
+                "description": "End point responsavel por listar todos as solicitações a serem aprovadas pelo usuario logado",
+                "tags": [
+                    "solicitacao"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna as solicitações",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "sumary": "Aprovar a solicitação de compras",
+                "description": "End point responsavel por aprovar a solicitação de compra",
+                "tags": [
+                    "solicitacao"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Dados necessarios para aprovar uma solicitação",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "arraySolicitacaoCompra": {
+                                        "type": "array",
+                                        "description": "Sigla do usuario",
+                                        "required": "true",
+                                        "items": {
+                                            "properties": {
+                                                "socoCod": {
+                                                    "type": "string"
+                                                },
+                                                "posUsuaCod": {
+                                                    "type": "string"
+                                                },
+                                                "socoNum": {
+                                                    "type": "string"
+                                                },
+                                                "valorTotalSoco": {
+                                                    "type": "number"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "USUA_SENHA_APP": {
+                                        "type": "string",
+                                        "description": "Senha do usuario para o aplicaitvo",
+                                        "required": "true"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "USUA_SENHA_APP": "123456789@Abc",
+                                "arraySolicitacaoCompra": [
+                                    "123@Sgn@sgn",
+                                    "1",
+                                    "1",
+                                    1.23
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna o token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/solicitacaoCompra/numero/{numeroSoco}": {
+            "get": {
+                "sumary": "Listar todas as solicitações que o usuario tem para puder aprovar com esse numero",
+                "description": "End point responsavel por listar todos as solicitações com esse numero a serem aprovadas pelo usuario logado",
+                "tags": [
+                    "solicitacao"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "numeroSoco",
+                        "in": "path",
+                        "description": "numero da solicitação",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna as solicitações",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/solicitacaoCompra/almoxarifado/{almoDesc}": {
+            "get": {
+                "sumary": "Listar todas as solicitações que o usuario tem para puder aprovar com esse almoxarifado",
+                "description": "End point responsavel por listar todos as solicitações com esse almoxarifado a serem aprovadas pelo usuario logado",
+                "tags": [
+                    "solicitacao"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "almoDesc",
+                        "in": "path",
+                        "description": "Almoxarifado da solicitação",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna as solicitações",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/solicitacaoCompra/setorCompras/{secoDesc}": {
+            "get": {
+                "sumary": "Listar todas as solicitações que o usuario tem para puder aprovar com esse setor de compras",
+                "description": "End point responsavel por listar todos as solicitações com esse setor de compras a serem aprovadas pelo usuario logado",
+                "tags": [
+                    "solicitacao"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "secoDesc",
+                        "in": "path",
+                        "description": "Setor de compras da solicitação",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna as solicitações",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/solicitacaoCompra/cr/{cereDesc}": {
+            "get": {
+                "sumary": "Listar todas as solicitações que o usuario tem para puder aprovar com esse centro de resultado",
+                "description": "End point responsavel por listar todos as solicitações com esse centro de resultado a serem aprovadas pelo usuario logado",
+                "tags": [
+                    "solicitacao"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "cereDesc",
+                        "in": "path",
+                        "description": "Centro de resultado da solicitação",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna as solicitações",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/solicitacaoCompra/data/{data}": {
+            "get": {
+                "sumary": "Listar todas as solicitações que o usuario tem para puder aprovar",
+                "description": "End point responsavel por listar todos as solicitações a serem aprovadas pelo usuario logado",
+                "tags": [
+                    "solicitacao"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "path",
+                        "description": "Data da solicitação",
+                        "required": true,
+                        "type": "date"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna as solicitações",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/solicitacaoCompra/create": {
+            "post": {
+                "sumary": "Criar uma solicitação de compra",
+                "description": "End point responsavel por criar uma solicitação de compra",
+                "tags": [
+                    "solicitacao"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Dados para cadastrar a solicitação de compra",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "secoCod": {
+                                        "type": "string",
+                                        "description": "Setor de compra",
+                                        "required": "true"
+                                    },
+                                    "itpcCod": {
+                                        "type": "string",
+                                        "description": "Item pcg",
+                                        "required": "true"
+                                    },
+                                    "cereCod": {
+                                        "type": "string",
+                                        "description": "Centro de resultado",
+                                        "required": "true"
+                                    },
+                                    "almoCod": {
+                                        "type": "string",
+                                        "description": "Almoxarifado",
+                                        "required": "true"
+                                    },
+                                    "dtNece": {
+                                        "type": "string",
+                                        "description": "Data necessaria",
+                                        "required": "true"
+                                    },
+                                    "pessCodSoli": {
+                                        "type": "string",
+                                        "description": "Funcionario solicitante",
+                                        "required": "true"
+                                    },
+                                    "ass1": {
+                                        "type": "string",
+                                        "description": "Codigo do aprovador 1",
+                                        "required": "true"
+                                    },
+                                    "ass2": {
+                                        "type": "string",
+                                        "description": "Codigo do aprovador 2",
+                                        "required": "true"
+                                    },
+                                    "arrayMaterial": {
+                                        "type": "array",
+                                        "description": "Array com os dados do produto/material",
+                                        "required": "true",
+                                        "items": {
+                                            "properties": {
+                                                "mateUnidMatCod": {
+                                                    "type": "string"
+                                                },
+                                                "mateQuantidade": {
+                                                    "type": "string"
+                                                },
+                                                "servCod": {
+                                                    "type": "string"
+                                                },
+                                                "mateCod": {
+                                                    "type": "number"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "example": {
+                                "secoCod": "1",
+                                "itpcCod": "1",
+                                "cereCod": "1",
+                                "almoCod": "1",
+                                "dtNece": "1",
+                                "pessCodSoli": "1",
+                                "ass1": "1",
+                                "ass2": "2",
+                                "arrayMaterial": [
+                                    {
+                                        "mateUnidMatCod": "1",
+                                        "mateQuantidade": "1",
+                                        "servCod": "1",
+                                        "mateCod": 0
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna as solicitações",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pedido": {
+            "get": {
+                "sumary": "Listar todas os pedidos que o usuario tem para puder aprovar com essa data",
+                "description": "End point responsavel por listar todos os pedidos com essa data a serem aprovadas pelo usuario logado",
+                "tags": [
+                    "pedido"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os pedidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "sumary": "Aprovação de pedidos em massa",
+                "description": "End point responsavel por aprovar de pedidos em massa",
+                "tags": [
+                    "pedido"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Dados do pedido para ser aprovado",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "USUA_SENHA_APP": {
+                                        "type": "string",
+                                        "description": "Senha do usuario",
+                                        "required": "true"
+                                    },
+                                    "posUsuaCod": {
+                                        "type": "string",
+                                        "description": "Ass do usuario",
+                                        "required": "true"
+                                    },
+                                    "pediCod": {
+                                        "type": "string",
+                                        "description": "Codigo do pedido",
+                                        "required": "true"
+                                    },
+                                    "fornCod": {
+                                        "type": "string",
+                                        "description": "Codigo do fornecedor",
+                                        "required": "true"
+                                    },
+                                    "valTotal": {
+                                        "type": "number",
+                                        "description": "Valor total do pedido",
+                                        "required": "true"
+                                    },
+                                    "pediNumero": {
+                                        "type": "string",
+                                        "description": "Número do pedido",
+                                        "required": "true"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "USUA_SENHA_APP": "123@ABC@abc",
+                                "arrayPedido": {
+                                    "ASS": "1",
+                                    "pediCod": "123",
+                                    "valTotal": 12.52,
+                                    "fornCod": "1",
+                                    "pediNumero": "reb5t"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": " Known bug "
+                    },
+                    "200": {
+                        "description": "Token cadastrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pedido/numero/{numero}": {
+            "get": {
+                "sumary": "Listar todas os pedidos que o usuario tem para puder aprovar com esse numero",
+                "description": "End point responsavel por listar todos os pedidos com esse numero a serem aprovadas pelo usuario logado",
+                "tags": [
+                    "pedido"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "numPedi",
+                        "in": "path",
+                        "description": "Número do pedido",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os pedidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pedido/forn/{forn}": {
+            "get": {
+                "sumary": "Listar todas os pedidos que o usuario tem para puder aprovar com esse fornecdor",
+                "description": "End point responsavel por listar todos os pedidos com esse fornecdor a serem aprovadas pelo usuario logado",
+                "tags": [
+                    "pedido"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "fornecdor",
+                        "in": "path",
+                        "description": "Fornecdor do pedido",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os pedidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pedido/func/:func": {
+            "get": {
+                "sumary": "Listar todas os pedidos que o usuario tem para puder aprovar com esse funcionario solicitante",
+                "description": "End point responsavel por listar todos os pedidos com esse funcionario solicitante a serem aprovadas pelo usuario logado",
+                "tags": [
+                    "pedido"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "funcionario",
+                        "in": "path",
+                        "description": "Funcionario do pedido",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os pedidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pedido/detalhe/:pediCod": {
+            "get": {
+                "sumary": "Retorna todos os detalhes desse pedido",
+                "description": "End point responsavel por retorna todos os detalhes desse pedido",
+                "tags": [
+                    "pedido"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "pediCod",
+                        "in": "path",
+                        "description": "Codigo do pedido",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os pedidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pedido/largeScale": {
+            "patch": {
+                "sumary": "Aprovação de pedidos em massa",
+                "description": "End point responsavel por aprovar de pedidos em massa",
+                "tags": [
+                    "pedido"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Dados do pedido para ser aprovado",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "USUA_SENHA_APP": {
+                                        "type": "string",
+                                        "description": "Senha do usuario",
+                                        "required": "true"
+                                    },
+                                    "arrayPedido": {
+                                        "type": "array",
+                                        "description": "Expo token para ser cadastrado no sistema",
+                                        "required": "true",
+                                        "items": {
+                                            "properties": {
+                                                "ASS": {
+                                                    "type": "string"
+                                                },
+                                                "pediCod": {
+                                                    "type": "string"
+                                                },
+                                                "fornCod": {
+                                                    "type": "string"
+                                                },
+                                                "pediNumero": {
+                                                    "type": "string"
+                                                },
+                                                "valTotal": {
+                                                    "type": "number"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "example": {
+                                "USUA_SENHA_APP": "123@ABC@abc",
+                                "arrayPedido": {
+                                    "ASS": "1",
+                                    "pediCod": "123",
+                                    "valTotal": 12.52,
+                                    "fornCod": "1",
+                                    "pediNumero": "reb5t"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": " Known bug "
+                    },
+                    "200": {
+                        "description": "Token cadastrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/agenda":{
+            "get": {
+                "sumary": "Listar todas as pessoas cadastrada na base seja juridica ou fisica",
+                "description": "End point responsavel por todas as pessoas cadastrada na base seja juridica ou fisica",
+                "tags": [
+                    "agenda"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os pessoas cadastradas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/almoxarifado": {
+            "get": {
+                "sumary": "Listar os almoxarifados",
+                "description": "End point responsavel por listar todos os almoxarifados",
+                "tags": [
+                    "almoxarifado"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os pessoas cadastradas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/unidMat": {
+            "get": {
+                "sumary": "Listar unidade de medida",
+                "description": "End point responsavel por listar unidade de medida",
+                "tags": [
+                    "unidMat"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna as unidades de medidas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/servicos": {
+            "get": {
+                "sumary": "Listar serviços",
+                "description": "End point responsavel por listar serviços",
+                "tags": [
+                    "servicos"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os serviços",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/setorCompra": {
+            "get": {
+                "sumary": "Listar setor de compra",
+                "description": "End point responsavel por listar setor de compra",
+                "tags": [
+                    "setorCompra"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os setores de compra",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
