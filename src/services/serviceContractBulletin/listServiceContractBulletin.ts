@@ -39,7 +39,9 @@ export class ServiceContractBulletinService {
     const array: IBocs[] = []
     const listBulletin1 = await PedidoEstoqueRepository.query(sql)
     const listBulletin2 = await PedidoEstoqueRepository.query(sql2)
-
+    console.log('====================================')
+    console.log(listBulletin1)
+    console.log('====================================')
     if (listBulletin1.length > 0) {
       listBulletin1.map((pos: IBocs) => array.push(pos))
     }

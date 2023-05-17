@@ -23,6 +23,8 @@ import { routerUnidMat } from './unidMat.routes'
 import { routerGuys } from './guys.routes'
 import { routerItemPgc } from './itemPcg.routes'
 import { routerPage } from './page.routes'
+import { routerNotification } from './notification.routes'
+import routerPurchaseWorksheet from './purchaseWorksheet.routes'
 
 export const routerV1 = express.Router()
 
@@ -71,3 +73,7 @@ routerV1.use('/pessoal', routerGuys)
 routerV1.use('/itemPcg', routerItemPgc)
 
 routerV1.use('/page', routerPage)
+
+routerV1.use('/notification', routerNotification)
+
+routerV1.use('/planilhaDeCompra', routerPurchaseWorksheet)

@@ -54,7 +54,8 @@ export const insertSoco = ({
         SOCO_NUMERO,
         SOCO_PESS_COD,
         SOCO_USUA_COD_ASS_1,
-        SOCO_USUA_COD_ASS_2
+        SOCO_USUA_COD_ASS_2,
+        SOCO_STATUS
       )
     VALUES
       (
@@ -73,10 +74,45 @@ export const insertSoco = ({
         ${socoNum},
         ${pessCodSoli},
         ${ass1},
-        ${ass2}
+        ${ass2},
+        ''
       )
   `
 }
+
+export const queryPegaTokenUserSoco = (socoCod: string) => {
+  return `
+    SELECT
+      SOCO_USUA_COD_ASS_1,
+      SOCO_USUA_COD_ASS_2,
+      SOCO_COD,
+      (
+        SELECT 
+          USUA_APP_TOKEN
+        FROM
+          USUARIO
+        WHERE
+          USUA_COD = SOCO_USUA_COD_ASS_1
+      ) 
+    AS 
+      EXPO_TOKEN_1,
+      (
+        SELECT 
+          USUA_APP_TOKEN
+        FROM
+          USUARIO
+        WHERE
+          USUA_COD = SOCO_USUA_COD_ASS_2
+      ) 
+    AS 
+      EXPO_TOKEN_2
+    FROM 
+      SOLICITACAO_COMPRA
+    WHERE 
+      SOCO_COD = ${socoCod}
+  `
+}
+
 export const selectSoliComp1 = (usuaCod: number) => {
   return `
     SELECT 
@@ -714,5 +750,65 @@ export const countNumAprovaSoliCompra = (cod: string) => {
       SOLICITACAO_COMPRA
     WHERE
       SOCO_COD = ${cod}
+  `
+}
+
+export const selectSocoFromPlac = (planilhaCod : string) => {
+  return `
+    SELECT 
+      SOCO_COD,
+      MATE_COD,
+      MATE_DESC,
+      ALMO_COD,
+      ALMO_DESC,
+      SOCO_DTNECE,
+      SOCO_QTD_NECE,
+      UNMA_SIGLA,
+      UNMA_COD,
+      SOCO_OBS,
+      MATE_REFERENCIA,
+      PESS_COD,
+      PESS_NOME,
+      SOCO_PLAC_OBS,
+      SOCO_DTPRAZORESP,
+      CERE_COD,
+      CERE_SIGLA + ' - ' + CERE_NOME as CERE,
+      ITPC_SIGLA + ' - ' + ITPC_DESC as ITPC,
+      ITPC_COD,
+      MATE_OBS,
+      FORN_NOME, 
+      'm' 
+    AS
+      TIPO
+    FROM
+      MATERIAL,
+      UNID_MAT,
+      SOLICITACAO_COMPRA,
+    LEFT OUTER JOIN 
+      PESSOAL 
+    ON 
+      SOCO_PESS_COD = PESS_COD
+    LEFT OUTER JOIN  
+      ITEM_PCG 
+    ON 
+      SOCO_ITPC_RATEIO_COD = ITPC_COD
+    LEFT OUTER JOIN 
+      CENTRO_RESULTADO 
+    ON 
+      SOCO_CERE_COD = CERE_COD
+    LEFT OUTER JOIN 
+      FORNECEDOR 
+    ON 
+      SOCO_FORN_COD_SEL = FORN_COD,ALMOXARIFADO
+    WHERE
+      MATE_COD = SOCO_MATE_COD
+    AND
+      ALMO_COD = SOCO_ALMO_COD
+    AND
+      UNMA_COD = SOCO_UNMA_COD
+    AND
+      SOCO_STATUS = 'PC'
+    AND
+      SOCO_PLAC_COD = ${planilhaCod}
   `
 }

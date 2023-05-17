@@ -1207,7 +1207,7 @@
                 }
             }
         },
-        "/agenda":{
+        "/agenda": {
             "get": {
                 "sumary": "Listar todas as pessoas cadastrada na base seja juridica ou fisica",
                 "description": "End point responsavel por todas as pessoas cadastrada na base seja juridica ou fisica",
@@ -1385,6 +1385,629 @@
                     },
                     "200": {
                         "description": "Retorna os setores de compra",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cr": {
+            "get": {
+                "sumary": "Listar centro de resultado",
+                "description": "End point responsavel por listar centro de resultado",
+                "tags": [
+                    "cr"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os cr",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cr/{almoCod}": {
+            "get": {
+                "sumary": "Listar centro de resultado",
+                "description": "End point responsavel por listar centro de resultado",
+                "tags": [
+                    "cr"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "almoCod",
+                        "in": "path",
+                        "description": "Codigo do almoxarifado",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os cr",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cr/{cod}/{planoContas}/{dataIni}/{dataFim}": {
+            "get": {
+                "sumary": "Listar os dados desse cr nesse periodo",
+                "description": "End point responsavel por listar os dados desse cr nesse periodo",
+                "tags": [
+                    "cr"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "cod",
+                        "in": "path",
+                        "description": "Codigo do cr",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "planoContas",
+                        "in": "path",
+                        "description": "Codigo do plano de conta",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "dataIni",
+                        "in": "path",
+                        "description": "Data inicial",
+                        "required": true,
+                        "type": "date"
+                    },
+                    {
+                        "name": "dataFim",
+                        "in": "path",
+                        "description": "Data final",
+                        "required": true,
+                        "type": "date"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os detalhes financeiros do cr",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/page": {
+            "get": {
+                "sumary": "Listar alguns parametros gerais",
+                "description": "End point responsavel por listar alguns parametros gerais",
+                "tags": [
+                    "page"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna alguns parametros gerais",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/material": {
+            "get": {
+                "sumary": "Listar os materiais",
+                "description": "End point responsavel por listar os materiais",
+                "tags": [
+                    "material"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os materias",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/itemPcg/{plgcCod}/{trcrCod}/{cereCod}": {
+            "get": {
+                "sumary": "Listar os itens pcg ",
+                "description": "End point responsavel por listar  os itens pcg",
+                "tags": [
+                    "itemPcg"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "plgcCod",
+                        "in": "path",
+                        "description": "codigo do plano de contas",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "trcrCod",
+                        "in": "path",
+                        "description": "codigo do trcr",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "cereCod",
+                        "in": "path",
+                        "description": "codigo do cr",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os item pcg",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pessoal": {
+            "get": {
+                "sumary": "Listar os funcionarios",
+                "description": "End point responsavel por listar os funcionarios",
+                "tags": [
+                    "pessoal"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os funcionarios",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/dataConnection": {
+            "get": {
+                "sumary": "Listar os dados da empresa para acesso ao sistema",
+                "description": "End point responsavel por listar os dados da empresa para acesso ao sistema",
+                "tags": [
+                    "dataConnection"
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os funcionarios",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contratoAditivo": {
+            "get": {
+                "sumary": "Listar os aditivos de contratos",
+                "description": "End point responsavel por listar os aditivos de contratos",
+                "tags": [
+                    "contratoAditivo"
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os contratoAditivo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contratoAditivo/{cod}": {
+            "get": {
+                "sumary": "Listar os detalhes de aditivos de contratos",
+                "description": "End point responsavel por listar os detalhes de aditivos de contratos",
+                "tags": [
+                    "contratoAditivo"
+                ],
+                "parameters": [
+                    {
+                        "name": "cod",
+                        "in": "path",
+                        "description": "Codigo do aditivo de contrato",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os contratoAditivo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contratoServico": {
+            "get": {
+                "sumary": "Listar os contratos de serviços",
+                "description": "End point responsavel por listar os contratos de serviços",
+                "tags": [
+                    "contratoServico"
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os contratoServico",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contratoServico/cod/{cod}": {
+            "get": {
+                "sumary": "Listar os contratos de serviços",
+                "description": "End point responsavel por listar os contratos de serviços",
+                "tags": [
+                    "contratoServico"
+                ],
+                "parameters": [
+                    {
+                        "name": "cod",
+                        "in": "path",
+                        "description": "Codigo do contrato de serviço",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os contratoServico",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contratoServico/detalhes/{cod}": {
+            "get": {
+                "sumary": "Listar os detalhes do contratos de serviços",
+                "description": "End point responsavel por listar os detalhes dos contratos de serviços",
+                "tags": [
+                    "contratoServico"
+                ],
+                "parameters": [
+                    {
+                        "name": "cod",
+                        "in": "path",
+                        "description": "Codigo do contrato de serviço",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os contratoServico",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contratoServico/empr/{empr}": {
+            "get": {
+                "sumary": "Listar os detalhes do contratos de serviços",
+                "description": "End point responsavel por listar os detalhes dos contratos de serviços",
+                "tags": [
+                    "contratoServico"
+                ],
+                "parameters": [
+                    {
+                        "name": "cod",
+                        "in": "path",
+                        "description": "Codigo do contrato de serviço",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Know Error"
+                    },
+                    "200": {
+                        "description": "Retorna os contratoServico",
                         "content": {
                             "application/json": {
                                 "schema": {

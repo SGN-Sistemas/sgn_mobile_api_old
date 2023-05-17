@@ -1,3 +1,5 @@
+import data1Mes from '../../utils/pega1Mes'
+import dataAtual from '../../utils/pegaDataAtual'
 
 export const selectBoletim1 = (usuaCod: string) => {
   return `
@@ -14,17 +16,20 @@ export const selectBoletim1 = (usuaCod: string) => {
       BOCS_NUMERO,
       BOCS_DT_VENC,
       '1' AS ASS,
+      COCS_COD,
+      COCS_CERE_COD,
+      COCS_FORN_COD,
       (
         SELECT
-          SUM(BCSI_QUANTIDADE)
+          ISNULL(SUM(BCSI_QUANTIDADE),0)
         FROM
           BOLETIM_CONTRATO_SERVICO_ITENS
         WHERE
           BCSI_BOCS_COD = BOCS_COD
       ) AS QTD,
-           (
+      (
         SELECT
-          SUM(BCSI_VLR_UNIT)
+          ISNULL(SUM(BCSI_VLR_UNIT),0)
         FROM
           BOLETIM_CONTRATO_SERVICO_ITENS
         WHERE
@@ -44,6 +49,23 @@ export const selectBoletim1 = (usuaCod: string) => {
       COCS_FORN_COD =  FORN_COD
     WHERE 
       BOCS_USUA_COD_ASS_1 = ${usuaCod}
+    AND 
+      BOCS_ASSINATURA_1 != 'S'
+    AND
+      BOCS_STATUS
+    IN
+      ('CA','')
+
+    AND
+
+    EXISTS (
+      SELECT
+        1
+      FROM
+        BOLETIM_CONTRATO_SERVICO_ITENS
+      WHERE
+        BCSI_BOCS_COD = BOCS_COD
+    )
   `
 }
 
@@ -62,9 +84,12 @@ export const selectBoletim2 = (usuaCod: string) => {
       BOCS_NUMERO,
       BOCS_DT_VENC,
       '2' AS ASS,
+      COCS_COD,
+      COCS_CERE_COD,
+      COCS_FORN_COD,
       (
         SELECT
-          SUM(BCSI_QUANTIDADE)
+          ISNULL(SUM(BCSI_QUANTIDADE),0)
         FROM
           BOLETIM_CONTRATO_SERVICO_ITENS
         WHERE
@@ -72,7 +97,7 @@ export const selectBoletim2 = (usuaCod: string) => {
       ) AS QTD,
            (
         SELECT
-          SUM(BCSI_VLR_UNIT)
+          ISNULL(SUM(BCSI_VLR_UNIT),0)
         FROM
           BOLETIM_CONTRATO_SERVICO_ITENS
         WHERE
@@ -94,6 +119,24 @@ export const selectBoletim2 = (usuaCod: string) => {
       BOCS_USUA_COD_ASS_2 = ${usuaCod}
     AND
       BOCS_ASSINATURA_1 = 'S'
+    AND 
+      BOCS_ASSINATURA_2 != 'S'
+    AND 
+      BOCS_STATUS
+    IN
+      ('CA','')
+    
+      AND
+
+    EXISTS (
+      SELECT
+        1
+      FROM
+        BOLETIM_CONTRATO_SERVICO_ITENS
+      WHERE
+        BCSI_BOCS_COD = BOCS_COD
+    )
+      
   `
 }
 
@@ -104,13 +147,18 @@ export const boletimMedicaoDetalhe = (codigo: string) => {
       SERV_DESC,
       BCSI_BOCS_COD,
       BCSI_QUANTIDADE,
-      BCSI_VLR_UNIT
+      BCSI_VLR_UNIT,
+      CONCAT(UNMA_SIGLA, ' - ', UNMA_DESC) AS UNID
     FROM 
       BOLETIM_CONTRATO_SERVICO_ITENS
     INNER JOIN
       SERVICOS
     ON 
       BCSI_SERV_COD = SERV_COD
+    INNER JOIN 
+      UNID_MAT
+    ON
+      SERV_UNMA_COD = UNMA_COD
     WHERE
       BCSI_BOCS_COD = ${codigo}
   `
@@ -159,5 +207,91 @@ export const countNumAprovaBoletim = (cod: string) => {
       BOLETIM_CONTRATO_SERVICO
     WHERE
       BOCS_COD = ${cod}
+  `
+}
+
+const dataIni = data1Mes()
+
+const dataFim = dataAtual()
+
+export const pegaValorAprovCrSql = (cereCod: string, usuaCod: string) => {
+  return `
+  SELECT
+    DISTINCT(COCS_COD),
+  SUM((
+      BCSI_QUANTIDADE
+    *
+      BCSI_VLR_UNIT
+    )) 
+  as 
+    valorTotal
+  FROM
+    BOLETIM_CONTRATO_SERVICO_ITENS
+  INNER JOIN
+    BOLETIM_CONTRATO_SERVICO
+  ON
+    BOCS_COD = BCSI_BOCS_COD
+  INNER JOIN 
+    CONTRATO_COMPRA_SERVICO
+  ON
+    COCS_COD = BOCS_COCS_COD
+  WHERE
+    COCS_CERE_COD = ${cereCod}
+  AND
+    (
+      BOCS_USUA_COD_ASS_1 = ${usuaCod}
+  OR
+      BOCS_USUA_COD_ASS_2 = ${usuaCod}
+    )
+  AND
+    BOCS_DATA <= '${dataIni}'
+  AND   
+    BOCS_DATA >= '${dataFim}'
+  AND
+    BOCS_STATUS = 'AP'
+  GROUP BY
+    COCS_COD
+  `
+}
+
+export const pegaValorAprovCrFornSql = (cereCod: string, fornCod: string, usuaCod: string) => {
+  return `
+    SELECT
+      DISTINCT(COCS_COD),
+    SUM((
+        BCSI_QUANTIDADE
+      *
+        BCSI_VLR_UNIT
+      )) 
+    as 
+      valorTotal
+    FROM
+      BOLETIM_CONTRATO_SERVICO_ITENS
+    INNER JOIN
+      BOLETIM_CONTRATO_SERVICO
+    ON
+      BOCS_COD = BCSI_BOCS_COD
+    INNER JOIN 
+      CONTRATO_COMPRA_SERVICO
+    ON
+      COCS_COD = BOCS_COCS_COD
+    WHERE
+      COCS_CERE_COD = ${cereCod}
+    AND 
+      COCS_FORN_COD = ${fornCod}
+    AND
+      (
+        BOCS_USUA_COD_ASS_1 = ${usuaCod}
+    OR
+        BOCS_USUA_COD_ASS_2 = ${usuaCod}
+      )
+    AND
+      BOCS_DATA <= '${dataIni}'
+    AND   
+      BOCS_DATA >= '${dataFim}'
+    AND
+      BOCS_STATUS = 'AP'
+    GROUP BY
+      COCS_COD
   `
 }

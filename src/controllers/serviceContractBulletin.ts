@@ -3,11 +3,6 @@ import { ServiceContractBulletinService } from '../services/serviceContractBulle
 import { ListDetailsBulletin } from '../services/serviceContractBulletin/listDetailsService'
 import { ApprovalBulletinService } from '../services/serviceContractBulletin/approvalService'
 
-interface IBocsArray {
-  cod: string;
-  pos: string;
-}
-
 export class ServiceContractBulletinController {
   public async list (request: Request, response: Response): Promise<Response> {
     const authHeader = request.headers.authorization
@@ -47,19 +42,33 @@ export class ServiceContractBulletinController {
     const approvalBulletinService = new ApprovalBulletinService()
 
     const { password, arrayBoletimC } = request.body
-
-    let msgCocs = ''
-
-    arrayBoletimC.forEach(async (item: IBocsArray[]) => {
-      msgCocs = `${msgCocs} ${item[0]}`
-      await approvalBulletinService.execute(
+    console.log('====================================')
+    console.log(password, arrayBoletimC)
+    console.log('====================================')
+    const msgCocs: string[] = []
+    let status = 200
+    let error = false
+    for await (const item of arrayBoletimC) {
+      const execute = await approvalBulletinService.execute(
         acessToken,
-        item[0] + '',
-        item[1] + '',
-        password
+        item.cod,
+        item.posAss,
+        password,
+        item.cereCod,
+        item.valor,
+        item.fornCod
       )
-    })
+      if (execute.erro === true) {
+        status = 400
+        error = true
+      }
+      msgCocs.push(execute.message)
+    }
 
-    return response.json(msgCocs)
+    return response.status(status).json({
+      message: msgCocs,
+      status,
+      error
+    })
   }
 }

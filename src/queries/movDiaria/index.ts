@@ -281,42 +281,43 @@ export const selectMovimentDetailsDataAndApl = (login: string, data: string, apl
 }
 
 export const selectMovimentDetailsData = (login: string, data: string) => {
-  return `SELECT 
-            APCO_NOME,
-            MODI_DEBITO,
-            MODI_CREDITO,
-            MODI_SALDO_ANTES,
-            MODI_DATA,
-            SUCC_DESC
-          FROM
-            USUARIO
-          INNER JOIN
-            REL_USUARIO_SUBCONTA
-          ON
-            REUS_USUA_COD = USUA_COD
-          INNER JOIN
-            SUB_CONTA_CORRENTE
-          ON
-            SUCC_COD = REUS_SUCC_COD
-          INNER JOIN
-            MOVIMENTO_DIARIO
-          ON
-            MODI_SUCC_COD = SUCC_COD
-          INNER JOIN
-            ALOCACAO_CONTA
-          ON
-            ALCO_SUCC_COD = SUCC_COD
-          INNER JOIN
-            GRUPO_ALOC_CONTA
-          ON
-            ALCO_GACO_COD = GACO_COD
-          INNER JOIN
-            APLICACAO_CONTA
-          ON
-            APCO_COD = ALCO_APCO_COD
-          WHERE
-            USUA_SIGLA ='${login}' 
-          AND
-            MODI_DATA = '${data}'
-          `
+  return `
+    SELECT 
+      APCO_NOME,
+      MODI_DEBITO,
+      MODI_CREDITO,
+      MODI_SALDO_ANTES,
+      MODI_DATA,
+      SUCC_DESC
+    FROM
+      USUARIO
+    INNER JOIN
+      REL_USUARIO_SUBCONTA
+    ON
+      REUS_USUA_COD = USUA_COD
+    INNER JOIN
+      SUB_CONTA_CORRENTE
+    ON
+      SUCC_COD = REUS_SUCC_COD
+    INNER JOIN
+      MOVIMENTO_DIARIO
+    ON
+      MODI_SUCC_COD = SUCC_COD
+    INNER JOIN
+      ALOCACAO_CONTA
+    ON
+      ALCO_SUCC_COD = SUCC_COD
+    INNER JOIN
+      GRUPO_ALOC_CONTA
+    ON
+      ALCO_GACO_COD = GACO_COD
+    INNER JOIN
+      APLICACAO_CONTA
+    ON
+      APCO_COD = ALCO_APCO_COD
+    WHERE
+      USUA_SIGLA ='${login}' 
+    AND
+      MODI_DATA = '${data}'
+`
 }

@@ -13,7 +13,7 @@ export default class DailyMovimentController {
     }
     const [, acessToken] = authHeader.split(' ')
 
-    const getDailyMovimentServices = await new GetDailyMovimentServices()
+    const getDailyMovimentServices = new GetDailyMovimentServices()
 
     const execute = await getDailyMovimentServices.execute(acessToken)
 

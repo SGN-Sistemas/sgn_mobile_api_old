@@ -129,12 +129,12 @@ export default class DailyMovimentController {
     let error = false
 
     for await (const item of arrayPedido) {
-      const sql = selectCerePeitPedi(item.pediCod)
+      const sql = selectCerePeitPedi(item[0].pediCod)
 
       const sqlExec = await PedidoEstoqueRepository.query(sql)
 
       for (let i = 0; i < sqlExec.length; i++) {
-        const valid = await validCereFornPedi(acessToken, sqlExec[i].CERE_COD, item.valTotal, item.fornCod, item.pediCod)
+        const valid = await validCereFornPedi(acessToken, sqlExec[i].CERE_COD, item[0].valTotal, item[0].fornCod, item[0].pediCod)
 
         if (valid.error === true) {
           pedidosTxt.push(valid.message)
@@ -149,7 +149,7 @@ export default class DailyMovimentController {
         if (i === sqlExec.length || valid.error === false) {
           const approvalRequestService = new ApprovalRequestService()
 
-          const approvalRequestExec = await approvalRequestService.execute(acessToken, USUA_SENHA_APP, item.ASS, item.pediCod, item.pediNumero)
+          const approvalRequestExec = await approvalRequestService.execute(acessToken, USUA_SENHA_APP, item[0].ASS, item[0].pediCod, item[0].pediNumero)
 
           pedidosTxt.push(approvalRequestExec.message)
 
@@ -167,7 +167,7 @@ export default class DailyMovimentController {
     })
   }
 
-  public async ListItems (request: Request, response: Response): Promise<Response> {
+  public async listItems (request: Request, response: Response): Promise<Response> {
     const authHeader = request.headers.authorization
     if (!authHeader) {
       return response.status(400).json({ message: 'Token is missing' })

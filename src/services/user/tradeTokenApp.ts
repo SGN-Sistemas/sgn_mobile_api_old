@@ -31,10 +31,26 @@ export class TradeTokenAppService {
 
       existsUser.USUA_APP_TOKEN = USUA_APP_TOKEN
 
-      await UsuarioRepository.save(existsUser)
-
+      await UsuarioRepository.query(`
+        UPDATE
+          USUARIO
+        SET
+          USUA_APP_TOKEN = '${USUA_APP_TOKEN}'
+        WHERE
+          USUA_SIGLA = '${USUA_SIGLA}'
+      `)
+      console.log('====================================')
+      console.log(`
+        UPDATE
+          USUARIO
+        SET
+          USUA_APP_TOKEN = '${USUA_APP_TOKEN}'
+        WHERE
+          USUA_SIGLA = '${USUA_SIGLA}'
+      `)
+      console.log('====================================')
       return {
-        message: 'Token adicionado com sucesso',
+        message: 'Token adicionado com sucesso ',
         error: false,
         status: 200
       }
@@ -42,7 +58,7 @@ export class TradeTokenAppService {
       return {
         message: e + '',
         error: false,
-        status: 200
+        status: 400
       }
     }
   }

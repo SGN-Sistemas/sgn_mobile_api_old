@@ -1,3 +1,56 @@
+export const queryPegaTokenUserSql = (pediCod: string) => {
+  return `
+    SELECT
+      PEDI_USUA_COD_ASS_1,
+      PEDI_USUA_COD_ASS_2,
+      PEDI_USUA_COD_ASS_3,
+      PEDI_USUA_COD_ASS_4,
+      (
+        SELECT 
+          USUA_APP_TOKEN
+        FROM
+          USUARIO
+        WHERE
+          USUA_COD = PEDI_USUA_COD_ASS_1
+      ) 
+    AS
+      EXPO_TOKEN_1,
+      (
+        SELECT 
+          USUA_APP_TOKEN
+        FROM
+          USUARIO
+        WHERE
+          USUA_COD = PEDI_USUA_COD_ASS_2
+      ) 
+    AS 
+      EXPO_TOKEN_2,
+      (
+        SELECT 
+          USUA_APP_TOKEN
+        FROM
+          USUARIO
+        WHERE
+          USUA_COD = PEDI_USUA_COD_ASS_3
+      ) 
+    AS 
+      EXPO_TOKEN_3,
+      (
+        SELECT 
+          USUA_APP_TOKEN
+        FROM
+          USUARIO
+        WHERE
+          USUA_COD = PEDI_USUA_COD_ASS_4
+      ) 
+    AS 
+      EXPO_TOKEN_4
+    FROM 
+      PEDIDO_ESTOQUE
+    WHERE 
+      PEDI_COD = ${pediCod}
+  `
+}
 export const countNumAprovaPedido = (cod: string) => {
   return `
     SELECT
@@ -145,7 +198,7 @@ export const selectPedidosItemServico = (pediCod: string) => {
 
 export const selectPedidoEstoque1 = (usuaCod: string, queryString: string) => {
   return `
-    SELECT
+    SELECT  TOP 100
       PEDI_TOTAL_MERC,
       PEDI_OBS,
       PEDI_DESCONTO,
@@ -222,9 +275,9 @@ export const selectPedidoEstoque1 = (usuaCod: string, queryString: string) => {
 }
 
 export const selectPedidoEstoque2 = (usuaCod: string, queryString: string) => {
-  return `
-    SELECT
-      PEDI_OBS,
+  return ` 
+    SELECT  TOP 100
+      PEDI_OBS, 
       PEDI_DESCONTO,
       PEDI_STATUS,
       PEDI_FRETE,
@@ -303,7 +356,7 @@ export const selectPedidoEstoque2 = (usuaCod: string, queryString: string) => {
 
 export const selectPedidoEstoque3 = (usuaCod: string, queryString: string) => {
   return `
-    SELECT
+    SELECT TOP 100
       PEDI_OBS,
       PEDI_DESCONTO,
       PEDI_STATUS,
@@ -386,7 +439,7 @@ export const selectPedidoEstoque3 = (usuaCod: string, queryString: string) => {
 
 export const selectPedidoEstoque4 = (usuaCod: string, queryString: string) => {
   return `
-    SELECT
+    SELECT TOP 100
       PEDI_OBS,
       PEDI_DESCONTO,
       PEDI_STATUS,
@@ -604,7 +657,7 @@ export const selectCerePeitPedi = (cod: string) => {
 
 export const selectPedidoEstoqueCere1 = (usuaCod: string, queryString: string, queryStringPese: string, queryStringPeit: string) => {
   return `
-    SELECT
+    SELECT  TOP 100
       PEDI_OBS,
       PEDI_DESCONTO,
       PEDI_STATUS,
@@ -683,7 +736,7 @@ export const selectPedidoEstoqueCere1 = (usuaCod: string, queryString: string, q
 
     UNION
 
-    SELECT
+    SELECT  TOP 100
       PEDI_OBS,
       PEDI_DESCONTO,
       PEDI_STATUS,
@@ -764,7 +817,7 @@ export const selectPedidoEstoqueCere1 = (usuaCod: string, queryString: string, q
 
 export const selectPedidoEstoqueCere2 = (usuaCod: string, queryString: string, queryStringPese: string, queryStringPeit: string) => {
   return `
-    SELECT
+    SELECT  TOP 100
       PEDI_OBS,
       PEDI_DESCONTO,
       PEDI_STATUS,
@@ -846,7 +899,7 @@ export const selectPedidoEstoqueCere2 = (usuaCod: string, queryString: string, q
 
     UNION
 
-    SELECT
+    SELECT  TOP 100
       PEDI_OBS,
       PEDI_DESCONTO,
       PEDI_STATUS,
@@ -929,8 +982,8 @@ export const selectPedidoEstoqueCere2 = (usuaCod: string, queryString: string, q
 
 export const selectPedidoEstoqueCere3 = (usuaCod: string, queryString: string, queryStringPese: string, queryStringPeit: string) => {
   return `
-    SELECT
-      PEDI_OBS,
+    SELECT  TOP 100
+      PEDI_OBS, 
       PEDI_DESCONTO,
       PEDI_STATUS,
       PEDI_FRETE,
@@ -1012,7 +1065,7 @@ export const selectPedidoEstoqueCere3 = (usuaCod: string, queryString: string, q
 
     UNION
 
-    SELECT
+    SELECT  TOP 100
       PEDI_OBS,
       PEDI_DESCONTO,
       PEDI_STATUS,
@@ -1097,7 +1150,7 @@ export const selectPedidoEstoqueCere3 = (usuaCod: string, queryString: string, q
 
 export const selectPedidoEstoqueCere4 = (usuaCod: string, queryString: string, queryStringPese: string, queryStringPeit: string) => {
   return `
-    SELECT
+    SELECT TOP 100
       PEDI_OBS,
       PEDI_DESCONTO,
       PEDI_STATUS,
@@ -1182,7 +1235,7 @@ export const selectPedidoEstoqueCere4 = (usuaCod: string, queryString: string, q
 
     UNION
 
-    SELECT
+    SELECT  TOP 100
       PEDI_OBS,
       PEDI_DESCONTO,
       PEDI_STATUS,

@@ -11,7 +11,9 @@ interface IBcsi {
 export class ListDetailsBulletin {
   public async execute (codBcsi: string): Promise<IBcsi[]> {
     const sql = boletimMedicaoDetalhe(codBcsi)
-
+    console.log('====================================')
+    console.log(sql)
+    console.log('====================================')
     const listBulletin1 = await PedidoEstoqueRepository.query(sql)
 
     return listBulletin1

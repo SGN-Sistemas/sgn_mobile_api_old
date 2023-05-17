@@ -1,4 +1,58 @@
 
+export const queryPegaTokenUserCocs = (cocsCod: string) => {
+  return `
+      SELECT
+      COCS_USUA_COD_ASS_1,
+      COCS_USUA_COD_ASS_2,
+      COCS_USUA_COD_ASS_3,
+      COCS_USUA_COD_ASS_4,
+      (
+        SELECT 
+          USUA_APP_TOKEN
+        FROM
+          USUARIO
+        WHERE
+          USUA_COD = COCS_USUA_COD_ASS_1
+      ) 
+    AS
+      EXPO_TOKEN_1,
+      (
+        SELECT 
+          USUA_APP_TOKEN
+        FROM
+          USUARIO
+        WHERE
+          USUA_COD = COCS_USUA_COD_ASS_2
+      ) 
+    AS 
+      EXPO_TOKEN_2,
+      (
+        SELECT 
+          USUA_APP_TOKEN
+        FROM
+          USUARIO
+        WHERE
+          USUA_COD = COCS_USUA_COD_ASS_3
+      ) 
+    AS 
+      EXPO_TOKEN_3,
+      (
+        SELECT 
+          USUA_APP_TOKEN
+        FROM
+          USUARIO
+        WHERE
+          USUA_COD = COCS_USUA_COD_ASS_4
+      ) 
+    AS 
+      EXPO_TOKEN_4
+    FROM 
+      CONTRATO_COMPRA_SERVICO
+    WHERE 
+      COCS_COD = ${cocsCod}
+  `
+}
+
 export const selectServiceContract1 = (usuaCod: string, queryString: string) => {
   return `
     SELECT 
