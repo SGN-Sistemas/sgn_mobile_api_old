@@ -25,6 +25,7 @@ import { routerItemPgc } from './itemPcg.routes'
 import { routerPage } from './page.routes'
 import { routerNotification } from './notification.routes'
 import routerPurchaseWorksheet from './purchaseWorksheet.routes'
+import { routerPay } from './pay.routes'
 
 export const routerV1 = express.Router()
 
@@ -77,3 +78,5 @@ routerV1.use('/page', routerPage)
 routerV1.use('/notification', routerNotification)
 
 routerV1.use('/planilhaDeCompra', routerPurchaseWorksheet)
+
+routerV1.use('/pagar', routerPay)
