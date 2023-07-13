@@ -26,39 +26,47 @@ export class LoginService {
     } : Ilogin
   ): Promise<ILoginReturn> {
     const Tokenuuid = process.env.TOKEN_SECRET_REFRESH + ''
-
-    const {
-      message,
-      error,
-      status,
-      userCod
-    } = await verifyUserLogin(USUA_SIGLA, USUA_SENHA_APP, DATABASE)
-
-    if (error) {
-      return ({
+    try {
+      const {
         message,
         error,
         status,
+        userCod
+      } = await verifyUserLogin(USUA_SIGLA, USUA_SENHA_APP, DATABASE)
+
+      if (error) {
+        return ({
+          message,
+          error,
+          status,
+          refreshToken: ''
+        })
+      }
+      const refreshToken = jwt.sign(
+        {
+          USUA_SIGLA,
+          USUA_COD: userCod,
+          DATABASE
+        },
+        Tokenuuid,
+        {
+          expiresIn: '1d'
+        }
+      )
+
+      return ({
+        message: 'Login efetuado',
+        error: false,
+        status: 200,
+        refreshToken
+      })
+    } catch (e) {
+      return ({
+        message: 'Internal server error',
+        error: true,
+        status: 500,
         refreshToken: ''
       })
     }
-    const refreshToken = jwt.sign(
-      {
-        USUA_SIGLA,
-        USUA_COD: userCod,
-        DATABASE
-      },
-      Tokenuuid,
-      {
-        expiresIn: '1d'
-      }
-    )
-
-    return ({
-      message: 'Login efetuado',
-      error: false,
-      status: 200,
-      refreshToken
-    })
   }
 }
