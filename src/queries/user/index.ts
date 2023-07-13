@@ -24,6 +24,21 @@ export const verifyUserQuery = (user: string, database: string): string => {
   `
 }
 
+export const verifyUserCodQuery = (cod: string, database: string): string => {
+  return `
+    USE [${database}]
+    SELECT 
+      USUA_COD,
+      USUA_NOME,
+      USUA_SENHA_APP,
+      USUA_BLOQ
+    FROM 
+      USUARIO
+    WHERE
+      USUA_COD = '${cod}'
+  `
+}
+
 export const verifyUserSpecial = (cod : string) => {
   return `
     SELECT 

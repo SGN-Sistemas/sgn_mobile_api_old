@@ -162,8 +162,9 @@ export const selectAditivoContrato4 = (cod: string, queryString: string, databas
   `
 }
 
-export const updateAditivoContrato = (pos: string, cod: string, queryString: string) => {
+export const updateAditivoContrato = (pos: string, cod: string, queryString: string, database: string) => {
   return `
+    USE [${database}]
     UPDATE 
       ADITIVO_CONTRATO_SERVICO
     SET 
@@ -174,8 +175,9 @@ export const updateAditivoContrato = (pos: string, cod: string, queryString: str
   `
 }
 
-export const countNumAprovAditivoContrato = (cod: string) => {
+export const countNumAprovAditivoContrato = (cod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
       (
         (

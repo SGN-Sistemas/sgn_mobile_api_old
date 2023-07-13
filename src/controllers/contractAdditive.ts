@@ -28,12 +28,6 @@ export class ContractAdditive {
   }
 
   public async approval (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
-
     const { password, arrayAdcs } = request.body
 
     const approvalServiceContract = new ApprovalContractAdditive()
@@ -43,7 +37,7 @@ export class ContractAdditive {
     arrayAdcs.forEach(async (item: IAdcsArray[]) => {
       msgAdcs = `${msgAdcs} ${item[1]}`
       await approvalServiceContract.execute(
-        acessToken, item[1] + '', item[0] + '', password
+        request.user_cod, item[1] + '', item[0] + '', password, request.database
       )
     })
 
