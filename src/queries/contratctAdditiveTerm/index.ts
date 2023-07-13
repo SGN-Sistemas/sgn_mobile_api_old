@@ -1,5 +1,6 @@
-export const updatePRCS = (pos: string, cod: string, queryString: string) => {
+export const updatePRCS = (pos: string, cod: string, queryString: string, database: string) => {
   return `
+    USE [${database}]
     UPDATE 
       PRAZO_CONTRATO_SERVICO 
     SET 
@@ -154,8 +155,9 @@ export const selectPrazoContratoServico4 = (cod: string, queryString: string, da
   `
 }
 
-export const countNumAprovAditivoContratoPR = (cod: string) => {
+export const countNumAprovAditivoContratoPR = (cod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
       (
         (
