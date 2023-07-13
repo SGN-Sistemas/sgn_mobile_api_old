@@ -10,8 +10,9 @@ export const updatePRCS = (pos: string, cod: string, queryString: string) => {
   `
 }
 
-export const selectPrazoContratoServico1 = (cod: string, queryString: string) => {
+export const selectPrazoContratoServico1 = (cod: string, queryString: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
       PRCS_COCS_COD,
       PRCS_COD,
@@ -42,8 +43,9 @@ export const selectPrazoContratoServico1 = (cod: string, queryString: string) =>
   `
 }
 
-export const selectPrazoContratoServico2 = (cod: string, queryString: string) => {
+export const selectPrazoContratoServico2 = (cod: string, queryString: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
       PRCS_COCS_COD,
       PRCS_COD,
@@ -76,8 +78,9 @@ export const selectPrazoContratoServico2 = (cod: string, queryString: string) =>
   `
 }
 
-export const selectPrazoContratoServico3 = (cod: string, queryString: string) => {
+export const selectPrazoContratoServico3 = (cod: string, queryString: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
       PRCS_COCS_COD,
       PRCS_COD,
@@ -112,8 +115,9 @@ export const selectPrazoContratoServico3 = (cod: string, queryString: string) =>
   `
 }
 
-export const selectPrazoContratoServico4 = (cod: string, queryString: string) => {
+export const selectPrazoContratoServico4 = (cod: string, queryString: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
       PRCS_COCS_COD,
       PRCS_COD,

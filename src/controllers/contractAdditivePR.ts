@@ -11,15 +11,9 @@ interface IAdcsArray {
 
 export class ContractAdditiveTerm {
   public async list (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
-
     const listServiceContractAdditive = new ListServiceContractAdditiveTerm()
 
-    const listServiceContractAdditiveExecute = await listServiceContractAdditive.execute(acessToken)
+    const listServiceContractAdditiveExecute = await listServiceContractAdditive.execute(request.user_cod, request.database)
 
     return response.json(listServiceContractAdditiveExecute)
   }
