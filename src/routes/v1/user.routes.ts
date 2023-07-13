@@ -9,7 +9,7 @@ const users = new UserController()
 
 routerUser.patch('/', users.tradePassword)
 
-routerUser.patch('/setTokenApp', users.tradeToken)
+routerUser.patch('/setTokenApp', isAuthenticatedRefresh, users.tradeToken)
 
 routerUser.post('/login', users.login)
 
