@@ -55,11 +55,12 @@ export default class UserController {
   ): Promise<Response> {
     const login = new LoginService()
 
-    const { USUA_SIGLA, USUA_SENHA_APP } = request.body
+    const { USUA_SIGLA, USUA_SENHA_APP, DATABASE } = request.body
 
     const user = await login.execute({
       USUA_SIGLA,
-      USUA_SENHA_APP
+      USUA_SENHA_APP,
+      DATABASE
     })
 
     return response.status(user.status).json(user)

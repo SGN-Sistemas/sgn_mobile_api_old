@@ -9,6 +9,21 @@ export const verifyPassword = (cod: string) => {
   `
 }
 
+export const verifyUserQuery = (user: string, database: string): string => {
+  return `
+    USE [${database}]
+    SELECT 
+      USUA_COD,
+      USUA_NOME,
+      USUA_SENHA_APP,
+      USUA_BLOQ
+    FROM 
+      USUARIO
+    WHERE
+      USUA_SIGLA = '${user}'
+  `
+}
+
 export const verifyUserSpecial = (cod : string) => {
   return `
     SELECT 

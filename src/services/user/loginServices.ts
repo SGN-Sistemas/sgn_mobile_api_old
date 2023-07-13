@@ -1,14 +1,13 @@
-import bcrypt from 'bcrypt'
-import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
+import { verifyUser } from '../../utils/verifyUser'
 
 dotenv.config()
 
 interface Ilogin {
-  USUA_SIGLA: string,
-  USUA_SENHA_APP: string,
-
+  USUA_SIGLA: string;
+  USUA_SENHA_APP: string;
+  DATABASE: string;
 }
 
 interface ILoginReturn {
@@ -22,57 +21,32 @@ export class LoginService {
   public async execute (
     {
       USUA_SIGLA,
-      USUA_SENHA_APP
+      USUA_SENHA_APP,
+      DATABASE
     } : Ilogin
   ): Promise<ILoginReturn> {
-    const existsUser = await UsuarioRepository.findOneBy({ USUA_SIGLA })
-
-    if (!existsUser) {
-      return ({
-        message: 'Login incorreto',
-        error: true,
-        status: 400,
-        refreshToken: ''
-      })
-    }
-
     const Tokenuuid = process.env.TOKEN_SECRET_REFRESH + ''
 
-    if (!existsUser.USUA_SENHA_APP || existsUser.USUA_SENHA_APP === '') {
+    const {
+      message,
+      error,
+      status,
+      userCod
+    } = await verifyUser(USUA_SIGLA, USUA_SENHA_APP, DATABASE)
+
+    if (error === true) {
       return ({
-        message: 'Úsuario sem senha cadastrada',
-        error: true,
-        status: 400,
-        refreshToken: ''
-      })
-    }
-
-    const passwordBD = existsUser.USUA_SENHA_APP
-
-    const sigla = existsUser.USUA_SIGLA
-
-    const comparePassword = await bcrypt.compare(USUA_SENHA_APP, passwordBD)
-
-    if (!comparePassword) {
-      return ({
-        message: 'Senha incorreta',
-        error: true,
-        status: 400,
-        refreshToken: ''
-      })
-    }
-
-    if (existsUser.USUA_BLOQ !== 'N') {
-      return ({
-        message: 'Úsuario bloqueado',
-        error: true,
-        status: 400,
+        message,
+        error,
+        status,
         refreshToken: ''
       })
     }
     const refreshToken = jwt.sign(
       {
-        sigla
+        USUA_SIGLA,
+        USUA_COD: userCod,
+        DATABASE
       },
       Tokenuuid,
       {
