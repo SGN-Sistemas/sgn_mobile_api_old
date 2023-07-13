@@ -1,12 +1,5 @@
 import { selectPrazoContratoServico1, selectPrazoContratoServico2, selectPrazoContratoServico3, selectPrazoContratoServico4 } from '../../queries/contratctAdditiveTerm'
 import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories'
-import jwt from 'jsonwebtoken'
-
-interface IdecodeAcessToken {
-    refreshToken: string,
-    USUA_SIGLA: string,
-    codUser: string
-}
 
 interface IPrcs {
   PRCS_COCS_COD: string,
@@ -20,46 +13,61 @@ interface IPrcs {
   ASS: string
 }
 
+interface IReturnResponse {
+  message: IPrcs[] | string;
+  status: number;
+  error: boolean;
+}
+
 export class ListServiceCodContractAdditiveTerm {
-  public async execute (token: string, PRCS_COCS_COD: string): Promise<IPrcs[]> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+  public async execute (cod: string, PRCS_COCS_COD: string, database: string): Promise<IReturnResponse> {
+    try {
+      const queryString = `
+      AND 
+        PRCS_COCS_COD = ${PRCS_COCS_COD}
+      `
 
-    const decodeToken = jwt.verify(token, secretAcess) as IdecodeAcessToken
+      const sql = selectPrazoContratoServico1(cod + '', queryString, database)
+      const sql2 = selectPrazoContratoServico2(cod + '', queryString, database)
+      const sql3 = selectPrazoContratoServico3(cod + '', queryString, database)
+      const sql4 = selectPrazoContratoServico4(cod + '', queryString, database)
 
-    const cod = parseInt(decodeToken.codUser)
+      const array: IPrcs[] = []
+      const listContract1 = await PedidoEstoqueRepository.query(sql)
+      const listContract2 = await PedidoEstoqueRepository.query(sql2)
+      const listContract3 = await PedidoEstoqueRepository.query(sql3)
+      const listContract4 = await PedidoEstoqueRepository.query(sql4)
 
-    const queryString = `
-    AND 
-      PRCS_COCS_COD = ${PRCS_COCS_COD}
-    `
+      if (listContract1.length > 0) {
+        listContract1.map((pos: IPrcs) => array.push(pos))
+      }
 
-    const sql = selectPrazoContratoServico1(cod + '', queryString)
-    const sql2 = selectPrazoContratoServico2(cod + '', queryString)
-    const sql3 = selectPrazoContratoServico3(cod + '', queryString)
-    const sql4 = selectPrazoContratoServico4(cod + '', queryString)
+      if (listContract2.length > 0) {
+        listContract2.map((pos: IPrcs) => array.push(pos))
+      }
 
-    const array: IPrcs[] = []
-    const listContract1 = await PedidoEstoqueRepository.query(sql)
-    const listContract2 = await PedidoEstoqueRepository.query(sql2)
-    const listContract3 = await PedidoEstoqueRepository.query(sql3)
-    const listContract4 = await PedidoEstoqueRepository.query(sql4)
+      if (listContract3.length > 0) {
+        listContract3.map((pos: IPrcs) => array.push(pos))
+      }
 
-    if (listContract1.length > 0) {
-      listContract1.map((pos: IPrcs) => array.push(pos))
+      if (listContract4.length > 0) {
+        listContract4.map((pos: IPrcs) => array.push(pos))
+      }
+
+      return {
+        message: array,
+        status: 200,
+        error: false
+      }
+    } catch (e) {
+      console.log('====================================')
+      console.log(e)
+      console.log('====================================')
+      return {
+        message: 'Internal server error',
+        status: 500,
+        error: true
+      }
     }
-
-    if (listContract2.length > 0) {
-      listContract2.map((pos: IPrcs) => array.push(pos))
-    }
-
-    if (listContract3.length > 0) {
-      listContract3.map((pos: IPrcs) => array.push(pos))
-    }
-
-    if (listContract4.length > 0) {
-      listContract4.map((pos: IPrcs) => array.push(pos))
-    }
-
-    return array
   }
 }
