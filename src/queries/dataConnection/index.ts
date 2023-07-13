@@ -1,10 +1,11 @@
 export const selectDataConnectionCompany = (cnpj: string) => {
   return `
+    USE [MOBILE_CCONNECTION]
     SELECT
       DACO_URL,
       DACO_DATABASE
     FROM
-      [MOBILE_CCONNECTION].[dbo].DATA_CONNECTION
+      DATA_CONNECTION
     WHERE
       DACO_CNPJ = '${cnpj}'
   `
