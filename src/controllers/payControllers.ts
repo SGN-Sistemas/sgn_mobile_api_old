@@ -73,7 +73,7 @@ export class PayControllers {
 
     const queryString = `
       AND
-        TRPG_NUM_DOC = '${trpgNumDoc}'
+        TRPG_NUM_DOC = '${trpgNumDoc}
     `
 
     const listPayServiceExec = await listPayService.execute(acessToken, queryString)
