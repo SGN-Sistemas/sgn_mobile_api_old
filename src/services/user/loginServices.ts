@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import { verifyUser } from '../../utils/verifyUser'
+import { verifyUserLogin } from '../../utils/verifyUser'
 
 dotenv.config()
 
@@ -32,7 +32,7 @@ export class LoginService {
       error,
       status,
       userCod
-    } = await verifyUser(USUA_SIGLA, USUA_SENHA_APP, DATABASE)
+    } = await verifyUserLogin(USUA_SIGLA, USUA_SENHA_APP, DATABASE)
 
     if (error) {
       return ({
