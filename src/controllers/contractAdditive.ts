@@ -14,23 +14,17 @@ export class ContractAdditive {
     const listServiceContractAdditive = new ListServiceContractAdditive()
     const listServiceContractAdditiveExecute = await listServiceContractAdditive.execute(request.user_cod, request.database)
 
-    return response.json(listServiceContractAdditiveExecute)
+    return response.status(listServiceContractAdditiveExecute.status).json(listServiceContractAdditiveExecute.message)
   }
 
   public async listCod (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
-
     const { cod } = request.params
 
     const listCodServiceContractAdditive = new ListCodServiceContractAdditive()
 
-    const listCodServiceContractAdditiveExec = await listCodServiceContractAdditive.execute(acessToken, cod + '')
+    const listCodServiceContractAdditiveExec = await listCodServiceContractAdditive.execute(request.user_cod, cod, request.database)
 
-    return response.json(listCodServiceContractAdditiveExec)
+    return response.status(listCodServiceContractAdditiveExec.status).json(listCodServiceContractAdditiveExec.message)
   }
 
   public async approval (request: Request, response: Response): Promise<Response> {
