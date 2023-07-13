@@ -1,10 +1,11 @@
 import bcrypt from 'bcrypt'
 import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories'
-import validPassword from '../../utils/validPassword'
+import { verifyUserSignUp } from '../../utils/verifyUser'
 
 interface Itrade{
-    USUA_SIGLA: string,
-    USUA_SENHA_APP: string
+  USUA_SIGLA: string;
+  USUA_SENHA_APP: string;
+  DATABASE: string;
 }
 
 interface IReturn {
@@ -17,47 +18,49 @@ export class TradePasswordService {
   public async execute (
     {
       USUA_SIGLA,
-      USUA_SENHA_APP
+      USUA_SENHA_APP,
+      DATABASE
     } : Itrade
   ): Promise<IReturn> {
-    const existsUser = await UsuarioRepository.findOneBy({ USUA_SIGLA })
+    try {
+      const {
+        message,
+        error,
+        status
+      } = await verifyUserSignUp(USUA_SIGLA, USUA_SENHA_APP, DATABASE)
 
-    if (!existsUser) {
-      return {
-        message: 'Usuario não existe',
-        error: true,
-        status: 400
+      if (error) {
+        return {
+          message,
+          error,
+          status
+        }
       }
-    }
 
-    if (USUA_SENHA_APP.length < 10) {
+      const saltRounds = 2
+      const passwordHash = await bcrypt.hash(USUA_SENHA_APP, saltRounds)
+
+      await UsuarioRepository.query(`
+        USE [${DATABASE}]
+        UPDATE
+          USUARIO
+        SET
+          USUA_SENHA_APP = '${passwordHash}'
+        WHERE 
+          USUA_SIGLA = '${USUA_SIGLA}'
+      `)
+
       return {
-        message: 'Senha de conter mais de 10 caracteres',
-        error: true,
-        status: 400
+        message: 'Senha trocada com sucesso ',
+        error: false,
+        status: 200
       }
-    }
-    const valid = validPassword(USUA_SENHA_APP)
-
-    if (!valid) {
+    } catch (e) {
       return {
-        message: 'Senha conter caracteres especiais,número, letra maiuscula e minuscula',
+        message: 'Error' + e,
         error: true,
-        status: 400
+        status: 500
       }
-    }
-
-    const saltRounds = 2
-    const passwordHash = await bcrypt.hash(USUA_SENHA_APP, saltRounds)
-
-    existsUser.USUA_SENHA_APP = passwordHash
-
-    await UsuarioRepository.save(existsUser)
-
-    return {
-      message: 'Senha trocada com sucesso ',
-      error: false,
-      status: 200
     }
   }
 }

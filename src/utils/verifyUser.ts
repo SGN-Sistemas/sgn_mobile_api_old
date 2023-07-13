@@ -1,12 +1,19 @@
 import { verifyUserQuery } from '../queries/user'
 import { UsuarioRepository } from '../typeorm/repository/usuarioRepositories'
 import bcrypt from 'bcrypt'
+import validPassword from './validPassword'
 
 interface IVerifyUser {
     message: string;
     error: boolean;
     status: number;
     userCod: number | string;
+}
+
+interface IVerifyUserPassword {
+    message: string;
+    error: boolean;
+    status: number;
 }
 
 export const verifyUserLogin =
@@ -60,3 +67,45 @@ export const verifyUserLogin =
      status: 0
    })
  }
+
+export const verifyUserSignUp =
+    async (acronym: string, password: string, database: string): Promise<IVerifyUserPassword> => {
+      const sqlVerifyUser = verifyUserQuery(acronym, database)
+      const existsUser = await UsuarioRepository.query(sqlVerifyUser)
+
+      if (!existsUser[0]) {
+        return ({
+          message: 'Login ou senha incorreto',
+          error: true,
+          status: 400
+        })
+      }
+
+      if (existsUser[0].USUA_BLOQ !== 'N') {
+        return ({
+          message: 'Úsuario bloqueado',
+          error: true,
+          status: 400
+        })
+      }
+
+      const {
+        message,
+        error,
+        status
+      } = validPassword(password)
+
+      if (error) {
+        return ({
+          message,
+          error,
+          status
+        })
+      }
+
+      return ({
+        message: '',
+        error: false,
+        status: 0
+      })
+    }
