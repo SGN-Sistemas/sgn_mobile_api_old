@@ -1,6 +1,7 @@
-export const selectAditivoContrato1 = (cod: string, queryString: string) => {
+export const selectAditivoContrato1 = (cod: string, queryString: string, database: string) => {
   return `
-      SELECT
+    USE [${database}]
+    SELECT
       ADCS_COD,
       ADCS_QUANTIDADE,
       ADCS_VLR_UNIT,
@@ -26,7 +27,7 @@ export const selectAditivoContrato1 = (cod: string, queryString: string) => {
     ON
       SERV_COD = ADCS_SERV_COD
     WHERE
-      ADCS_APROVADO =! 'S'
+      ADCS_APROVADO != 'S'
     AND
       ADCS_ASSINATURA_1 != 'S'
     AND
@@ -35,9 +36,10 @@ export const selectAditivoContrato1 = (cod: string, queryString: string) => {
   `
 }
 
-export const selectAditivoContrato2 = (cod: string, queryString: string) => {
+export const selectAditivoContrato2 = (cod: string, queryString: string, database: string) => {
   return `
-      SELECT
+    USE [${database}]
+    SELECT
       ADCS_COD,
       ADCS_QUANTIDADE,
       ADCS_VLR_UNIT,
@@ -63,7 +65,7 @@ export const selectAditivoContrato2 = (cod: string, queryString: string) => {
     ON
       SERV_COD = ADCS_SERV_COD
     WHERE
-      ADCS_APROVADO =! 'S'
+      ADCS_APROVADO != 'S'
     AND
       ADCS_ASSINATURA_1 = 'S'
     AND
@@ -74,9 +76,10 @@ export const selectAditivoContrato2 = (cod: string, queryString: string) => {
   `
 }
 
-export const selectAditivoContrato3 = (cod: string, queryString: string) => {
+export const selectAditivoContrato3 = (cod: string, queryString: string, database: string) => {
   return `
-      SELECT
+    USE [${database}]
+    SELECT
       ADCS_COD,
       ADCS_QUANTIDADE,
       ADCS_VLR_UNIT,
@@ -102,7 +105,7 @@ export const selectAditivoContrato3 = (cod: string, queryString: string) => {
     ON
       SERV_COD = ADCS_SERV_COD
     WHERE
-      ADCS_APROVADO =! 'S'
+      ADCS_APROVADO != 'S'
     AND
       ADCS_ASSINATURA_1 = 'S'
     AND
@@ -115,9 +118,10 @@ export const selectAditivoContrato3 = (cod: string, queryString: string) => {
   `
 }
 
-export const selectAditivoContrato4 = (cod: string, queryString: string) => {
+export const selectAditivoContrato4 = (cod: string, queryString: string, database: string) => {
   return `
-      SELECT
+    USE [${database}]
+    SELECT
       ADCS_COD,
       ADCS_QUANTIDADE,
       ADCS_VLR_UNIT,
@@ -143,7 +147,7 @@ export const selectAditivoContrato4 = (cod: string, queryString: string) => {
     ON
       SERV_COD = ADCS_SERV_COD
     WHERE
-      ADCS_APROVADO =! 'S'
+      ADCS_APROVADO != 'S'
     AND
       ADCS_ASSINATURA_1 = 'S'
     AND
