@@ -34,7 +34,7 @@ export class LoginService {
       userCod
     } = await verifyUser(USUA_SIGLA, USUA_SENHA_APP, DATABASE)
 
-    if (error === true) {
+    if (error) {
       return ({
         message,
         error,
