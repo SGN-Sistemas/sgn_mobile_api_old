@@ -1,6 +1,73 @@
 import data1Mes from '../../utils/pega1Mes'
 import dataAtual from '../../utils/pegaDataAtual'
 
+export const selectBoletimApprovaded = (usuaCod: string) => {
+  return `
+    SELECT
+      BOCS_COD,
+      FORN_NOME,
+      BOCS_DATA,
+      BOCS_DT_INICIO,
+      BOCS_DT_FIM,
+      BOCS_STATUS,
+      BOCS_OBS,
+      BOCS_NUMERO,
+      BOCS_DT_VENC,
+      COCS_COD,
+      COCS_CERE_COD,
+      COCS_FORN_COD,
+      (
+        SELECT
+          ISNULL(SUM(BCSI_QUANTIDADE),0)
+        FROM
+          BOLETIM_CONTRATO_SERVICO_ITENS
+        WHERE
+          BCSI_BOCS_COD = BOCS_COD
+      ) AS QTD,
+      (
+        SELECT
+          ISNULL(SUM(BCSI_VLR_UNIT),0)
+        FROM
+          BOLETIM_CONTRATO_SERVICO_ITENS
+        WHERE
+          BCSI_BOCS_COD = BOCS_COD
+      )
+    AS
+      VAL_UNIT
+    FROM
+      BOLETIM_CONTRATO_SERVICO
+    INNER JOIN
+      CONTRATO_COMPRA_SERVICO
+    ON
+      BOCS_COCS_COD =  COCS_COD
+    INNER JOIN
+      FORNECEDOR
+    ON
+      COCS_FORN_COD =  FORN_COD
+    WHERE
+      (
+          BOCS_USUA_COD_ASS_1 = ${usuaCod}
+        AND
+          BOCS_ASSINATURA_1 = 'S'
+      )
+    OR
+      (
+          BOCS_USUA_COD_ASS_2 = ${usuaCod}
+        AND
+          BOCS_ASSINATURA_2 = 'S'
+      )
+    AND 
+    EXISTS (
+      SELECT
+        1
+      FROM
+        BOLETIM_CONTRATO_SERVICO_ITENS
+      WHERE
+        BCSI_BOCS_COD = BOCS_COD
+    )
+  `
+}
+
 export const selectBoletim1 = (usuaCod: string) => {
   return `
     SELECT
