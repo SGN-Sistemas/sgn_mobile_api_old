@@ -16,9 +16,9 @@ const isAuthenticated = (
     return response.status(400).json({ message: 'Invalid Token', status: 401 })
   }
   const [, token] = authHeader.split(' ')
+
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const decodeToken = jwt.verify(token, secret)
+    jwt.verify(token, secret)
     return next()
   } catch {
     return response.status(400).json({ message: 'Invalid Token', status: 401 })
