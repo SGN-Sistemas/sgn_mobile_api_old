@@ -1,11 +1,12 @@
-import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 
 dotenv.config()
 
 interface IdecodeAcessToken {
-  sigla: string,
+  USUA_SIGLA: string;
+  USUA_COD: string;
+  DATABASE: string;
 }
 
 export class GenerateTokenService {
@@ -14,25 +15,20 @@ export class GenerateTokenService {
 
     const secretRefresh = process.env.TOKEN_SECRET_REFRESH + ''
 
-    const decodeToken = jwt.verify(TOKEN, secretRefresh) as IdecodeAcessToken
-
-    const USUA_SIGLA = decodeToken.sigla
-
-    const existsUser = await UsuarioRepository.findOneBy({ USUA_SIGLA })
+    const {
+      USUA_SIGLA,
+      USUA_COD,
+      DATABASE
+    } = jwt.verify(TOKEN, secretRefresh) as IdecodeAcessToken
 
     const refreshToken = TOKEN
-
-    if (!existsUser) {
-      return 'usuario invalido'
-    }
-
-    const codUser = existsUser.USUA_COD
 
     const acessToken = jwt.sign(
       {
         refreshToken,
         USUA_SIGLA,
-        codUser
+        USUA_COD,
+        DATABASE
       },
       secretAcess,
       {
