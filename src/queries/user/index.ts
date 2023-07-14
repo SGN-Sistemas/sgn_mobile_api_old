@@ -31,7 +31,8 @@ export const verifyUserCodQuery = (cod: string, database: string): string => {
       USUA_COD,
       USUA_NOME,
       USUA_SENHA_APP,
-      USUA_BLOQ
+      USUA_BLOQ,
+      USUA_TIPO
     FROM 
       USUARIO
     WHERE

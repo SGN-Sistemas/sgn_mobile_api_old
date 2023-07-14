@@ -10,6 +10,13 @@ interface IVerifyUser {
     userCod: number | string;
 }
 
+interface IVerifyUserWithout {
+  message: string;
+  error: boolean;
+  status: number;
+  userTipo: number | string;
+}
+
 interface IVerifyUserPassword {
     message: string;
     error: boolean;
@@ -158,6 +165,27 @@ export const verifyUsercod =
       message: '',
       error: false,
       userCod: existsUser[0].USUA_COD,
+      status: 0
+    })
+  }
+
+export const verifyUsercodWithOutSignUp =
+  async (cod: string, database: string): Promise<IVerifyUserWithout> => {
+    const sqlVerifyUser = verifyUserCodQuery(cod, database)
+    const existsUser = await UsuarioRepository.query(sqlVerifyUser)
+
+    if (existsUser[0].USUA_BLOQ !== 'N') {
+      return ({
+        message: 'Úsuario bloqueado',
+        error: true,
+        status: 400,
+        userTipo: existsUser[0].USUA_TIPO
+      })
+    }
+    return ({
+      message: '',
+      error: false,
+      userTipo: existsUser[0].USUA_TIPO,
       status: 0
     })
   }
