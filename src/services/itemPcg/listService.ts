@@ -1,16 +1,6 @@
 import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories'
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
 import { selectForPlgc } from '../../queries/itemPcg'
 import { selectLevelRcUser } from '../../queries/userRc'
-
-dotenv.config()
-
-interface IdecodeAcessToken {
-    refreshToken: string,
-    USUA_SIGLA: string,
-    codUser: string
-}
 
 interface IPromise {
     error: boolean,
@@ -19,41 +9,33 @@ interface IPromise {
 }
 
 export class ListItemPgcService {
-  public async execute (TOKEN: string, plgcCod: string, trcrCod: string, cereCod: string): Promise<IPromise> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+  public async execute (cod: string, plgcCod: string, trcrCod: string, cereCod: string, database: string): Promise<IPromise> {
+    try {
+      const selectNiacCod = selectLevelRcUser(cereCod, cod, database)
 
-    const decodeToken = jwt.verify(TOKEN, secretAcess) as IdecodeAcessToken
+      const niacCodQuery = await UsuarioRepository.query(selectNiacCod)
 
-    const cod = decodeToken.codUser
+      let niacCod = '0'
 
-    const existsUser = await UsuarioRepository.findOneBy({ USUA_COD: parseInt(cod) })
+      if (niacCodQuery[0]) {
+        niacCod = niacCodQuery[0].USCR_NIAC_COD_PG
+      }
 
-    if (!existsUser) {
+      const selectForPlgcQuery = selectForPlgc(niacCod, trcrCod, plgcCod, database)
+
+      const itemsPcg = await UsuarioRepository.query(selectForPlgcQuery)
+
+      return {
+        error: false,
+        message: itemsPcg,
+        status: 200
+      }
+    } catch (error) {
       return {
         error: true,
-        message: 'Usuario não existe',
-        status: 400
+        message: 'Internal Server Error',
+        status: 500
       }
-    }
-
-    const selectNiacCod = selectLevelRcUser(cereCod, cod)
-
-    const niacCodQuery = await UsuarioRepository.query(selectNiacCod)
-
-    let niacCod = '0'
-
-    if (niacCodQuery[0]) {
-      niacCod = niacCodQuery[0].USCR_NIAC_COD_PG
-    }
-
-    const selectForPlgcQuery = selectForPlgc(niacCod, trcrCod, plgcCod)
-
-    const itemsPcg = await UsuarioRepository.query(selectForPlgcQuery)
-
-    return {
-      error: false,
-      message: itemsPcg,
-      status: 200
     }
   }
 }

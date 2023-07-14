@@ -1,5 +1,6 @@
-export const selectLevelRcUser = (cereCod: string, usuaCod: string) => {
+export const selectLevelRcUser = (cereCod: string, usuaCod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
         USCR_NIAC_COD_PG
     FROM

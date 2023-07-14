@@ -1,5 +1,6 @@
-export const selectForPlgc = (niacCod: string, tipoCr: string, plgcCod: string) => {
+export const selectForPlgc = (niacCod: string, tipoCr: string, plgcCod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
         ITPC_COD,
         ITPC_SIGLA,
