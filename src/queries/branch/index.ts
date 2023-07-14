@@ -1,5 +1,7 @@
-export const searchEmprUsua = (usuaCod: string) => {
-  return `SELECT 
+export const searchEmprUsua = (usuaCod: string, database: string) => {
+  return `
+    USE [${database}]
+    SELECT
             DISTINCT (EMPR_COD),
             EMPR_NOME
           FROM 

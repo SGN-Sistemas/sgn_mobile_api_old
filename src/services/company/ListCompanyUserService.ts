@@ -1,34 +1,32 @@
-import dotenv from 'dotenv'
 import { EmpresaContaRepository } from '../../typeorm/repository/empresaRepositories'
-import jwt from 'jsonwebtoken'
 import { searchEmprUsua } from '../../queries/branch'
 
-dotenv.config()
-
-interface IdecodeAcessToken {
-    refreshToken: string,
-    USUA_SIGLA: string,
-    codUser: string
-}
 interface IResponse {
+  status: number,
+  message: string | {
     DEBITO: number,
     CREDITO: number,
     SALDO: number,
     DATA: string
+  }
 }
 
 export class ListCompanyUserService {
-  public async execute (TOKEN: string): Promise<IResponse> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+  public async execute (cod: string, database: string): Promise<IResponse> {
+    try {
+      const sql = searchEmprUsua(cod, database)
 
-    const decodeToken = jwt.verify(TOKEN, secretAcess) as IdecodeAcessToken
+      const empresaQuery = await EmpresaContaRepository.query(sql)
 
-    const codUser = decodeToken.codUser
-
-    const sql = searchEmprUsua(codUser)
-
-    const empresaQuery = await EmpresaContaRepository.query(sql)
-
-    return empresaQuery
+      return {
+        status: 200,
+        message: empresaQuery
+      }
+    } catch (e) {
+      return {
+        message: 'Internal Server Error',
+        status: 500
+      }
+    }
   }
 }
