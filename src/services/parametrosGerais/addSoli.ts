@@ -8,9 +8,9 @@ interface IResponse {
 }
 
 export class ListParametros {
-  public async execute (): Promise<IResponse> {
+  public async execute (database: string): Promise<IResponse> {
     try {
-      const sql = selectPagePag2StartAddPage()
+      const sql = selectPagePag2StartAddPage(database)
 
       const data = await PedidoEstoqueRepository.query(sql)
 

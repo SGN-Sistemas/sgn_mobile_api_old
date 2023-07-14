@@ -30,12 +30,13 @@ export const sqlPageControleUsuarioCrAlmox = () => {
   `
 }
 
-export const selectPagePag2StartAddPage = () => {
+export const selectPagePag2StartAddPage = (database: string) => {
   return `
+    USE [${database}]
     SELECT
       PAGE_NUM_APROVACOES_SOLIC,
       PAGE_TODAS_APROVACOES_SOLIC
-    FROM 
+    FROM
       PARAMETROS_GERAIS
   `
 }

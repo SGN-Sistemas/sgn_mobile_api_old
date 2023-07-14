@@ -4,9 +4,11 @@ const dataBefore = data1Mes()
 
 export const approvalTrpp = (
   RETU_USUA_COD: string,
-  RETU_TRPP_COD: string
+  RETU_TRPP_COD: string,
+  database: string
 ) => {
   return `
+    USE [${database}]
     INSERT INTO
         REL_TRPP_USUA
             (
@@ -23,8 +25,9 @@ export const approvalTrpp = (
   `
 }
 
-export const selectTrpg = (usuaCod: string, autorizacaoCount: string, queryString: string) => {
+export const selectTrpg = (usuaCod: string, autorizacaoCount: string, queryString: string, database: string) => {
   return `
+    USE [${database}]
     Select TOP 200
         trpg_cod,
         trpg_empr_cod,

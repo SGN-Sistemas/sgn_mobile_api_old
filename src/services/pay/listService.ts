@@ -1,15 +1,5 @@
 import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories'
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
 import { selectTrpg } from '../../queries/pay'
-
-dotenv.config()
-
-interface IdecodeAcessToken {
-    refreshToken: string,
-    USUA_SIGLA: string,
-    codUser: string
-}
 
 interface IPromise {
     error: boolean,
@@ -18,32 +8,17 @@ interface IPromise {
 }
 
 export class ListPayService {
-  public async execute (TOKEN: string, queryString: string): Promise<IPromise> {
+  public async execute (cod: string, queryString: string, database: string): Promise<IPromise> {
     try {
-      const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
-
-      const decodeToken = jwt.verify(TOKEN, secretAcess) as IdecodeAcessToken
-
-      const cod = decodeToken.codUser
-
-      const existsUser = await UsuarioRepository.findOneBy({ USUA_COD: parseInt(cod) })
-
-      if (!existsUser) {
-        return {
-          error: true,
-          message: 'Usuario não existe',
-          status: 400
-        }
-      }
-
       const autorizacaoCount = await UsuarioRepository.query(`
+        USE [${database}]
         SELECT
           PAGE_NUM_AUTORIZACOES
         FROM
           PARAMETROS_GERAIS
       `)
 
-      const selectSql = selectTrpg(cod.toString(), autorizacaoCount[0].PAGE_NUM_AUTORIZACOES, queryString)
+      const selectSql = selectTrpg(cod, autorizacaoCount[0].PAGE_NUM_AUTORIZACOES, queryString, database)
       console.log('====================================')
       console.log(selectSql)
       console.log('====================================')
@@ -57,7 +32,7 @@ export class ListPayService {
     } catch (e) {
       return {
         error: true,
-        message: `Erro ${e}`,
+        message: `Internal Server Error: ${e}`,
         status: 500
       }
     }

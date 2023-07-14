@@ -1,16 +1,6 @@
 import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories'
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
 import { approvalTrpp } from '../../queries/pay'
-import bcrypt from 'bcrypt'
-
-dotenv.config()
-
-interface IdecodeAcessToken {
-    refreshToken: string,
-    USUA_SIGLA: string,
-    codUser: string
-}
+import { verifyUserApproval } from '../../utils/verifyUser'
 
 interface IPromise {
     error: boolean,
@@ -19,39 +9,25 @@ interface IPromise {
 }
 
 export class ApprovalPayService {
-  public async execute (TOKEN: string, trppCod: string, cereCod: string, valor: number, password: string): Promise<IPromise> {
+  public async execute (sigla: string, trppCod: string, cereCod: string, valor: number, password: string, database: string): Promise<IPromise> {
     try {
-      const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+      const {
+        message,
+        error,
+        status,
+        userCod
+      } = await verifyUserApproval(sigla, password, database)
 
-      const decodeToken = jwt.verify(TOKEN, secretAcess) as IdecodeAcessToken
-
-      const cod = decodeToken.codUser
-
-      const existsUser = await UsuarioRepository.findOneBy({ USUA_COD: parseInt(cod) })
-
-      if (!existsUser) {
-        return {
-          error: true,
-          message: 'Usuario não existe',
-          status: 400
-        }
-      }
-      console.log('====================================')
-      console.log(existsUser.USUA_SENHA_APP)
-      console.log('====================================')
-      const passwordBD = existsUser.USUA_SENHA_APP
-
-      const comparePassword = await bcrypt.compare(password, passwordBD)
-
-      if (!comparePassword) {
+      if (error) {
         return ({
-          message: 'Senha incorreta',
-          error: true,
-          status: 400
+          message,
+          error,
+          status
         })
       }
 
       const autorizacaoCount = await UsuarioRepository.query(`
+        USE [${database}]
         SELECT
           (
             SELECT
@@ -61,7 +37,7 @@ export class ApprovalPayService {
             WHERE
                 RETU_TRPP_COD = ${trppCod}
             AND
-                RETU_USUA_COD = ${cod}
+                RETU_USUA_COD = ${userCod}
           ) as countTrppUsua,
           PAGE_NUM_AUTORIZACOES
         FROM
@@ -80,29 +56,18 @@ export class ApprovalPayService {
 
       const selectValAprovAutoriza = await UsuarioRepository.query(
         `
+          USE [${database}]
           SELECT
             USCR_VALOR_MAXIMO,
             USCR_AUTORIZA
           FROM
             USUARIO_CR
           WHERE
-            USCR_USUA_COD = ${cod}
+            USCR_USUA_COD = ${userCod}
           AND
             USCR_CERE_COD = ${cereCod}
         `
       )
-
-      console.log('====================================')
-      console.log(`          SELECT
-            USCR_VALOR_MAXIMO,
-            USCR_AUTORIZA
-          FROM
-            USUARIO_CR
-          WHERE
-            USCR_USUA_COD = ${cod}
-          AND
-            USCR_CERE_COD = ${cereCod}`)
-      console.log('====================================')
 
       if (selectValAprovAutoriza[0].USCR_AUTORIZA === 'N') {
         return {
@@ -120,7 +85,7 @@ export class ApprovalPayService {
         }
       }
 
-      const queryApproval = approvalTrpp(cod, trppCod)
+      const queryApproval = approvalTrpp(userCod + '', trppCod, database)
 
       await UsuarioRepository.query(queryApproval)
 
