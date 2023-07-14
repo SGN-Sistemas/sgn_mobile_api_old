@@ -10,10 +10,10 @@ interface IResponse {
 }
 
 class SendNotificationPush {
-  public async execute (cod: string, tipo: string): Promise<IResponse> {
+  public async execute (cod: string, tipo: string, database: string): Promise<IResponse> {
     try {
       if (tipo === 'pedido') {
-        const queryPegaTokenUserQuery = queryPegaTokenUserSql(cod)
+        const queryPegaTokenUserQuery = queryPegaTokenUserSql(cod, database)
         const queryPegaTokenUserData = await UsuarioRepository.query(queryPegaTokenUserQuery)
         if (queryPegaTokenUserData[0]) {
           if (queryPegaTokenUserData[0].EXPO_TOKEN_1) {
@@ -35,7 +35,7 @@ class SendNotificationPush {
         }
       }
       if (tipo === 'solictação') {
-        const queryPegaTokenUserQuery = queryPegaTokenUserSoco(cod)
+        const queryPegaTokenUserQuery = queryPegaTokenUserSoco(cod, database)
         const queryPegaTokenUserData = await UsuarioRepository.query(queryPegaTokenUserQuery)
         if (queryPegaTokenUserData[0]) {
           if (queryPegaTokenUserData[0].EXPO_TOKEN_1) {
@@ -52,7 +52,7 @@ class SendNotificationPush {
         }
       }
       if (tipo === 'contrato serviço') {
-        const queryPegaTokenUserQuery = queryPegaTokenUserCocs(cod)
+        const queryPegaTokenUserQuery = queryPegaTokenUserCocs(cod, database)
         const queryPegaTokenUserData = await UsuarioRepository.query(queryPegaTokenUserQuery)
         if (queryPegaTokenUserData[0]) {
           if (queryPegaTokenUserData[0].EXPO_TOKEN_1) {

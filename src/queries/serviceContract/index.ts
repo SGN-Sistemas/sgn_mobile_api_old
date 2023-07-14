@@ -1,7 +1,8 @@
 
-export const queryPegaTokenUserCocs = (cocsCod: string) => {
+export const queryPegaTokenUserCocs = (cocsCod: string, database: string) => {
   return `
-      SELECT
+    USE [${database}]
+    SELECT
       COCS_USUA_COD_ASS_1,
       COCS_USUA_COD_ASS_2,
       COCS_USUA_COD_ASS_3,

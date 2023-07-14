@@ -80,8 +80,9 @@ export const insertSoco = ({
   `
 }
 
-export const queryPegaTokenUserSoco = (socoCod: string) => {
+export const queryPegaTokenUserSoco = (socoCod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
       SOCO_USUA_COD_ASS_1,
       SOCO_USUA_COD_ASS_2,

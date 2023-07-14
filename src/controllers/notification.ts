@@ -10,7 +10,7 @@ export default class NotificationControllers {
 
     const sendNotificationPush = new SendNotificationPush()
 
-    const sendNotificationPushExec = await sendNotificationPush.execute(cod, tipo)
+    const sendNotificationPushExec = await sendNotificationPush.execute(cod, tipo, request.database)
 
     return response.status(sendNotificationPushExec.status).json(sendNotificationPushExec)
   }

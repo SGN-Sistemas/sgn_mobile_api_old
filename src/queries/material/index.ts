@@ -34,3 +34,22 @@ export const sqlMaterialAll = () => {
         UNMA_COD = MATE_UNMA_COD
   `
 }
+
+export const sqlMaterialAllDataQuery = (database: string): string => {
+  return `
+        USE [${database}]
+            SELECT
+            MATE_DESC,
+            MATE_SIGLA,
+            MATE_COD,
+            MATE_UNMA_COD,
+            UNMA_DESC,
+            UNMA_SIGLA
+        FROM
+            MATERIAL
+        INNER JOIN
+            UNID_MAT
+        ON
+            UNMA_COD = MATE_UNMA_COD
+    `
+}

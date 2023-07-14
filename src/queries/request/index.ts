@@ -1,5 +1,6 @@
-export const queryPegaTokenUserSql = (pediCod: string) => {
+export const queryPegaTokenUserSql = (pediCod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
       PEDI_USUA_COD_ASS_1,
       PEDI_USUA_COD_ASS_2,
