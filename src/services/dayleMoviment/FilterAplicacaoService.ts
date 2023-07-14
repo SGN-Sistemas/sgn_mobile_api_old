@@ -1,33 +1,31 @@
-import dotenv from 'dotenv'
 import { MovimentoDiarioRepository } from '../../typeorm/repository/movimentoDiarioRepositories'
-import jwt from 'jsonwebtoken'
 import { selectMovimentacaoAplicacao } from '../../queries/movDiaria'
 
-dotenv.config()
-
-interface IdecodeAcessToken {
-    refreshToken: string,
-    USUA_SIGLA: string,
-    codUser: string
-}
 interface IResponse {
+  status: number;
+  message: string | {
     DEBITO: number,
     CREDITO: number,
     SALDO: number,
     DATA: string
+  }
 }
 
 export class FilterAplicacao {
-  public async execute (TOKEN: string, aplicacao: string): Promise<IResponse> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+  public async execute (cod: string, aplicacao: string, database: string): Promise<IResponse> {
+    try {
+      const sql = selectMovimentacaoAplicacao(cod, aplicacao, database)
+      const movimentQuery = await MovimentoDiarioRepository.query(sql)
 
-    const decodeToken = jwt.verify(TOKEN, secretAcess) as IdecodeAcessToken
-
-    const USUA_SIGLA = decodeToken.USUA_SIGLA
-
-    const sql = selectMovimentacaoAplicacao(USUA_SIGLA, aplicacao)
-    const movimentQuery = await MovimentoDiarioRepository.query(sql)
-
-    return movimentQuery
+      return {
+        status: 200,
+        message: movimentQuery
+      }
+    } catch (err) {
+      return {
+        message: 'Internal Server Error',
+        status: 500
+      }
+    }
   }
 }

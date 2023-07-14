@@ -5,8 +5,10 @@ const dataAt = dataAtual()
 
 const dataMesAtras = data1Mes()
 
-export const selectMovimentacao = (login: string) => {
-  return `SELECT 
+export const selectMovimentacao = (cod: string, database: string) => {
+  return `
+    USE [${database}]
+    SELECT
             SUM(MODI_DEBITO) AS DEBITO,
             gaco_nome,
             SUM(MODI_CREDITO) AS CREDITO,
@@ -39,7 +41,7 @@ export const selectMovimentacao = (login: string) => {
           ON
             APCO_COD = ALCO_APCO_COD
           WHERE
-            USUA_SIGLA ='${login}' 
+            USUA_COD = ${cod} 
           AND
             MODI_DATA
           BETWEEN
@@ -55,8 +57,10 @@ export const selectMovimentacao = (login: string) => {
   `
 }
 
-export const selectMovimentacaoAplicacao = (login: string, aplicacao: string) => {
-  return `SELECT 
+export const selectMovimentacaoAplicacao = (cod: string, aplicacao: string, database: string) => {
+  return `
+    USE [${database}]
+    SELECT
             SUM(MODI_DEBITO) AS DEBITO,
             gaco_nome,
             SUM(MODI_CREDITO) AS CREDITO,
@@ -89,7 +93,7 @@ export const selectMovimentacaoAplicacao = (login: string, aplicacao: string) =>
           ON
             APCO_COD = ALCO_APCO_COD
           WHERE
-            USUA_SIGLA ='${login}' 
+            USUA_COD = ${cod} 
           AND
             GACO_NOME LIKE '%${aplicacao}%'
           AND
@@ -107,8 +111,10 @@ export const selectMovimentacaoAplicacao = (login: string, aplicacao: string) =>
   `
 }
 
-export const selectComboAplicacao = (login: string) => {
-  return `SELECT 
+export const selectComboAplicacao = (cod: string, database: string) => {
+  return `
+    USE [${database}]  
+    SELECT
             DISTINCT(gaco_nome)
           FROM
             USUARIO
@@ -141,12 +147,14 @@ export const selectComboAplicacao = (login: string) => {
           ON
             SUCC_COCO_COD = COCO_COD
           WHERE
-            USUA_SIGLA ='${login}'
+            USUA_CPD = ${cod}
   `
 }
 
-export const selectMovimentFilterData = (login: string, dataIni: string, dataFim: string) => {
-  return `SELECT 
+export const selectMovimentFilterData = (cod: string, dataIni: string, dataFim: string, database: string) => {
+  return `
+    USE [${database}]
+    SELECT
             APCO_NOME,
             MODI_DEBITO,
             MODI_CREDITO,
@@ -180,7 +188,7 @@ export const selectMovimentFilterData = (login: string, dataIni: string, dataFim
           ON
             APCO_COD = ALCO_APCO_COD
           WHERE
-            USUA_SIGLA ='${login}' 
+            USUA_COD = ${cod} 
           AND
             MODI_DATA
           BETWEEN
@@ -190,8 +198,10 @@ export const selectMovimentFilterData = (login: string, dataIni: string, dataFim
           `
 }
 
-export const selectMovimentFilterDataAndApl = (login: string, dataIni: string, dataFim: string, aplicacao: string) => {
-  return `SELECT 
+export const selectMovimentFilterDataAndApl = (cod: string, dataIni: string, dataFim: string, aplicacao: string, database: string) => {
+  return `
+    USE [${database}]
+    SELECT
             APCO_NOME,
             MODI_DEBITO,
             MODI_CREDITO,
@@ -225,7 +235,7 @@ export const selectMovimentFilterDataAndApl = (login: string, dataIni: string, d
           ON
             APCO_COD = ALCO_APCO_COD
           WHERE
-            USUA_SIGLA ='${login}' 
+            USUA_COD = ${cod}
           AND
             MODI_DATA
           BETWEEN
@@ -237,8 +247,10 @@ export const selectMovimentFilterDataAndApl = (login: string, dataIni: string, d
           `
 }
 
-export const selectMovimentDetailsDataAndApl = (login: string, data: string, aplicacao: string) => {
-  return `SELECT 
+export const selectMovimentDetailsDataAndApl = (cod: string, data: string, aplicacao: string, database: string) => {
+  return `
+    USE [${database}]
+    SELECT 
             APCO_NOME,
             MODI_DEBITO,
             MODI_CREDITO,
@@ -272,7 +284,7 @@ export const selectMovimentDetailsDataAndApl = (login: string, data: string, apl
           ON
             APCO_COD = ALCO_APCO_COD
           WHERE
-            USUA_SIGLA ='${login}' 
+            USUA_COD = ${cod} 
           AND
             MODI_DATA = '${data}'
           AND 
@@ -280,8 +292,9 @@ export const selectMovimentDetailsDataAndApl = (login: string, data: string, apl
           `
 }
 
-export const selectMovimentDetailsData = (login: string, data: string) => {
+export const selectMovimentDetailsData = (cod: string, data: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
       APCO_NOME,
       MODI_DEBITO,
@@ -316,7 +329,7 @@ export const selectMovimentDetailsData = (login: string, data: string) => {
     ON
       APCO_COD = ALCO_APCO_COD
     WHERE
-      USUA_SIGLA ='${login}' 
+      USUA_COD = ${cod} 
     AND
       MODI_DATA = '${data}'
 `
