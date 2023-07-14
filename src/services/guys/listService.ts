@@ -8,8 +8,8 @@ interface IPromise {
 }
 
 export class ListGuysService {
-  public async execute (): Promise<IPromise> {
-    const pessoalSql = selectAllPessoal()
+  public async execute (database: string): Promise<IPromise> {
+    const pessoalSql = selectAllPessoal(database)
     const users = await UsuarioRepository.query(pessoalSql)
     return ({
       message: users,

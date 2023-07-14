@@ -1,5 +1,6 @@
-export const selectAllPessoal = () => {
+export const selectAllPessoal = (database: string) => {
   return `
+        USE [${database}]
         SELECT
             PESS_NOME,
             PESS_COD
