@@ -1,17 +1,7 @@
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
 import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories'
 import { selectSoliComp1, selectSoliComp2 } from '../../queries/purchaseOrder'
 
-dotenv.config()
-
-interface IdecodeAcessToken {
-    refreshToken: string,
-    USUA_SIGLA: string,
-    codUser: string
-}
-
-interface IRequestBD {
+interface IReturnBd {
   SOCO_COD: number,
   SOCO_DTSOLI: string,
   SOCO_OBS: string,
@@ -22,34 +12,46 @@ interface IRequestBD {
   SOCO_ALMO_COD: number,
   SOCO_MATE_COD: number,
   ESTO_CUSTO_MEDIO: number,
-  valor_total:number,
-  ASS:string
+  valor_total: number,
+  ASS: string
+}
+
+interface IRequestBD {
+  error: boolean,
+  message: IReturnBd[] | string,
+  status: number
 }
 
 export class ListPurchaseOrderService {
-  public async execute (token: string): Promise<IRequestBD[]> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+  public async execute (cod: string, database: string): Promise<IRequestBD> {
+    try {
+      const query2 = selectSoliComp2(cod, database)
+      const query1 = selectSoliComp1(cod, database)
 
-    const decodeToken = jwt.verify(token, secretAcess) as IdecodeAcessToken
+      const listPurchaseOrder1 = await PedidoEstoqueRepository.query(query1)
+      const listPurchaseOrder2 = await PedidoEstoqueRepository.query(query2)
 
-    const cod = parseInt(decodeToken.codUser)
+      const orderArray: IReturnBd[] = []
 
-    const query2 = selectSoliComp2(cod)
-    const query1 = selectSoliComp1(cod)
+      if (listPurchaseOrder1.length > 0) {
+        listPurchaseOrder1.map((pos: IReturnBd) => orderArray.push(pos))
+      }
 
-    const listPurchaseOrder1 = await PedidoEstoqueRepository.query(query1)
-    const listPurchaseOrder2 = await PedidoEstoqueRepository.query(query2)
+      if (listPurchaseOrder2.length > 0) {
+        listPurchaseOrder2.map((pos: IReturnBd) => orderArray.push(pos))
+      }
 
-    const orderArray: IRequestBD[] = []
-
-    if (listPurchaseOrder1.length > 0) {
-      listPurchaseOrder1.map((pos: IRequestBD) => orderArray.push(pos))
+      return {
+        error: false,
+        message: orderArray,
+        status: 200
+      }
+    } catch (e) {
+      return {
+        error: true,
+        message: `Internal Server Error: ${e}`,
+        status: 500
+      }
     }
-
-    if (listPurchaseOrder2.length > 0) {
-      listPurchaseOrder2.map((pos: IRequestBD) => orderArray.push(pos))
-    }
-
-    return orderArray
   }
 }

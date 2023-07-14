@@ -114,8 +114,9 @@ export const queryPegaTokenUserSoco = (socoCod: string, database: string) => {
   `
 }
 
-export const selectSoliComp1 = (usuaCod: number) => {
+export const selectSoliComp1 = (usuaCod: string, database: string) => {
   return `
+    USE [${database}]   
     SELECT 
       SOCO_COD,
       SOCO_DTSOLI,
@@ -197,8 +198,9 @@ export const selectSoliComp1 = (usuaCod: number) => {
   `
 }
 
-export const selectSoliComp2 = (usuaCod: number) => {
+export const selectSoliComp2 = (usuaCod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
       SOCO_COD,
       SOCO_DTSOLI,

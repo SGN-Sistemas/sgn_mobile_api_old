@@ -92,6 +92,7 @@ export const selectTrpg = (usuaCod: string, autorizacaoCount: string, queryStrin
         trpg_dtorigem > '${dataBefore}T00:00:00.000Z'
     AND
         (
+
             SELECT
                 COUNT(RETU_DATA)
             FROM
@@ -100,7 +101,7 @@ export const selectTrpg = (usuaCod: string, autorizacaoCount: string, queryStrin
                 RETU_TRPP_COD = trpp_cod
             AND
                 RETU_USUA_COD = ${usuaCod}
-        )
+        )   
     <
         ${autorizacaoCount}
     ${queryString}

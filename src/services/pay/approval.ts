@@ -97,7 +97,7 @@ export class ApprovalPayService {
     } catch (e) {
       return {
         error: true,
-        message: `Transação ${trppCod} - não pode ser aprovada ${e}`,
+        message: `Internal Server Error: ${e}`,
         status: 500
       }
     }

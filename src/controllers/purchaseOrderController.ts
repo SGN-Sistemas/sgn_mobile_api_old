@@ -11,15 +11,9 @@ import { CreatePurchase } from '../services/purchase_order/createPurchase'
 
 export class PurchaseOrderController {
   public async list (request: Request, response: Response) {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
-
     const listPurchaseOrderService = new ListPurchaseOrderService()
 
-    const listPurchaseOrderServiceExec = await listPurchaseOrderService.execute(acessToken)
+    const listPurchaseOrderServiceExec = await listPurchaseOrderService.execute(request.user_cod, request.database)
 
     response.json(listPurchaseOrderServiceExec)
   }
