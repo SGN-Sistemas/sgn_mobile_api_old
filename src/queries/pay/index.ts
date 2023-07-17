@@ -1,7 +1,3 @@
-import data1Mes from '../../utils/pega1Mes'
-
-const dataBefore = data1Mes()
-
 export const approvalTrpp = (
   RETU_USUA_COD: string,
   RETU_TRPP_COD: string,
@@ -88,8 +84,7 @@ export const selectTrpg = (usuaCod: string, autorizacaoCount: string, queryStrin
         USCR_USUA_COD = ${usuaCod}
     AND
         USCR_AUTORIZA = 'S'
-    AND 
-        trpg_dtorigem > '${dataBefore}T00:00:00.000Z'
+
     AND
         (
 

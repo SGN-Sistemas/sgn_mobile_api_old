@@ -1,16 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
 import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories'
 import { selectSoliCompAlmoxarifado } from '../../queries/purchaseOrder'
-
-dotenv.config()
-
-interface IdecodeAcessToken {
-    refreshToken: string,
-    USUA_SIGLA: string,
-    codUser: string
-}
 
 interface IRequestBD {
     SOCO_COD: number,
@@ -26,31 +15,39 @@ interface IRequestBD {
     valor_total: number,
     ASS: string
 }
+interface IResponse {
+  message: string | IRequestBD[];
+  status: number;
+}
 
 export class ListPurchaseOrderWarehouseService {
-  public async execute (token: string, almoDesc:string): Promise<IRequestBD[]> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+  public async execute (cod: string, almoDesc: string, database: string): Promise<IResponse> {
+    try {
+      const query2 = selectSoliCompAlmoxarifado(cod, almoDesc, '1', database)
+      const query1 = selectSoliCompAlmoxarifado(cod, almoDesc, '2', database)
 
-    const decodeToken = jwt.verify(token, secretAcess) as IdecodeAcessToken
+      const listPurchaseOrder1 = await PedidoEstoqueRepository.query(query1)
+      const listPurchaseOrder2 = await PedidoEstoqueRepository.query(query2)
 
-    const cod = parseInt(decodeToken.codUser)
+      const orderArray: IRequestBD[] = []
 
-    const query2 = selectSoliCompAlmoxarifado(cod, almoDesc, '1')
-    const query1 = selectSoliCompAlmoxarifado(cod, almoDesc, '2')
+      if (listPurchaseOrder1.length > 0) {
+        listPurchaseOrder1.map((pos: IRequestBD) => orderArray.push(pos))
+      }
 
-    const listPurchaseOrder1 = await PedidoEstoqueRepository.query(query1)
-    const listPurchaseOrder2 = await PedidoEstoqueRepository.query(query2)
+      if (listPurchaseOrder2.length > 0) {
+        listPurchaseOrder2.map((pos: IRequestBD) => orderArray.push(pos))
+      }
 
-    const orderArray: IRequestBD[] = []
-
-    if (listPurchaseOrder1.length > 0) {
-      listPurchaseOrder1.map((pos: any) => orderArray.push(pos))
+      return {
+        message: orderArray,
+        status: 200
+      }
+    } catch (e) {
+      return {
+        message: 'Internal Server Error',
+        status: 500
+      }
     }
-
-    if (listPurchaseOrder2.length > 0) {
-      listPurchaseOrder2.map((pos: any) => orderArray.push(pos))
-    }
-
-    return orderArray
   }
 }

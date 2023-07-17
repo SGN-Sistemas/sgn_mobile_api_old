@@ -14,7 +14,8 @@ interface Iparametros {
   socoNum: string,
   pessCodSoli: string,
   ass1: string,
-  ass2: string
+  ass2: string,
+  database: string
 }
 
 export const insertSoco = ({
@@ -33,9 +34,11 @@ export const insertSoco = ({
   socoNum,
   pessCodSoli,
   ass1,
-  ass2
+  ass2,
+  database
 }: Iparametros) => {
   return `
+    USE [${database}]
     INSERT INTO 
       SOLICITACAO_COMPRA
       (
@@ -284,8 +287,9 @@ export const selectSoliComp2 = (usuaCod: string, database: string) => {
   `
 }
 
-export const selectSoliCompNumero = (usuaCod: number, socoNUMERO: string, pos: string) => {
+export const selectSoliCompNumero = (usuaCod: string, socoNUMERO: string, pos: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
       SOCO_COD,
       SOCO_DTSOLI,
@@ -369,8 +373,9 @@ export const selectSoliCompNumero = (usuaCod: number, socoNUMERO: string, pos: s
   `
 }
 
-export const selectSoliCompAlmoxarifado = (usuaCod: number, almoDesc: string, pos: string) => {
+export const selectSoliCompAlmoxarifado = (usuaCod: string, almoDesc: string, pos: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
       SOCO_COD,
       SOCO_DTSOLI,
@@ -454,8 +459,9 @@ export const selectSoliCompAlmoxarifado = (usuaCod: number, almoDesc: string, po
   `
 }
 
-export const selectSoliCompCR = (usuaCod: number, cereNome: string, pos: string) => {
+export const selectSoliCompCR = (usuaCod: string, cereNome: string, pos: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
       SOCO_COD,
       SOCO_DTSOLI,
@@ -539,8 +545,9 @@ export const selectSoliCompCR = (usuaCod: number, cereNome: string, pos: string)
   `
 }
 
-export const selectSoliCompSetorCompras = (usuaCod: number, SECO_DESC: string, pos: string) => {
+export const selectSoliCompSetorCompras = (usuaCod: string, SECO_DESC: string, pos: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
       SOCO_COD,
       SOCO_DTSOLI,
@@ -624,8 +631,9 @@ export const selectSoliCompSetorCompras = (usuaCod: number, SECO_DESC: string, p
   `
 }
 
-export const selectSoliCompData = (usuaCod: number, SOCO_DTSOLI: string, pos: string) => {
+export const selectSoliCompData = (usuaCod: string, SOCO_DTSOLI: string, pos: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
       SOCO_COD,
       SOCO_DTSOLI,
@@ -709,8 +717,9 @@ export const selectSoliCompData = (usuaCod: number, SOCO_DTSOLI: string, pos: st
   `
 }
 
-export const updateASSSolicitacao = (socoCod: string, posCod: string, sqlQuery: string) => {
+export const updateASSSolicitacao = (socoCod: string, posCod: string, sqlQuery: string, database: string) => {
   return `
+    USE [${database}]
     UPDATE 
         SOLICITACAO_COMPRA
     SET

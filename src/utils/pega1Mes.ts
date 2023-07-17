@@ -2,7 +2,7 @@
 const data1Mes = () => {
   const date = new Date()
 
-  date.setDate(date.getDate() - 30)
+  date.setDate(date.getDate() - 60)
 
   let data:any
 

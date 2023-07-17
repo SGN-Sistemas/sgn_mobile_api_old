@@ -1,12 +1,20 @@
 import { Request, Response } from 'express'
 import { ListPayService } from '../services/pay/listService'
 import { ApprovalPayService } from '../services/pay/approval'
+import data1Mes from '../utils/pega1Mes'
+
+const dataBefore = data1Mes()
 
 export class PayControllers {
   public async list (request: Request, response: Response): Promise<Response> {
     const listPayService = new ListPayService()
 
-    const listPayServiceExec = await listPayService.execute(request.user_cod, '', request.database)
+    const queryString = `
+    AND
+      trpg_dtorigem > '${dataBefore}T00:00:00.000Z'
+    `
+
+    const listPayServiceExec = await listPayService.execute(request.user_cod, queryString, request.database)
     return response.status(listPayServiceExec.status).json(listPayServiceExec.message)
   }
 

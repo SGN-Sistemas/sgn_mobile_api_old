@@ -1,15 +1,5 @@
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
 import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories'
 import { insertSoco } from '../../queries/purchaseOrder'
-
-dotenv.config()
-
-interface IdecodeAcessToken {
-    refreshToken: string,
-    USUA_SIGLA: string,
-    codUser: string
-}
 
 interface IResponse {
     message: string,
@@ -30,7 +20,8 @@ interface Iparametros {
   pessCodSoli: string,
   ass1: string,
   ass2: string,
-  token: string
+  cod: string,
+  database: string
 }
 
 export class CreatePurchase {
@@ -47,24 +38,10 @@ export class CreatePurchase {
     pessCodSoli,
     ass1,
     ass2,
-    token
+    cod,
+    database
   }: Iparametros): Promise<IResponse> {
     try {
-      const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
-
-      const decodeToken = jwt.verify(token, secretAcess) as IdecodeAcessToken
-
-      const cod = parseInt(decodeToken.codUser)
-
-      const existsUser = await UsuarioRepository.findOneBy({ USUA_COD: cod })
-      if (!existsUser) {
-        return ({
-          message: 'Usuario inexistente',
-          status: 422,
-          error: true
-        })
-      }
-
       const dt = new Date()
 
       let data: number | string
@@ -78,6 +55,7 @@ export class CreatePurchase {
       const dtSoli = dt.getFullYear() + '-' + month + '-' + data
 
       const sqlSocoCodMax1 = `
+      USE [${database}]
       SELECT 
         MAX(SOCO_COD) + 1 as COD
       FROM 
@@ -91,6 +69,7 @@ export class CreatePurchase {
       const socoCodUltimo = socoCod - 1
 
       const sqlSocoNum = `
+      USE [${database}]
         SELECT
           (ISNULL(SOCO_NUMERO,0) + 1) AS SOCO_NUMERO
         FROM
@@ -123,7 +102,8 @@ export class CreatePurchase {
         socoNum,
         pessCodSoli,
         ass1,
-        ass2
+        ass2,
+        database
       })
 
       console.log('====================================')
@@ -138,8 +118,8 @@ export class CreatePurchase {
       })
     } catch (e) {
       return ({
-        message: e + '',
-        status: 400,
+        message: 'Intertanl server error',
+        status: 500,
         error: true
       })
     }

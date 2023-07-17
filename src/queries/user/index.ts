@@ -16,7 +16,8 @@ export const verifyUserQuery = (user: string, database: string): string => {
       USUA_COD,
       USUA_NOME,
       USUA_SENHA_APP,
-      USUA_BLOQ
+      USUA_BLOQ,
+      usua_valor_aprov_solic
     FROM 
       USUARIO
     WHERE
@@ -32,7 +33,8 @@ export const verifyUserCodQuery = (cod: string, database: string): string => {
       USUA_NOME,
       USUA_SENHA_APP,
       USUA_BLOQ,
-      USUA_TIPO
+      USUA_TIPO,
+      usua_valor_aprov_solic 
     FROM 
       USUARIO
     WHERE

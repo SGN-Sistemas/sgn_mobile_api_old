@@ -8,6 +8,7 @@ interface IVerifyUser {
     error: boolean;
     status: number;
     userCod: number | string;
+    usua_valor_aprov_solic: string;
 }
 
 interface IVerifyUserWithout {
@@ -33,7 +34,8 @@ export const verifyUserLogin =
        message: 'Login ou senha incorreto',
        error: true,
        status: 400,
-       userCod: ''
+       userCod: '',
+       usua_valor_aprov_solic: ''
      })
    }
 
@@ -42,7 +44,8 @@ export const verifyUserLogin =
        message: 'Úsuario sem senha cadastrada',
        error: true,
        status: 400,
-       userCod: ''
+       userCod: '',
+       usua_valor_aprov_solic: ''
      })
    }
 
@@ -55,7 +58,8 @@ export const verifyUserLogin =
        message: 'Login ou senha incorreto',
        error: true,
        status: 400,
-       userCod: ''
+       userCod: '',
+       usua_valor_aprov_solic: ''
      })
    }
 
@@ -64,14 +68,16 @@ export const verifyUserLogin =
        message: 'Úsuario bloqueado',
        error: true,
        status: 400,
-       userCod: ''
+       userCod: '',
+       usua_valor_aprov_solic: ''
      })
    }
    return ({
      message: '',
      error: false,
      userCod: existsUser[0].USUA_COD,
-     status: 0
+     status: 0,
+     usua_valor_aprov_solic: ''
    })
  }
 
@@ -85,7 +91,8 @@ export const verifyUserApproval =
         message: 'Senha incorreto',
         error: true,
         status: 400,
-        userCod: ''
+        userCod: '',
+        usua_valor_aprov_solic: ''
       })
     }
 
@@ -94,7 +101,8 @@ export const verifyUserApproval =
         message: 'Úsuario sem senha cadastrada',
         error: true,
         status: 400,
-        userCod: ''
+        userCod: '',
+        usua_valor_aprov_solic: ''
       })
     }
 
@@ -107,7 +115,8 @@ export const verifyUserApproval =
         message: 'Senha incorreto',
         error: true,
         status: 400,
-        userCod: ''
+        userCod: '',
+        usua_valor_aprov_solic: ''
       })
     }
 
@@ -116,14 +125,16 @@ export const verifyUserApproval =
         message: 'Úsuario bloqueado',
         error: true,
         status: 400,
-        userCod: ''
+        userCod: '',
+        usua_valor_aprov_solic: ''
       })
     }
     return ({
       message: '',
       error: false,
       userCod: existsUser[0].USUA_COD,
-      status: 0
+      status: 0,
+      usua_valor_aprov_solic: existsUser[0].usua_valor_aprov_solic
     })
   }
 
@@ -179,7 +190,8 @@ export const verifyUsercod =
         message: 'Login ou senha incorreto',
         error: true,
         status: 400,
-        userCod: ''
+        userCod: '',
+        usua_valor_aprov_solic: ''
       })
     }
 
@@ -188,7 +200,8 @@ export const verifyUsercod =
         message: 'Úsuario sem senha cadastrada',
         error: true,
         status: 400,
-        userCod: ''
+        userCod: '',
+        usua_valor_aprov_solic: ''
       })
     }
 
@@ -201,7 +214,8 @@ export const verifyUsercod =
         message: 'Login ou senha incorreto',
         error: true,
         status: 400,
-        userCod: ''
+        userCod: '',
+        usua_valor_aprov_solic: ''
       })
     }
 
@@ -210,14 +224,16 @@ export const verifyUsercod =
         message: 'Úsuario bloqueado',
         error: true,
         status: 400,
-        userCod: ''
+        userCod: '',
+        usua_valor_aprov_solic: ''
       })
     }
     return ({
       message: '',
       error: false,
       userCod: existsUser[0].USUA_COD,
-      status: 0
+      status: 0,
+      usua_valor_aprov_solic: ''
     })
   }
 
