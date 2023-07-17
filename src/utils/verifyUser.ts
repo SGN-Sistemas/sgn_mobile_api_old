@@ -4,11 +4,14 @@ import bcrypt from 'bcrypt'
 import validPassword from './validPassword'
 
 interface IVerifyUser {
-    message: string;
-    error: boolean;
-    status: number;
-    userCod: number | string;
-    usua_valor_aprov_solic: string;
+  message: string;
+  error: boolean;
+  status: number;
+  userCod: number | string;
+  usua_valor_aprov_solic: string;
+  USUA_VALOR_APROVACAO_MENSAL: string;
+  USUA_VALOR_APROVACAO: string;
+  USUA_TIPO?: string;
 }
 
 interface IVerifyUserWithout {
@@ -35,7 +38,9 @@ export const verifyUserLogin =
        error: true,
        status: 400,
        userCod: '',
-       usua_valor_aprov_solic: ''
+       usua_valor_aprov_solic: '',
+       USUA_VALOR_APROVACAO: '',
+       USUA_VALOR_APROVACAO_MENSAL: ''
      })
    }
 
@@ -45,7 +50,9 @@ export const verifyUserLogin =
        error: true,
        status: 400,
        userCod: '',
-       usua_valor_aprov_solic: ''
+       usua_valor_aprov_solic: '',
+       USUA_VALOR_APROVACAO: '',
+       USUA_VALOR_APROVACAO_MENSAL: ''
      })
    }
 
@@ -59,7 +66,9 @@ export const verifyUserLogin =
        error: true,
        status: 400,
        userCod: '',
-       usua_valor_aprov_solic: ''
+       usua_valor_aprov_solic: '',
+       USUA_VALOR_APROVACAO: '',
+       USUA_VALOR_APROVACAO_MENSAL: ''
      })
    }
 
@@ -69,7 +78,9 @@ export const verifyUserLogin =
        error: true,
        status: 400,
        userCod: '',
-       usua_valor_aprov_solic: ''
+       usua_valor_aprov_solic: '',
+       USUA_VALOR_APROVACAO: '',
+       USUA_VALOR_APROVACAO_MENSAL: ''
      })
    }
    return ({
@@ -77,7 +88,9 @@ export const verifyUserLogin =
      error: false,
      userCod: existsUser[0].USUA_COD,
      status: 0,
-     usua_valor_aprov_solic: ''
+     usua_valor_aprov_solic: '',
+     USUA_VALOR_APROVACAO: existsUser[0].USUA_VALOR_APROVACAO,
+     USUA_VALOR_APROVACAO_MENSAL: existsUser[0].USUA_VALOR_APROVACAO_MENSAL
    })
  }
 
@@ -92,7 +105,9 @@ export const verifyUserApproval =
         error: true,
         status: 400,
         userCod: '',
-        usua_valor_aprov_solic: ''
+        usua_valor_aprov_solic: '',
+        USUA_VALOR_APROVACAO: '',
+        USUA_VALOR_APROVACAO_MENSAL: ''
       })
     }
 
@@ -102,7 +117,9 @@ export const verifyUserApproval =
         error: true,
         status: 400,
         userCod: '',
-        usua_valor_aprov_solic: ''
+        usua_valor_aprov_solic: '',
+        USUA_VALOR_APROVACAO: '',
+        USUA_VALOR_APROVACAO_MENSAL: ''
       })
     }
 
@@ -116,7 +133,9 @@ export const verifyUserApproval =
         error: true,
         status: 400,
         userCod: '',
-        usua_valor_aprov_solic: ''
+        usua_valor_aprov_solic: '',
+        USUA_VALOR_APROVACAO: '',
+        USUA_VALOR_APROVACAO_MENSAL: ''
       })
     }
 
@@ -126,7 +145,9 @@ export const verifyUserApproval =
         error: true,
         status: 400,
         userCod: '',
-        usua_valor_aprov_solic: ''
+        usua_valor_aprov_solic: '',
+        USUA_VALOR_APROVACAO: '',
+        USUA_VALOR_APROVACAO_MENSAL: ''
       })
     }
     return ({
@@ -134,7 +155,9 @@ export const verifyUserApproval =
       error: false,
       userCod: existsUser[0].USUA_COD,
       status: 0,
-      usua_valor_aprov_solic: existsUser[0].usua_valor_aprov_solic
+      usua_valor_aprov_solic: existsUser[0].usua_valor_aprov_solic,
+      USUA_VALOR_APROVACAO: existsUser[0].USUA_VALOR_APROVACAO,
+      USUA_VALOR_APROVACAO_MENSAL: existsUser[0].USUA_VALOR_APROVACAO_MENSAL
     })
   }
 
@@ -191,7 +214,9 @@ export const verifyUsercod =
         error: true,
         status: 400,
         userCod: '',
-        usua_valor_aprov_solic: ''
+        usua_valor_aprov_solic: '',
+        USUA_VALOR_APROVACAO: '',
+        USUA_VALOR_APROVACAO_MENSAL: ''
       })
     }
 
@@ -201,7 +226,9 @@ export const verifyUsercod =
         error: true,
         status: 400,
         userCod: '',
-        usua_valor_aprov_solic: ''
+        usua_valor_aprov_solic: '',
+        USUA_VALOR_APROVACAO: '',
+        USUA_VALOR_APROVACAO_MENSAL: ''
       })
     }
 
@@ -215,7 +242,9 @@ export const verifyUsercod =
         error: true,
         status: 400,
         userCod: '',
-        usua_valor_aprov_solic: ''
+        usua_valor_aprov_solic: '',
+        USUA_VALOR_APROVACAO: '',
+        USUA_VALOR_APROVACAO_MENSAL: ''
       })
     }
 
@@ -225,7 +254,9 @@ export const verifyUsercod =
         error: true,
         status: 400,
         userCod: '',
-        usua_valor_aprov_solic: ''
+        usua_valor_aprov_solic: '',
+        USUA_VALOR_APROVACAO: '',
+        USUA_VALOR_APROVACAO_MENSAL: ''
       })
     }
     return ({
@@ -233,7 +264,51 @@ export const verifyUsercod =
       error: false,
       userCod: existsUser[0].USUA_COD,
       status: 0,
-      usua_valor_aprov_solic: ''
+      usua_valor_aprov_solic: '',
+      USUA_VALOR_APROVACAO: existsUser[0].USUA_VALOR_APROVACAO,
+      USUA_VALOR_APROVACAO_MENSAL: existsUser[0].USUA_VALOR_APROVACAO_MENSAL
+    })
+  }
+
+export const verifyUsercodWithoutPassword =
+  async (cod: string, database: string): Promise<IVerifyUser> => {
+    const sqlVerifyUser = verifyUserCodQuery(cod, database)
+    const existsUser = await UsuarioRepository.query(sqlVerifyUser)
+
+    if (!existsUser[0]) {
+      return ({
+        message: 'Login ou senha incorreto',
+        error: true,
+        status: 400,
+        userCod: '',
+        usua_valor_aprov_solic: '',
+        USUA_VALOR_APROVACAO: '',
+        USUA_VALOR_APROVACAO_MENSAL: '',
+        USUA_TIPO: ''
+      })
+    }
+
+    if (existsUser[0].USUA_BLOQ !== 'N') {
+      return ({
+        message: 'Úsuario bloqueado',
+        error: true,
+        status: 400,
+        userCod: '',
+        usua_valor_aprov_solic: '',
+        USUA_VALOR_APROVACAO: '',
+        USUA_VALOR_APROVACAO_MENSAL: '',
+        USUA_TIPO: ''
+      })
+    }
+    return ({
+      message: '',
+      error: false,
+      userCod: existsUser[0].USUA_COD,
+      status: 0,
+      usua_valor_aprov_solic: '',
+      USUA_VALOR_APROVACAO: existsUser[0].USUA_VALOR_APROVACAO,
+      USUA_VALOR_APROVACAO_MENSAL: existsUser[0].USUA_VALOR_APROVACAO_MENSAL,
+      USUA_TIPO: existsUser[0].USUA_TIPO
     })
   }
 

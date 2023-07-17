@@ -1,15 +1,5 @@
 import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories'
 import { selectPurchaseWorksheet } from '../../queries/purchaseWorksheet'
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
-
-dotenv.config()
-
-interface IdecodeAcessToken {
-    refreshToken: string,
-    USUA_SIGLA: string,
-    codUser: string
-}
 
 interface iArrayPurchaseWorksheet {
     PLAC_SECO_COD: string;
@@ -22,22 +12,11 @@ interface iArrayPurchaseWorksheet {
 }
 
 export class ListPurcahseWorksheet {
-  public async execute (TOKEN: string) {
+  public async execute (cod: string, database: string) {
     try {
-      const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+      const selectWorksheet = selectPurchaseWorksheet(cod, '1', database)
+      const selectWorksheet2 = selectPurchaseWorksheet(cod, '2', database)
 
-      const decodeToken = jwt.verify(TOKEN, secretAcess) as IdecodeAcessToken
-
-      const cod = decodeToken.codUser
-
-      const selectWorksheet = selectPurchaseWorksheet(cod, '1')
-      console.log('====================================')
-      console.log(selectWorksheet)
-      console.log('====================================')
-      const selectWorksheet2 = selectPurchaseWorksheet(cod, '2')
-      console.log('====================================')
-      console.log(selectWorksheet2)
-      console.log('====================================')
       const selectWorksheetExec = await PedidoEstoqueRepository.query(selectWorksheet)
       const selectWorksheetExec2 = await PedidoEstoqueRepository.query(selectWorksheet2)
 
@@ -56,8 +35,8 @@ export class ListPurcahseWorksheet {
       })
     } catch (e) {
       return ({
-        message: 'Erro' + e,
-        status: 400
+        message: 'Internal server error',
+        status: 500
       })
     }
   }

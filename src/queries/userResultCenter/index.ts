@@ -1,5 +1,6 @@
-export const selectUsuaCrParametros = (cod:string, cereCod:string) => {
+export const selectUsuaCrParametros = (cod:string, cereCod:string, database: string) => {
   return `
+    USE [${database}]
     SELECT
         USCR_VLR_MAX_APROV_PED,
         USCR_VLR_MAX_APROV_PED_FORN
@@ -12,8 +13,9 @@ export const selectUsuaCrParametros = (cod:string, cereCod:string) => {
   `
 }
 
-export const selectUsuaCr = (cod:string) => {
+export const selectUsuaCr = (cod:string, database: string) => {
   return `
+    USE [${database}]
     SELECT
         USCR_CERE_COD
     FROM

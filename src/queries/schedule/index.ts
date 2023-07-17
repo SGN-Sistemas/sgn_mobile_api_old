@@ -1,5 +1,6 @@
-export const selectPefiPejuPess = () => {
+export const selectPefiPejuPess = (database: string) => {
   return `
+    USE [${database}]
     SELECT
       PESS_NOME AS NOME,
       PESS_END AS ENDERECO, 

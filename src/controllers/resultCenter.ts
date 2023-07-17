@@ -4,17 +4,11 @@ import { DetailsResultCenterService } from '../services/resultCenter/detailsServ
 
 export default class ResultCenterController {
   public async list (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
-
     const listResultCenterService = new ListResultCenterService()
 
-    const execute = await listResultCenterService.execute(acessToken)
+    const execute = await listResultCenterService.execute(request.user_cod, request.database)
 
-    return response.json(execute)
+    return response.status(execute.status).json(execute.message)
   }
 
   public async listDetails (request: Request, response: Response): Promise<Response> {
@@ -31,9 +25,10 @@ export default class ResultCenterController {
       cod,
       planoContas,
       dataIni,
-      dataFim
+      dataFim,
+      request.database
     )
 
-    return response.json(execute)
+    return response.status(execute.status).json(execute.message)
   }
 }

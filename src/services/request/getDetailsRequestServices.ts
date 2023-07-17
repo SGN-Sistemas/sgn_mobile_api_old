@@ -1,11 +1,26 @@
 import { selectPedidosItemServico } from '../../queries/request'
 import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories'
 
-export class GetDetailsRequestServices {
-  public async execute (PEDI_COD : string) {
-    const sql = selectPedidosItemServico(PEDI_COD)
+interface IResponse {
+  status: number;
+  message: string | []
+}
 
-    const requestItens = await PedidoEstoqueRepository.query(sql)
-    return requestItens
+export class GetDetailsRequestServices {
+  public async execute (PEDI_COD: string, database: string): Promise<IResponse> {
+    try {
+      const sql = selectPedidosItemServico(PEDI_COD, database)
+
+      const requestItens = await PedidoEstoqueRepository.query(sql)
+      return {
+        status: 200,
+        message: requestItens
+      }
+    } catch (e) {
+      return {
+        status: 500,
+        message: 'Internal server error'
+      }
+    }
   }
 }

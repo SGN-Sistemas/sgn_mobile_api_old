@@ -13,8 +13,19 @@ export class ApprovalPurchaseOrderService {
     try {
       const {
         // eslint-disable-next-line camelcase
-        usua_valor_aprov_solic
+        usua_valor_aprov_solic,
+        error,
+        message,
+        status
       } = await verifyUserApproval(sigla, password, database)
+
+      if (error) {
+        return ({
+          message,
+          error,
+          status
+        })
+      }
 
       if (Number(usua_valor_aprov_solic) < valorTotalSoco) {
         return ({

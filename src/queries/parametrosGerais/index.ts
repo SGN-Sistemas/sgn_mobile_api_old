@@ -1,8 +1,9 @@
-export const selectPag2ContrUsuaSmpCrPedCom = () => {
+export const selectPag2ContrUsuaSmpCrPedCom = (database: string) => {
   return `
-    SELECT 
-        PAG2_CONTR_USUA_SMP_CR_PED_COM 
-    FROM 
+    USE [${database}]
+    SELECT
+        PAG2_CONTR_USUA_SMP_CR_PED_COM
+    FROM
         PARAMETROS_GERAIS_2
   `
 }

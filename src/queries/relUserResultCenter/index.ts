@@ -1,5 +1,6 @@
-export const selectCRUsua = (cod: string) => {
+export const selectCRUsua = (cod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
         USCR_CERE_COD
     FROM

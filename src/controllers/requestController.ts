@@ -5,28 +5,17 @@ import { GetDetailsRequestServices } from '../services/request/getDetailsRequest
 import { selectCerePeitPedi } from '../queries/request'
 import { PedidoEstoqueRepository } from '../typeorm/repository/pedidoEstoqueRepositories'
 import { validCereFornPedi } from '../services/request/validCereForn'
+
 export default class DailyMovimentController {
   public async list (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
-
     const listPedidoService = new ListPedidoService()
 
-    const execute = await listPedidoService.execute(acessToken, '')
+    const execute = await listPedidoService.execute(request.user_cod, '', request.database)
 
-    return response.json(execute)
+    return response.status(execute.status).json(execute.message)
   }
 
   public async listNumber (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
-
     const { numero } = request.params
 
     const queryString = `
@@ -36,18 +25,12 @@ export default class DailyMovimentController {
 
     const listPedidoNumberService = new ListPedidoService()
 
-    const execute = await listPedidoNumberService.execute(acessToken, queryString)
+    const execute = await listPedidoNumberService.execute(request.user_cod, queryString, request.database)
 
-    return response.json(execute)
+    return response.status(execute.status).json(execute.message)
   }
 
   public async listForn (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
-
     const { forn } = request.params
 
     const queryString = `
@@ -57,18 +40,12 @@ export default class DailyMovimentController {
 
     const listPedidoFornService = new ListPedidoService()
 
-    const execute = await listPedidoFornService.execute(acessToken, queryString)
+    const execute = await listPedidoFornService.execute(request.user_cod, queryString, request.database)
 
-    return response.json(execute)
+    return response.status(execute.status).json(execute.message)
   }
 
   public async listFunc (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
-
     const { func } = request.params
     const queryString = `
     AND
@@ -76,20 +53,12 @@ export default class DailyMovimentController {
     `
     const listPedidoFuncService = new ListPedidoService()
 
-    const execute = await listPedidoFuncService.execute(acessToken, queryString)
+    const execute = await listPedidoFuncService.execute(request.user_cod, queryString, request.database)
 
-    return response.json(execute)
+    return response.status(execute.status).json(execute.message)
   }
 
   public async approvalRequest (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-
-    const [, acessToken] = authHeader.split(' ')
-
     const { USUA_SENHA_APP, posUsuaCod, pediCod, fornCod, valTotal, pediNumero } = request.body
 
     const approvalRequestService = new ApprovalRequestService()
@@ -99,27 +68,19 @@ export default class DailyMovimentController {
     const sqlExec = await PedidoEstoqueRepository.query(sql)
 
     for (let i = 0; i < sqlExec.length; i++) {
-      const valid = await validCereFornPedi(acessToken, sqlExec[i].CERE_COD, valTotal, fornCod, pediCod)
+      const valid = await validCereFornPedi(request.user_cod, sqlExec[i].CERE_COD, valTotal, fornCod, pediCod, request.database)
 
       if (valid.error === true) {
         return response.status(valid.status).json(valid)
       }
     }
 
-    const approvalRequestExec = await approvalRequestService.execute(acessToken, USUA_SENHA_APP, posUsuaCod, pediCod, pediNumero)
+    const approvalRequestExec = await approvalRequestService.execute(request.user_sigla, USUA_SENHA_APP, posUsuaCod, pediCod, pediNumero, request.database)
 
     return response.status(approvalRequestExec.status).json(approvalRequestExec)
   }
 
   public async approvalLargeScale (request: Request, response: Response) {
-    const authHeader = request.headers.authorization
-
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-
-    const [, acessToken] = authHeader.split(' ')
-
     const { USUA_SENHA_APP, arrayPedido } = request.body
 
     const pedidosTxt: string[] = []
@@ -129,12 +90,12 @@ export default class DailyMovimentController {
     let error = false
 
     for await (const item of arrayPedido) {
-      const sql = selectCerePeitPedi(item[0].pediCod)
+      const sql = selectCerePeitPedi(item.pediCod)
 
       const sqlExec = await PedidoEstoqueRepository.query(sql)
 
       for (let i = 0; i < sqlExec.length; i++) {
-        const valid = await validCereFornPedi(acessToken, sqlExec[i].CERE_COD, item[0].valTotal, item[0].fornCod, item[0].pediCod)
+        const valid = await validCereFornPedi(request.user_cod, sqlExec[i].CERE_COD, item.valTotal, item.fornCod, item.pediCod, request.database)
 
         if (valid.error === true) {
           pedidosTxt.push(valid.message)
@@ -149,7 +110,7 @@ export default class DailyMovimentController {
         if (i === sqlExec.length || valid.error === false) {
           const approvalRequestService = new ApprovalRequestService()
 
-          const approvalRequestExec = await approvalRequestService.execute(acessToken, USUA_SENHA_APP, item[0].ASS, item[0].pediCod, item[0].pediNumero)
+          const approvalRequestExec = await approvalRequestService.execute(request.user_cod, USUA_SENHA_APP, item.ASS, item.pediCod, item.pediNumero, request.database)
 
           pedidosTxt.push(approvalRequestExec.message)
 
@@ -168,16 +129,12 @@ export default class DailyMovimentController {
   }
 
   public async listItems (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'Token is missing' })
-    }
     const { pediCod } = request.params
 
     const getDetailsRequestServices = new GetDetailsRequestServices()
 
-    const execute = await getDetailsRequestServices.execute(pediCod)
+    const execute = await getDetailsRequestServices.execute(pediCod, request.database)
 
-    return response.json(execute)
+    return response.status(execute.status).json(execute.message)
   }
 }

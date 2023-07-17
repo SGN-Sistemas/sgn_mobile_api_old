@@ -107,8 +107,9 @@ export const countNumAprovaPedido = (cod: string) => {
   `
 }
 
-export const updatePedidoASS = (pediCod: string, pos: string, sqlQuery: string) => {
+export const updatePedidoASS = (pediCod: string, pos: string, sqlQuery: string, database: string) => {
   return `
+    USE [${database}]
     UPDATE 
         PEDIDO_ESTOQUE
     SET
@@ -121,8 +122,9 @@ export const updatePedidoASS = (pediCod: string, pos: string, sqlQuery: string) 
   `
 }
 
-export const selectPedidosItemServico = (pediCod: string) => {
+export const selectPedidosItemServico = (pediCod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
         PEIT_VALORUNI AS VALOR_UNITARIO,
         UNMA_DESC AS DESCRICAO_MEDIDA,
@@ -197,8 +199,9 @@ export const selectPedidosItemServico = (pediCod: string) => {
     `
 }
 
-export const selectPedidoEstoque1 = (usuaCod: string, queryString: string) => {
+export const selectPedidoEstoque1 = (usuaCod: string, queryString: string, database: string) => {
   return `
+    USE [${database}]
     SELECT  TOP 100
       PEDI_TOTAL_MERC,
       PEDI_OBS,
@@ -275,8 +278,9 @@ export const selectPedidoEstoque1 = (usuaCod: string, queryString: string) => {
   `
 }
 
-export const selectPedidoEstoque2 = (usuaCod: string, queryString: string) => {
+export const selectPedidoEstoque2 = (usuaCod: string, queryString: string, database: string) => {
   return ` 
+    USE [${database}]
     SELECT  TOP 100
       PEDI_OBS, 
       PEDI_DESCONTO,
@@ -355,8 +359,9 @@ export const selectPedidoEstoque2 = (usuaCod: string, queryString: string) => {
   `
 }
 
-export const selectPedidoEstoque3 = (usuaCod: string, queryString: string) => {
+export const selectPedidoEstoque3 = (usuaCod: string, queryString: string, database: string) => {
   return `
+    USE [${database}]
     SELECT TOP 100
       PEDI_OBS,
       PEDI_DESCONTO,
@@ -438,8 +443,9 @@ export const selectPedidoEstoque3 = (usuaCod: string, queryString: string) => {
         PEDI_DATA DESC`
 }
 
-export const selectPedidoEstoque4 = (usuaCod: string, queryString: string) => {
+export const selectPedidoEstoque4 = (usuaCod: string, queryString: string, database: string) => {
   return `
+    USE [${database}]
     SELECT TOP 100
       PEDI_OBS,
       PEDI_DESCONTO,
@@ -522,8 +528,9 @@ export const selectPedidoEstoque4 = (usuaCod: string, queryString: string) => {
     `
 }
 
-export const totalFornCerePedido = (cereCod: string, fornCod: string, queryString: string) => {
+export const totalFornCerePedido = (cereCod: string, fornCod: string, queryString: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
       AUX.FORNECEDOR,
       AUX.CR,
@@ -583,8 +590,9 @@ export const totalFornCerePedido = (cereCod: string, fornCod: string, queryStrin
   `
 }
 
-export const totalUsuaPedido = (usuaCod: string, queryString: string) => {
+export const totalUsuaPedido = (usuaCod: string, queryString: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
       PEDI_COD AS COD,
       (
@@ -656,8 +664,9 @@ export const selectCerePeitPedi = (cod: string) => {
   `
 }
 
-export const selectPedidoEstoqueCere1 = (usuaCod: string, queryString: string, queryStringPese: string, queryStringPeit: string) => {
+export const selectPedidoEstoqueCere1 = (usuaCod: string, queryString: string, queryStringPese: string, queryStringPeit: string, database: string) => {
   return `
+    USE [${database}] 
     SELECT  TOP 100
       PEDI_OBS,
       PEDI_DESCONTO,
@@ -816,8 +825,9 @@ export const selectPedidoEstoqueCere1 = (usuaCod: string, queryString: string, q
   `
 }
 
-export const selectPedidoEstoqueCere2 = (usuaCod: string, queryString: string, queryStringPese: string, queryStringPeit: string) => {
+export const selectPedidoEstoqueCere2 = (usuaCod: string, queryString: string, queryStringPese: string, queryStringPeit: string, database: string) => {
   return `
+  USE [${database}] 
     SELECT  TOP 100
       PEDI_OBS,
       PEDI_DESCONTO,
@@ -981,8 +991,9 @@ export const selectPedidoEstoqueCere2 = (usuaCod: string, queryString: string, q
   `
 }
 
-export const selectPedidoEstoqueCere3 = (usuaCod: string, queryString: string, queryStringPese: string, queryStringPeit: string) => {
+export const selectPedidoEstoqueCere3 = (usuaCod: string, queryString: string, queryStringPese: string, queryStringPeit: string, database: string) => {
   return `
+    USE [${database}]
     SELECT  TOP 100
       PEDI_OBS, 
       PEDI_DESCONTO,
@@ -1149,8 +1160,9 @@ export const selectPedidoEstoqueCere3 = (usuaCod: string, queryString: string, q
   `
 }
 
-export const selectPedidoEstoqueCere4 = (usuaCod: string, queryString: string, queryStringPese: string, queryStringPeit: string) => {
+export const selectPedidoEstoqueCere4 = (usuaCod: string, queryString: string, queryStringPese: string, queryStringPeit: string, database: string) => {
   return `
+    USE [${database}]
     SELECT TOP 100
       PEDI_OBS,
       PEDI_DESCONTO,

@@ -9,8 +9,9 @@ export const selectCereSoliCompra = (cereCod: string) => {
   `
 }
 
-export const selectCere = (cod: string, queryString: string) => {
+export const selectCere = (cod: string, queryString: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
         CERE_NOME,
         CERE_SIGLA,
@@ -24,8 +25,8 @@ export const selectCere = (cod: string, queryString: string) => {
   `
 }
 
-export const detailsCR = (planoContas: string, codigo:string, dataFim : string, dataIni : string) => {
-  return ' select 1 as tipo, \n' +
+export const detailsCR = (planoContas: string, codigo: string, dataFim: string, dataIni: string, database: string) => {
+  return ` USE [${database}] select 1 as tipo, \n` +
     '       itpc_cod as cod, \n' +
     '       itpc_sigla as sigla, \n' +
     '       itpc_desc as descricao,   \n' +

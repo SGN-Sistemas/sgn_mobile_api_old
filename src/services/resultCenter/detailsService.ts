@@ -25,12 +25,13 @@ interface IQuery {
 }
 
 export class DetailsResultCenterService {
-  public async execute (cod: string, planoContasCod: string, dataIni: string, dataFim: string): Promise<IPromise> {
+  public async execute (cod: string, planoContasCod: string, dataIni: string, dataFim: string, database: string): Promise<IPromise> {
     const sqlSelectDetails = detailsCR(
       planoContasCod,
       cod,
       dataFim,
-      dataIni
+      dataIni,
+      database
     )
 
     const resultSelectDetails = await UsuarioRepository.query(sqlSelectDetails)

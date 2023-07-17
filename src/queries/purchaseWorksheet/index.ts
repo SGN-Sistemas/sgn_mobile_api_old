@@ -1,5 +1,6 @@
-export const selectPurchaseWorksheet = (cod:string, pos: string) => {
+export const selectPurchaseWorksheet = (cod: string, pos: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
         PLAC_SECO_COD,
         PLAC_COD,
