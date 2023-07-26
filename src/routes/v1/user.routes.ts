@@ -16,3 +16,4 @@ routerUser.post('/login', users.login)
 routerUser.get('/acessToken', isAuthenticatedRefresh, users.generateToken)
 
 routerUser.get('/usuarioAprovSolic', isAuthenticatedAcess, users.ListUserAprovSoli)
+// ${url}${version}/

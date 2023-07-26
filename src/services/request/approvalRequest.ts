@@ -15,7 +15,11 @@ export class ApprovalRequestService {
       message,
       status
     } = await verifyUserApproval(sigla, USUA_SENHA_APP, database)
-
+    console.log('====================================')
+    console.log(error,
+      message,
+      status)
+    console.log('====================================')
     if (error) {
       return ({
         message,
@@ -26,7 +30,7 @@ export class ApprovalRequestService {
 
     let sqlQuery = ''
 
-    const sqlCountNumAprovaPedido = countNumAprovaPedido(pediCod)
+    const sqlCountNumAprovaPedido = countNumAprovaPedido(pediCod, database)
 
     const valCountNumAprovaPedido = await PedidoEstoqueRepository.query(sqlCountNumAprovaPedido)
 

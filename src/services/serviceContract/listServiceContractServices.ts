@@ -1,12 +1,5 @@
-import jwt from 'jsonwebtoken'
 import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories'
 import { selectServiceContract1, selectServiceContract2, selectServiceContract3, selectServiceContract4 } from '../../queries/serviceContract'
-
-interface IdecodeAcessToken {
-  refreshToken: string,
-  USUA_SIGLA: string,
-  codUser: string
-}
 
 interface ICocs{
   COCS_DT_INICIO:string
@@ -29,40 +22,52 @@ interface ICocs{
   ASS: string
 }
 
+interface IResponse {
+  message: string | ICocs[];
+  status: number;
+}
+
 export class ListServiceContractServices {
-  public async execute (token: string, queryString: string): Promise<ICocs[]> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+  public async execute (cod: string, queryString: string, database: string): Promise<IResponse> {
+    try {
+      const sql = selectServiceContract1(cod, queryString, database)
+      const sql2 = selectServiceContract2(cod, queryString, database)
+      const sql3 = selectServiceContract3(cod, queryString, database)
+      const sql4 = selectServiceContract4(cod, queryString, database)
+      console.log('====================================')
+      console.log(sql)
+      console.log('====================================')
+      const array: ICocs[] = []
+      const listContract1 = await PedidoEstoqueRepository.query(sql)
+      const listContract2 = await PedidoEstoqueRepository.query(sql2)
+      const listContract3 = await PedidoEstoqueRepository.query(sql3)
+      const listContract4 = await PedidoEstoqueRepository.query(sql4)
 
-    const decodeToken = jwt.verify(token, secretAcess) as IdecodeAcessToken
+      if (listContract1.length > 0) {
+        listContract1.map((pos: ICocs) => array.push(pos))
+      }
 
-    const cod = parseInt(decodeToken.codUser)
-    const sql = selectServiceContract1(cod + '', queryString)
-    const sql2 = selectServiceContract2(cod + '', queryString)
-    const sql3 = selectServiceContract3(cod + '', queryString)
-    const sql4 = selectServiceContract4(cod + '', queryString)
+      if (listContract2.length > 0) {
+        listContract2.map((pos: ICocs) => array.push(pos))
+      }
 
-    const array: ICocs[] = []
-    const listContract1 = await PedidoEstoqueRepository.query(sql)
-    const listContract2 = await PedidoEstoqueRepository.query(sql2)
-    const listContract3 = await PedidoEstoqueRepository.query(sql3)
-    const listContract4 = await PedidoEstoqueRepository.query(sql4)
+      if (listContract3.length > 0) {
+        listContract3.map((pos: ICocs) => array.push(pos))
+      }
 
-    if (listContract1.length > 0) {
-      listContract1.map((pos: ICocs) => array.push(pos))
+      if (listContract4.length > 0) {
+        listContract4.map((pos: ICocs) => array.push(pos))
+      }
+
+      return {
+        message: array,
+        status: 200
+      }
+    } catch (e) {
+      return {
+        message: 'Internal Server Error',
+        status: 500
+      }
     }
-
-    if (listContract2.length > 0) {
-      listContract2.map((pos: ICocs) => array.push(pos))
-    }
-
-    if (listContract3.length > 0) {
-      listContract3.map((pos: ICocs) => array.push(pos))
-    }
-
-    if (listContract4.length > 0) {
-      listContract4.map((pos: ICocs) => array.push(pos))
-    }
-
-    return array
   }
 }

@@ -41,10 +41,11 @@ export default class UserController {
     const tradeTokenApp = new TradeTokenAppService()
 
     const { USUA_SIGLA, USUA_APP_TOKEN } = request.body
-
+    const database = request.database
     const user = await tradeTokenApp.execute({
       USUA_SIGLA,
-      USUA_APP_TOKEN
+      USUA_APP_TOKEN,
+      database
     })
 
     return response.status(user.status).json(user)
@@ -89,7 +90,7 @@ export default class UserController {
     response: Response
   ): Promise<Response> {
     const listUserAprovSoliService = new ListUserAprovSoliService()
-    const listUserAprovSoliServiceExec = await listUserAprovSoliService.execute()
+    const listUserAprovSoliServiceExec = await listUserAprovSoliService.execute(request.database)
     return response.json({ listUserAprovSoliServiceExec })
   }
 }

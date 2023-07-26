@@ -54,8 +54,9 @@ export const queryPegaTokenUserCocs = (cocsCod: string, database: string) => {
   `
 }
 
-export const selectServiceContract1 = (usuaCod: string, queryString: string) => {
+export const selectServiceContract1 = (usuaCod: string, queryString: string, database: string) => {
   return `
+  USE [${database}]
     SELECT 
       COCS_DT_INICIO,
       COCS_DT_FIM,
@@ -75,6 +76,7 @@ export const selectServiceContract1 = (usuaCod: string, queryString: string) => 
       SERV_DESC,
       FORN_NOME,
       '1' AS ASS,
+      CERE_NOME,
       COCS_COD,
       (
         SELECT 
@@ -119,15 +121,21 @@ export const selectServiceContract1 = (usuaCod: string, queryString: string) => 
     AND
       COCS_USUA_COD_ASS_1 = ${usuaCod}
     AND 
-      COCS_ASSINATURA_1 != 'S'
-    AND
-      COCS_STATUS != 'AP'
+      (
+        SELECT 
+          SUM(ICCS_QUANTIDADE * ICCS_VLR_UNIT)
+        FROM
+          ITEM_CONTRATO_COMPRA_SERVICO
+        WHERE
+          ICCS_COCS_COD = COCS_COD     
+      )  > 0
     ${queryString}
   `
 }
 
-export const selectServiceContract2 = (usuaCod: string, queryString: string) => {
+export const selectServiceContract2 = (usuaCod: string, queryString: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
       COCS_DT_INICIO,
       COCS_DT_FIM,
@@ -159,7 +167,7 @@ export const selectServiceContract2 = (usuaCod: string, queryString: string) => 
       EMPR_NOME,
       FILI_NOME_FANTASIA,
       LOCA_DESC,
-      COCS_LOCA_COD                                                                      
+      COCS_LOCA_COD
     FROM
       CONTRATO_COMPRA_SERVICO
     INNER JOIN
@@ -194,14 +202,22 @@ export const selectServiceContract2 = (usuaCod: string, queryString: string) => 
       COCS_ASSINATURA_2 != 'S'
     AND 
       COCS_ASSINATURA_1 = 'S'
-    AND
-      COCS_STATUS != 'AP'
+    AND 
+      (
+        SELECT 
+          SUM(ICCS_QUANTIDADE * ICCS_VLR_UNIT)
+        FROM
+          ITEM_CONTRATO_COMPRA_SERVICO
+        WHERE
+          ICCS_COCS_COD = COCS_COD     
+      )  > 0      
     ${queryString}
   `
 }
 
-export const selectServiceContract3 = (usuaCod: string, queryString: string) => {
+export const selectServiceContract3 = (usuaCod: string, queryString: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
       COCS_DT_INICIO,
       COCS_DT_FIM,
@@ -270,13 +286,21 @@ export const selectServiceContract3 = (usuaCod: string, queryString: string) => 
       COCS_ASSINATURA_1 = 'S'
     AND
       COCS_ASSINATURA_2 = 'S'
-    AND
-      COCS_STATUS != 'AP'
+    AND 
+      (
+        SELECT 
+          SUM(ICCS_QUANTIDADE * ICCS_VLR_UNIT)
+        FROM
+          ITEM_CONTRATO_COMPRA_SERVICO
+        WHERE
+          ICCS_COCS_COD = COCS_COD     
+      )  > 0      
     ${queryString}
   `
 }
-export const selectServiceContract4 = (usuaCod: string, queryString: string) => {
+export const selectServiceContract4 = (usuaCod: string, queryString: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
       COCS_DT_INICIO,
       COCS_DT_FIM,
@@ -348,13 +372,21 @@ export const selectServiceContract4 = (usuaCod: string, queryString: string) => 
     AND
       COCS_ASSINATURA_3 = 'S'
     AND
-      COCS_STATUS != 'AP'
+      (
+        SELECT 
+          SUM(ICCS_QUANTIDADE * ICCS_VLR_UNIT)
+        FROM
+          ITEM_CONTRATO_COMPRA_SERVICO
+        WHERE
+          ICCS_COCS_COD = COCS_COD     
+      )  > 0      
     ${queryString}
   `
 }
 
-export const countNumAprov = (cod: string) => {
+export const countNumAprov = (cod: string, database:string) => {
   return `
+    USE [${database}]
     SELECT
       (
         (
@@ -408,8 +440,9 @@ export const countNumAprov = (cod: string) => {
   `
 }
 
-export const attContratoCompraServico = (cod: string, ass: string, statusQuery: string) => {
+export const attContratoCompraServico = (cod: string, ass: string, statusQuery: string, database: string) => {
   return `
+    USE [${database}]
     UPDATE
       CONTRATO_COMPRA_SERVICO
     SET 
@@ -421,8 +454,9 @@ export const attContratoCompraServico = (cod: string, ass: string, statusQuery: 
   `
 }
 
-export const selectDetailsServiceContract = (cod: string) => {
+export const selectDetailsServiceContract = (cod: string, database: string) => {
   return `
+  USE [${database}]
     SELECT 
       ICCS_ITPC_COD_FINANC,
       ICCS_VLR_UNIT_ATUAL,

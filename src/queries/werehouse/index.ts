@@ -1,5 +1,6 @@
-export const selectAllAlmo = () => {
+export const selectAllAlmo = (database: string) => {
   return `
+        USE [${database}]
         SELECT
             ALMO_COD,
             ALMO_DESC
@@ -10,8 +11,9 @@ export const selectAllAlmo = () => {
   `
 }
 
-export const selectAlmoRelCere = (codUsua: string) => {
+export const selectAlmoRelCere = (codUsua: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
         DISTINCT  ALMO_COD, 
         ALMO_DESC
@@ -37,8 +39,9 @@ export const selectAlmoRelCere = (codUsua: string) => {
     `
 }
 
-export const SelectalmoRelUsuario = (codUsua: string) => {
+export const SelectalmoRelUsuario = (codUsua: string, database: string) => {
   return `
+    USE [${database}]
     SELECT 
         DISTINCT  ALMO_COD,
         ALMO_DESC

@@ -1,5 +1,6 @@
-export const selectAll = () => {
+export const selectAll = (database: string) => {
   return `
+    USE [${database}]
     SELECT
       SERV_COD AS MATE_COD,
       SERV_DESC AS MATE_DESC,

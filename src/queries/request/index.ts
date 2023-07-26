@@ -52,8 +52,9 @@ export const queryPegaTokenUserSql = (pediCod: string, database: string) => {
       PEDI_COD = ${pediCod}
   `
 }
-export const countNumAprovaPedido = (cod: string) => {
+export const countNumAprovaPedido = (cod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
       (      
         (

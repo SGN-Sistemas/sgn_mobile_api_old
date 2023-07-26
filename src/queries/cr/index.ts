@@ -1,5 +1,6 @@
-export const selectAllCrFiliAlmo = (almoCod: string) => {
+export const selectAllCrFiliAlmo = (almoCod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
         CERE_COD,
         CERE_SIGLA,
@@ -29,8 +30,9 @@ export const selectAllCrFiliAlmo = (almoCod: string) => {
   `
 }
 
-export const selectAllCrFiliAlmoUsua = (almoCod: string, usuaCod: string) => {
+export const selectAllCrFiliAlmoUsua = (almoCod: string, usuaCod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
         CERE_COD,
         CERE_SIGLA,
@@ -71,8 +73,9 @@ export const selectAllCrFiliAlmoUsua = (almoCod: string, usuaCod: string) => {
   `
 }
 
-export const selectCrForAlmo = (almoCod: string) => {
+export const selectCrForAlmo = (almoCod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
         CERE_COD,
         CERE_SIGLA,
@@ -98,8 +101,9 @@ export const selectCrForAlmo = (almoCod: string) => {
         )
   `
 }
-export const selectCrForAlmoUsua = (almoCod: string, usuaCod: string) => {
+export const selectCrForAlmoUsua = (almoCod: string, usuaCod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
         CERE_COD,
         CERE_SIGLA,

@@ -5,26 +5,14 @@ import { ListDetailsServiceContract } from '../services/serviceContract/listDeta
 
 export class ServiceContract {
   public async list (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
-
     const listServiceContractServices = new ListServiceContractServices()
 
-    const execute = await listServiceContractServices.execute(acessToken, '')
+    const execute = await listServiceContractServices.execute(request.user_cod, '', request.database)
 
-    return response.json(execute)
+    return response.status(execute.status).json(execute.message)
   }
 
   public async listCode (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
-
     const { cod } = request.params
 
     const queryString = `
@@ -34,18 +22,12 @@ export class ServiceContract {
 
     const listServiceContractServices = new ListServiceContractServices()
 
-    const execute = await listServiceContractServices.execute(acessToken, queryString)
+    const execute = await listServiceContractServices.execute(request.user_cod, queryString, request.database)
 
-    return response.json(execute)
+    return response.status(execute.status).json(execute.message)
   }
 
   public async listEmpr (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
-
     const { empr } = request.params
 
     const queryString = `
@@ -55,18 +37,11 @@ export class ServiceContract {
 
     const listServiceContractServices = new ListServiceContractServices()
 
-    const execute = await listServiceContractServices.execute(acessToken, queryString)
-
-    return response.json(execute)
+    const execute = await listServiceContractServices.execute(request.user_cod, queryString, request.database)
+    return response.status(execute.status).json(execute.message)
   }
 
   public async listFili (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
-
     const { fili } = request.params
 
     const queryString = `
@@ -76,18 +51,12 @@ export class ServiceContract {
 
     const listServiceContractServices = new ListServiceContractServices()
 
-    const execute = await listServiceContractServices.execute(acessToken, queryString)
+    const execute = await listServiceContractServices.execute(request.user_cod, queryString, request.database)
 
-    return response.json(execute)
+    return response.status(execute.status).json(execute.message)
   }
 
   public async listForn (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
-
     const { forn } = request.params
 
     const queryString = `
@@ -97,78 +66,74 @@ export class ServiceContract {
 
     const listServiceContractServices = new ListServiceContractServices()
 
-    const execute = await listServiceContractServices.execute(acessToken, queryString)
+    const execute = await listServiceContractServices.execute(request.user_cod, queryString, request.database)
 
-    return response.json(execute)
+    return response.status(execute.status).json(execute.message)
   }
 
-  public async listLocal (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
-
-    const { local } = request.params
+  public async listCereCod (request: Request, response: Response): Promise<Response> {
+    const { cereCod } = request.params
 
     const queryString = `
     AND
-      LOCA_DESC LIKE '%${local}%'
+    COCS_FORN_COD = ${cereCod}
     `
 
     const listServiceContractServices = new ListServiceContractServices()
 
-    const execute = await listServiceContractServices.execute(acessToken, queryString)
+    const execute = await listServiceContractServices.execute(request.user_cod, queryString, request.database)
 
-    return response.json(execute)
+    return response.status(execute.status).json(execute.message)
+  }
+
+  public async listLocal (request: Request, response: Response): Promise<Response> {
+    const { local } = request.params
+
+    const queryString = `
+    AND
+      LOCA_COD = ${local}
+    `
+
+    const listServiceContractServices = new ListServiceContractServices()
+    console.log('====================================')
+    console.log(queryString)
+    console.log('====================================')
+    const execute = await listServiceContractServices.execute(request.user_cod, queryString, request.database)
+
+    return response.status(execute.status).json(execute.message)
   }
 
   public async listDetails (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-
     const { cod } = request.params
 
     const listDetailsServiceContract = new ListDetailsServiceContract()
 
-    const execute = await listDetailsServiceContract.execute(cod)
+    const execute = await listDetailsServiceContract.execute(cod, request.database)
 
-    return response.json(execute)
+    return response.status(execute.status).json(execute.message)
   }
 
   public async approval (request: Request, response: Response): Promise<Response> {
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
-      return response.status(400).json({ message: 'TOKEN IS MISSING' })
-    }
-    const [, acessToken] = authHeader.split(' ')
-
     const { password, arrayCocs } = request.body
 
     const approvalServiceContract = new ApprovalServiceContract()
 
     const msgCocs:string[] = []
     let status = 200
-    let erro = false
 
     for await (const item of arrayCocs) {
+      console.log('====================================')
+      console.log(item)
+      console.log('====================================')
       const execute = await approvalServiceContract.execute(
-        acessToken, item[0] + '', item[1] + '', password, item[2]
-        // TOKEN: string, ass: string, codCocs: string, password: string, valTotal: string
+        request.user_sigla, item.posAss + '', item.cod + '', password, item.valor, request.database
       )
       if (execute.erro === true) {
-        status = 400
-        erro = true
+        status = execute.status
       }
       msgCocs.push(execute.message)
     }
 
-    return response.status(status).json({
-      message: msgCocs,
-      erro,
-      status
-    })
+    return response.status(status).json(msgCocs)
   }
 }

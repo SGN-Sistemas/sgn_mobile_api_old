@@ -3,12 +3,6 @@ import { ListServiceContractAdditive } from '../services/contractAdditive/listSe
 import { ApprovalContractAdditive } from '../services/contractAdditive/approvalService'
 import { ListCodServiceContractAdditive } from '../services/contractAdditive/listCodService'
 
-interface IAdcsArray {
-    status: number;
-    message: string;
-    erro: boolean;
-}
-
 export class ContractAdditive {
   public async list (request: Request, response: Response): Promise<Response> {
     const listServiceContractAdditive = new ListServiceContractAdditive()
@@ -32,17 +26,20 @@ export class ContractAdditive {
 
     const approvalServiceContract = new ApprovalContractAdditive()
 
-    let msgAdcs = ''
+    const message: string[] = []
 
-    arrayAdcs.forEach(async (item: IAdcsArray[]) => {
-      msgAdcs = `${msgAdcs} ${item[1]}`
-      await approvalServiceContract.execute(
-        request.user_cod, item[1] + '', item[0] + '', password, request.database
+    let status = 200
+
+    for await (const item of arrayAdcs) {
+      const execute = await approvalServiceContract.execute(
+        request.user_cod, item.ass + '', item.codCocs + '', password, request.database
       )
-    })
+      message.push(execute.message)
+      if (execute.error) {
+        status = execute.status
+      }
+    }
 
-    return response.status(200).json({
-      message: 'Aditivo de contrato' + msgAdcs + ' aprovado'
-    })
+    return response.status(status).json(message)
   }
 }

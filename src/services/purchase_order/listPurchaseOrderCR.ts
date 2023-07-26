@@ -21,10 +21,10 @@ interface IResponse {
 }
 
 export class ListPurchaseOrderCrService {
-  public async execute (cod: string, cereDesc: string, database: string): Promise<IResponse> {
+  public async execute (cod: string, crCod: string, database: string): Promise<IResponse> {
     try {
-      const query2 = selectSoliCompCR(cod, cereDesc, '1', database)
-      const query1 = selectSoliCompCR(cod, cereDesc, '2', database)
+      const query2 = selectSoliCompCR(cod, crCod, '1', database)
+      const query1 = selectSoliCompCR(cod, crCod, '2', database)
 
       const listPurchaseOrder1 = await PedidoEstoqueRepository.query(query1)
       const listPurchaseOrder2 = await PedidoEstoqueRepository.query(query2)

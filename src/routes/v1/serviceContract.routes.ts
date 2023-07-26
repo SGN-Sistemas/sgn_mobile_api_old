@@ -13,4 +13,5 @@ routerServiceContract.get('/empr/:empr', isAuthenticatedAcess, serviceContract.l
 routerServiceContract.get('/fili/:fili', isAuthenticatedAcess, serviceContract.listFili)
 routerServiceContract.get('/forn/:forn', isAuthenticatedAcess, serviceContract.listForn)
 routerServiceContract.get('/local/:local', isAuthenticatedAcess, serviceContract.listLocal)
+routerServiceContract.get('/cr/:cereCod', isAuthenticatedAcess, serviceContract.listCereCod)
 routerServiceContract.patch('/', isAuthenticatedAcess, serviceContract.approval)

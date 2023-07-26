@@ -2,7 +2,8 @@ import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories'
 
 interface Itrade{
     USUA_SIGLA: string,
-    USUA_APP_TOKEN: string
+    USUA_APP_TOKEN: string,
+    database: string
 }
 
 interface IReturn {
@@ -15,23 +16,14 @@ export class TradeTokenAppService {
   public async execute (
     {
       USUA_SIGLA,
-      USUA_APP_TOKEN
+      USUA_APP_TOKEN,
+      database
+
     }: Itrade
   ): Promise<IReturn> {
     try {
-      const existsUser = await UsuarioRepository.findOneBy({ USUA_SIGLA })
-
-      if (!existsUser) {
-        return {
-          message: 'Usuario não existe',
-          error: true,
-          status: 400
-        }
-      }
-
-      existsUser.USUA_APP_TOKEN = USUA_APP_TOKEN
-
       await UsuarioRepository.query(`
+        USE [${database}]
         UPDATE
           USUARIO
         SET
@@ -39,16 +31,7 @@ export class TradeTokenAppService {
         WHERE
           USUA_SIGLA = '${USUA_SIGLA}'
       `)
-      console.log('====================================')
-      console.log(`
-        UPDATE
-          USUARIO
-        SET
-          USUA_APP_TOKEN = '${USUA_APP_TOKEN}'
-        WHERE
-          USUA_SIGLA = '${USUA_SIGLA}'
-      `)
-      console.log('====================================')
+
       return {
         message: 'Token adicionado com sucesso ',
         error: false,
@@ -56,9 +39,9 @@ export class TradeTokenAppService {
       }
     } catch (e) {
       return {
-        message: e + '',
+        message: 'Internal server error: ' + e,
         error: false,
-        status: 400
+        status: 500
       }
     }
   }

@@ -19,6 +19,15 @@ export class ApprovalPayService {
       } = await verifyUserApproval(sigla, password, database)
 
       if (error) {
+        console.log('====================================')
+        console.log(
+          {
+            message,
+            error,
+            status
+          }
+        )
+        console.log('====================================')
         return ({
           message,
           error,
@@ -48,9 +57,9 @@ export class ApprovalPayService {
         Number(autorizacaoCount[0].PAGE_NUM_AUTORIZACOES) === Number(autorizacaoCount[0].countTrppUsua)
       ) {
         return {
-          error: false,
+          error: true,
           message: 'Parcela já autorizada',
-          status: 200
+          status: 403
         }
       }
 
@@ -71,17 +80,17 @@ export class ApprovalPayService {
 
       if (selectValAprovAutoriza[0].USCR_AUTORIZA === 'N') {
         return {
-          error: false,
+          error: true,
           message: `Transação ${trppCod} - Usuario não é aprovador`,
-          status: 200
+          status: 403
         }
       }
 
       if (selectValAprovAutoriza[0].USCR_VALOR_MAXIMO < valor) {
         return {
-          error: false,
+          error: true,
           message: `Transação ${trppCod} - usuario não pode aprovar um valor tão alto`,
-          status: 200
+          status: 403
         }
       }
 

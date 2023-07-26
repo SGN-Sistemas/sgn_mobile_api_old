@@ -20,7 +20,8 @@ export const verifyUserQuery = (user: string, database: string): string => {
       usua_valor_aprov_solic,
       USUA_VALOR_APROVACAO,
       USUA_VALOR_APROVACAO_MENSAL,
-      USUA_TIPO
+      USUA_TIPO,
+      USUA_VALOR_APROVA_CONT_SERV
     FROM 
       USUARIO
     WHERE

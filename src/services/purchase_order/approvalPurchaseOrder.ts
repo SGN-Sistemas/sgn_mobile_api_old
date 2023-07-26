@@ -10,6 +10,9 @@ interface IResponse {
 
 export class ApprovalPurchaseOrderService {
   public async execute (sigla: string, password: string, posUsuaCod: string, socoCod: string, valorTotalSoco: number, database: string): Promise<IResponse> {
+    console.log('====================================')
+    console.log(database)
+    console.log('====================================')
     try {
       const {
         // eslint-disable-next-line camelcase
@@ -35,18 +38,20 @@ export class ApprovalPurchaseOrderService {
         })
       }
 
-      const sqlContNumAprovaS = countNumAprovaSoliCompra(socoCod)
-
+      const sqlContNumAprovaS = countNumAprovaSoliCompra(socoCod, database)
+      console.log('====================================')
+      console.log(sqlContNumAprovaS)
+      console.log('====================================')
       const countNumAprovaS = await PedidoEstoqueRepository.query(sqlContNumAprovaS)
 
       const sqlAprovaNumPage = await PedidoEstoqueRepository.query(`
-    USE [${database}]
-    SELECT 
-      page_num_aprovacoes_solic,
-      page_todas_aprovacoes_solic
-    FROM 
-      PARAMETROS_GERAIS
-    `)
+        USE [${database}]
+        SELECT 
+          page_num_aprovacoes_solic,
+          page_todas_aprovacoes_solic
+        FROM 
+          PARAMETROS_GERAIS
+      `)
 
       let statusSQL = ''
 
@@ -61,16 +66,18 @@ export class ApprovalPurchaseOrderService {
       }
 
       const sql = updateASSSolicitacao(socoCod, posUsuaCod, statusSQL, database)
-
+      console.log('====================================')
+      console.log(database)
+      console.log('====================================')
       await PedidoEstoqueRepository.query(sql)
       return ({
-        message: 'Solicitação aprovada com sucesso',
+        message: `Solicitação ${socoCod} aprovada com sucesso`,
         error: false,
         status: 200
       })
     } catch (e) {
       return ({
-        message: 'Internal Server Error',
+        message: 'Internal Server Error' + e,
         error: true,
         status: 500
       })

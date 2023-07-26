@@ -1,8 +1,9 @@
 import data1Mes from '../../utils/pega1Mes'
 import dataAtual from '../../utils/pegaDataAtual'
 
-export const selectBoletimApprovaded = (usuaCod: string) => {
+export const selectBoletimApprovaded = (usuaCod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
       BOCS_COD,
       FORN_NOME,
@@ -68,8 +69,9 @@ export const selectBoletimApprovaded = (usuaCod: string) => {
   `
 }
 
-export const selectBoletim1 = (usuaCod: string) => {
+export const selectBoletim1 = (usuaCod: string, database: string, queryString: string) => {
   return `
+    USE [${database}]
     SELECT
       BOCS_COD,
       FORN_NOME,
@@ -133,11 +135,13 @@ export const selectBoletim1 = (usuaCod: string) => {
       WHERE
         BCSI_BOCS_COD = BOCS_COD
     )
+    ${queryString}
   `
 }
 
-export const selectBoletim2 = (usuaCod: string) => {
+export const selectBoletim2 = (usuaCod: string, database: string, queryString: string) => {
   return `
+    USE [${database}]
     SELECT
       BOCS_COD,
       FORN_NOME,
@@ -203,12 +207,13 @@ export const selectBoletim2 = (usuaCod: string) => {
       WHERE
         BCSI_BOCS_COD = BOCS_COD
     )
-      
+    ${queryString}
   `
 }
 
-export const boletimMedicaoDetalhe = (codigo: string) => {
+export const boletimMedicaoDetalhe = (codigo: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
       BCSI_SERV_COD,
       SERV_DESC,
@@ -231,8 +236,9 @@ export const boletimMedicaoDetalhe = (codigo: string) => {
   `
 }
 
-export const updateBoletim = (pos: string, statusUpdate: string, cod: string) => {
+export const updateBoletim = (pos: string, statusUpdate: string, cod: string, database: string) => {
   return `
+    USE [${database}]
     UPDATE 
       BOLETIM_CONTRATO_SERVICO
     SET 
@@ -244,8 +250,9 @@ export const updateBoletim = (pos: string, statusUpdate: string, cod: string) =>
   `
 }
 
-export const countNumAprovaBoletim = (cod: string) => {
+export const countNumAprovaBoletim = (cod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
       (      
         (
@@ -281,8 +288,9 @@ const dataIni = data1Mes()
 
 const dataFim = dataAtual()
 
-export const pegaValorAprovCrSql = (cereCod: string, usuaCod: string) => {
+export const pegaValorAprovCrSql = (cereCod: string, usuaCod: string, database: string) => {
   return `
+  USE [${database}]
   SELECT
     DISTINCT(COCS_COD),
   SUM((
@@ -321,8 +329,9 @@ export const pegaValorAprovCrSql = (cereCod: string, usuaCod: string) => {
   `
 }
 
-export const pegaValorAprovCrFornSql = (cereCod: string, fornCod: string, usuaCod: string) => {
+export const pegaValorAprovCrFornSql = (cereCod: string, fornCod: string, usuaCod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
       DISTINCT(COCS_COD),
     SUM((
@@ -362,3 +371,12 @@ export const pegaValorAprovCrFornSql = (cereCod: string, fornCod: string, usuaCo
       COCS_COD
   `
 }
+
+// <ButtonSelectFilter
+// text={crDesc}
+// handleClick={
+//     () => {
+//       setModalCr(!modalCr)
+//     }
+// }
+// />

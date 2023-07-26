@@ -34,7 +34,7 @@ export class ListCrService {
     `)
       if (userTipo === 'E') {
         if (sqlParametro[0].PAGE_COMPRAS_CR_ALMOXARIFADO === 'S') {
-          const selectCrForAlmoSql = selectCrForAlmo(almoCod)
+          const selectCrForAlmoSql = selectCrForAlmo(almoCod, database)
           const selectCrForAlmoQuery = await UsuarioRepository.query(selectCrForAlmoSql)
           return ({
             error: false,
@@ -42,7 +42,7 @@ export class ListCrService {
             status: 200
           })
         }
-        const selectAllCrFiliAlmoSql = selectAllCrFiliAlmo(almoCod)
+        const selectAllCrFiliAlmoSql = selectAllCrFiliAlmo(almoCod, database)
         const selectAllCrFiliAlmoQuery = await UsuarioRepository.query(selectAllCrFiliAlmoSql)
         return ({
           error: false,
@@ -51,7 +51,7 @@ export class ListCrService {
         })
       }
       if (sqlParametro[0].PAGE_COMPRAS_CR_ALMOXARIFADO === 'S') {
-        const selectCrForAlmoUsuaSql = selectCrForAlmoUsua(almoCod, cod)
+        const selectCrForAlmoUsuaSql = selectCrForAlmoUsua(almoCod, cod, database)
         const selectCrForAlmoUsuaQuery = await UsuarioRepository.query(selectCrForAlmoUsuaSql)
         return ({
           error: false,
@@ -60,7 +60,7 @@ export class ListCrService {
         })
       }
 
-      const selectAllCrFiliAlmoUsuaSql = selectAllCrFiliAlmoUsua(almoCod, cod)
+      const selectAllCrFiliAlmoUsuaSql = selectAllCrFiliAlmoUsua(almoCod, cod, database)
       const selectAllCrFiliAlmoUsuaQuery = await UsuarioRepository.query(selectAllCrFiliAlmoUsuaSql)
       return {
         error: false,

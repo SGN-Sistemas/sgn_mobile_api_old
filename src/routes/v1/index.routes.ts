@@ -26,6 +26,9 @@ import { routerPage } from './page.routes'
 import { routerNotification } from './notification.routes'
 import routerPurchaseWorksheet from './purchaseWorksheet.routes'
 import { routerPay } from './pay.routes'
+import { routerBranch } from './branch.routes'
+import { routerLocal } from './local.routes'
+import { routerSupplier } from './supplier.routes'
 
 export const routerV1 = express.Router()
 
@@ -80,3 +83,9 @@ routerV1.use('/notification', routerNotification)
 routerV1.use('/planilhaDeCompra', routerPurchaseWorksheet)
 
 routerV1.use('/pagar', routerPay)
+
+routerV1.use('/filial', routerBranch)
+
+routerV1.use('/local', routerLocal)
+
+routerV1.use('/fornecedor', routerSupplier)

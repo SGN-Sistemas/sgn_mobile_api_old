@@ -29,8 +29,10 @@ export class PurchaseOrderController {
     let status = 200
 
     const message: string[] = []
-
     for await (const item of arraySolicitacaoCompra) {
+      console.log('====================================')
+      console.log(item)
+      console.log('====================================')
       const execute = await approvalPurchaseOrderService.execute(
         request.user_sigla,
         USUA_SENHA_APP,
@@ -84,11 +86,11 @@ export class PurchaseOrderController {
   }
 
   public async listFilerCr (request: Request, response: Response) {
-    const { cereDesc } = request.params
+    const { crCod } = request.params
 
     const listPurchaseOrderCrService = new ListPurchaseOrderCrService()
 
-    const listPurchaseOrderCrServiceExec = await listPurchaseOrderCrService.execute(request.user_cod, cereDesc, request.database)
+    const listPurchaseOrderCrServiceExec = await listPurchaseOrderCrService.execute(request.user_cod, crCod, request.database)
 
     response.status(listPurchaseOrderCrServiceExec.status).json(listPurchaseOrderCrServiceExec.message)
   }
@@ -113,9 +115,14 @@ export class PurchaseOrderController {
       arrayMaterial,
       pessCodSoli,
       ass1,
-      ass2
+      ass2,
+      itpcRateioCod,
+      debitoDireto
     } = request.body
     const message: string[] = []
+    console.log('array====================================')
+    console.log(arrayMaterial)
+    console.log('====================================')
     let status = 200
     let error = false
     const create = new CreatePurchase()
@@ -128,7 +135,7 @@ export class PurchaseOrderController {
       const createExec = await create.execute({
         secoCod,
         servCod,
-        itpcCod,
+        itpcRateioCod,
         cereCod,
         unmaCod,
         almoCod,
@@ -139,10 +146,12 @@ export class PurchaseOrderController {
         ass1,
         ass2,
         cod,
-        database: request.database
+        database: request.database,
+        itpcCod,
+        debitoDireto
       })
       if (createExec.error === true) {
-        status = 400
+        status = createExec.status
         error = true
       }
       message.push(createExec.message)

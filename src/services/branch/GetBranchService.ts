@@ -9,8 +9,8 @@ interface IResponse {
 }
 
 export class GetBranchService {
-  public async execute (codEmpr: string): Promise<IResponse> {
-    const sql = searchEmprUsua(codEmpr)
+  public async execute (codEmpr: string, database: string): Promise<IResponse> {
+    const sql = searchEmprUsua(codEmpr, database)
 
     const empresaQuery = await FilialRepository.query(sql)
 

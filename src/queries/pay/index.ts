@@ -24,7 +24,7 @@ export const approvalTrpp = (
 export const selectTrpg = (usuaCod: string, autorizacaoCount: string, queryString: string, database: string) => {
   return `
     USE [${database}]
-    Select TOP 200
+    Select
         trpg_cod,
         trpg_empr_cod,
         empr_nome,

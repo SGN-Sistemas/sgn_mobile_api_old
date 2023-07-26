@@ -19,6 +19,15 @@ export default class ResultCenterController {
       dataFim
     } = request.params
 
+    console.log('====================================')
+    console.log(
+      cod,
+      planoContas,
+      dataIni,
+      dataFim
+    )
+    console.log('====================================')
+
     const detailsResultCenterService = new DetailsResultCenterService()
 
     const execute = await detailsResultCenterService.execute(

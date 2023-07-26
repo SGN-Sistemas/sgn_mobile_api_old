@@ -8,14 +8,27 @@ interface IBcsi {
     BCSI_VLR_UNIT: string,
 }
 
-export class ListDetailsBulletin {
-  public async execute (codBcsi: string): Promise<IBcsi[]> {
-    const sql = boletimMedicaoDetalhe(codBcsi)
-    console.log('====================================')
-    console.log(sql)
-    console.log('====================================')
-    const listBulletin1 = await PedidoEstoqueRepository.query(sql)
+interface IResponse {
+  message: string | IBcsi[];
+  status: number;
+}
 
-    return listBulletin1
+export class ListDetailsBulletin {
+  public async execute (codBcsi: string, database: string): Promise<IResponse> {
+    try {
+      const sql = boletimMedicaoDetalhe(codBcsi, database)
+
+      const listBulletin1 = await PedidoEstoqueRepository.query(sql)
+
+      return {
+        message: listBulletin1,
+        status: 200
+      }
+    } catch (e) {
+      return {
+        status: 500,
+        message: 'Internal server error'
+      }
+    }
   }
 }

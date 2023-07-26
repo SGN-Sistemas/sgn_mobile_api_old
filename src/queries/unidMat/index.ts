@@ -1,5 +1,6 @@
-export const selectAllUnidMat = () => {
+export const selectAllUnidMat = (database: string) => {
   return `
+    USE [${database}]
     SELECT
       UNMA_SIGLA,
       UNMA_COD,

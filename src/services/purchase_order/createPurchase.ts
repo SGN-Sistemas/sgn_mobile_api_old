@@ -1,3 +1,4 @@
+// SOCO_DEBITO_DIRETO
 import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories'
 import { insertSoco } from '../../queries/purchaseOrder'
 
@@ -21,14 +22,16 @@ interface Iparametros {
   ass1: string,
   ass2: string,
   cod: string,
-  database: string
+  database: string,
+  itpcRateioCod: string,
+  debitoDireto: string
 }
 
 export class CreatePurchase {
   public async execute ({
     secoCod,
     servCod,
-    itpcCod,
+    itpcRateioCod,
     cereCod,
     unmaCod,
     almoCod,
@@ -39,7 +42,9 @@ export class CreatePurchase {
     ass1,
     ass2,
     cod,
-    database
+    database,
+    itpcCod,
+    debitoDireto
   }: Iparametros): Promise<IResponse> {
     try {
       const dt = new Date()
@@ -83,12 +88,9 @@ export class CreatePurchase {
       const socoNum = dataSocoNumMax1[0].SOCO_NUMERO
 
       console.log('====================================')
-      console.log(socoNum)
-      console.log('====================================')
-
-      const sqlInsertSoco = insertSoco({
+      console.log({
         socoCod,
-        itpcCod,
+        itpcRateioCod,
         servCod,
         userLogged: cod + '',
         cereCod,
@@ -103,7 +105,32 @@ export class CreatePurchase {
         pessCodSoli,
         ass1,
         ass2,
-        database
+        database,
+        itpcCod,
+        debitoDireto
+      })
+      console.log('====================================')
+
+      const sqlInsertSoco = insertSoco({
+        socoCod,
+        itpcRateioCod,
+        servCod,
+        userLogged: cod + '',
+        cereCod,
+        secoCod,
+        unmaCod,
+        almoCod,
+        dtSoli,
+        dtNece,
+        qtd,
+        mateCod,
+        socoNum,
+        pessCodSoli,
+        ass1,
+        ass2,
+        database,
+        itpcCod,
+        debitoDireto
       })
 
       console.log('====================================')
@@ -118,7 +145,7 @@ export class CreatePurchase {
       })
     } catch (e) {
       return ({
-        message: 'Intertanl server error',
+        message: 'Intertanl server error ' + e,
         status: 500,
         error: true
       })

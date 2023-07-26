@@ -11,6 +11,7 @@ export const AppDataSource = new DataSource({
   password: process.env.PASSWORDDB,
   database: process.env.DATABASEDB,
   synchronize: true,
+  requestTimeout: 60_000,
   logging: false,
   extra: {
     encrypt: false,
@@ -18,5 +19,4 @@ export const AppDataSource = new DataSource({
   },
   entities: [`${__dirname}/entities/*.{ts,js}`],
   migrations: [`${__dirname}/migrations/*.{ts,js}`]
-
 })

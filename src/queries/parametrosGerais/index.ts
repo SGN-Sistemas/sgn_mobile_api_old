@@ -20,8 +20,9 @@ export const sqlPag2Page = () => {
   `
 }
 
-export const sqlPageControleUsuarioCrAlmox = () => {
+export const sqlPageControleUsuarioCrAlmox = (database: string) => {
   return `
+    USE [${database}]
     SELECT
       PAG2_CONTROLE_USUARIO_CR_ALMOX,
       PAG2_REL_USUA_ALMOX

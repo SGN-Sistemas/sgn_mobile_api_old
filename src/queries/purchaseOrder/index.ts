@@ -15,12 +15,14 @@ interface Iparametros {
   pessCodSoli: string,
   ass1: string,
   ass2: string,
-  database: string
+  database: string,
+  debitoDireto: string,
+  itpcRateioCod: string
 }
 
 export const insertSoco = ({
   socoCod,
-  itpcCod,
+  itpcRateioCod,
   servCod,
   userLogged,
   cereCod,
@@ -35,7 +37,9 @@ export const insertSoco = ({
   pessCodSoli,
   ass1,
   ass2,
-  database
+  database,
+  itpcCod,
+  debitoDireto
 }: Iparametros) => {
   return `
     USE [${database}]
@@ -43,7 +47,7 @@ export const insertSoco = ({
       SOLICITACAO_COMPRA
       (
         SOCO_COD,
-        SOCO_ITPC_COD,
+        SOCO_ITPC_RATEIO_COD,
         SOCO_SERV_COD,
         SOCO_USUA_COD,
         SOCO_CERE_COD,
@@ -58,12 +62,14 @@ export const insertSoco = ({
         SOCO_PESS_COD,
         SOCO_USUA_COD_ASS_1,
         SOCO_USUA_COD_ASS_2,
-        SOCO_STATUS
+        SOCO_STATUS,
+        SOCO_ITPC_COD,
+        SOCO_DEBITO_DIRETO
       )
     VALUES
       (
         ${socoCod},
-        ${itpcCod},
+        ${itpcRateioCod},
         ${servCod},
         ${userLogged},
         ${cereCod},
@@ -78,7 +84,9 @@ export const insertSoco = ({
         ${pessCodSoli},
         ${ass1},
         ${ass2},
-        ''
+        '',
+        ${itpcCod || 'null'},
+        '${debitoDireto}'
       )
   `
 }
@@ -367,9 +375,9 @@ export const selectSoliCompNumero = (usuaCod: string, socoNUMERO: string, pos: s
     AND 
       SOCO_NUMERO = '${socoNUMERO}'
     AND
-      SOCO_STATUS = ''
+      (SOCO_STATUS = ''
     OR  
-      SOCO_STATUS = NULL
+      SOCO_STATUS = NULL)
   `
 }
 
@@ -453,13 +461,13 @@ export const selectSoliCompAlmoxarifado = (usuaCod: string, almoDesc: string, po
     AND 
       ALMO_DESC LIKE '%${almoDesc}%'
     AND
-      SOCO_STATUS = ''
+      (SOCO_STATUS = ''
     OR  
-      SOCO_STATUS = NULL
+      SOCO_STATUS = NULL)
   `
 }
 
-export const selectSoliCompCR = (usuaCod: string, cereNome: string, pos: string, database: string) => {
+export const selectSoliCompCR = (usuaCod: string, crCod: string, pos: string, database: string) => {
   return `
     USE [${database}]
     SELECT 
@@ -537,11 +545,11 @@ export const selectSoliCompCR = (usuaCod: string, cereNome: string, pos: string,
     AND 
       SOCO_USUA_COD_ASS_${pos} = ${usuaCod}
     AND 
-      CERE_NOME LIKE '%${cereNome}%'
+      CERE_COD = ${crCod}
     AND
-      SOCO_STATUS = ''
+      (SOCO_STATUS = ''
     OR  
-      SOCO_STATUS = NULL
+      SOCO_STATUS = NULL)
   `
 }
 
@@ -623,9 +631,11 @@ export const selectSoliCompSetorCompras = (usuaCod: string, SECO_DESC: string, p
     AND 
       SOCO_USUA_COD_ASS_${pos} = ${usuaCod}
     AND
-      SOCO_STATUS = ''
-    OR  
-      SOCO_STATUS = NULL
+      (
+          SOCO_STATUS = ''
+        OR  
+          SOCO_STATUS = NULL
+      )
     AND 
       SECO_DESC LIKE '%${SECO_DESC}%'
   `
@@ -709,9 +719,11 @@ export const selectSoliCompData = (usuaCod: string, SOCO_DTSOLI: string, pos: st
     AND 
       SOCO_USUA_COD_ASS_${pos} = ${usuaCod}
     AND
-      SOCO_STATUS = ''
-    OR  
-      SOCO_STATUS = NULL
+      (
+          SOCO_STATUS = ''
+        OR  
+          SOCO_STATUS = NULL
+      )
     AND 
       SOCO_DTSOLI = '${SOCO_DTSOLI}'
   `
@@ -732,8 +744,9 @@ export const updateASSSolicitacao = (socoCod: string, posCod: string, sqlQuery: 
   `
 }
 
-export const countNumAprovaSoliCompra = (cod: string) => {
+export const countNumAprovaSoliCompra = (cod: string, database: string) => {
   return `
+    USE [${database}]
     SELECT
       (      
         (

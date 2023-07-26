@@ -62,7 +62,7 @@ export class LoginService {
       })
     } catch (e) {
       return ({
-        message: 'Internal server error',
+        message: 'Internal server error' + e,
         error: true,
         status: 500,
         refreshToken: ''

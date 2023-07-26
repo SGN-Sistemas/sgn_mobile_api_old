@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken'
 import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories'
 import { selectBoletimApprovaded } from '../../queries/serviceContractBulletin'
 
@@ -20,28 +19,31 @@ interface IBocs {
   val_total: string
 }
 
-interface IdecodeAcessToken {
-  refreshToken: string,
-  USUA_SIGLA: string,
-  codUser: string
+interface IResponse {
+  message: string | IBocs[];
+  status: number;
 }
 
 export class ServiceContractBulletinServiceApprovaded {
-  public async execute (token: string): Promise<IBocs[]> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+  public async execute (cod: string, database: string): Promise<IResponse> {
+    try {
+      const sql = selectBoletimApprovaded(cod, database)
 
-    const decodeToken = jwt.verify(token, secretAcess) as IdecodeAcessToken
+      console.log('====================================')
+      console.log(sql)
+      console.log('====================================')
 
-    const cod = parseInt(decodeToken.codUser)
+      const listBulletin1 = await PedidoEstoqueRepository.query(sql)
 
-    const sql = selectBoletimApprovaded(cod + '')
-
-    console.log('====================================')
-    console.log(sql)
-    console.log('====================================')
-
-    const listBulletin1 = await PedidoEstoqueRepository.query(sql)
-
-    return listBulletin1
+      return {
+        message: listBulletin1,
+        status: 200
+      }
+    } catch (e) {
+      return {
+        message: 'Internal server error',
+        status: 500
+      }
+    }
   }
 }

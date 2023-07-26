@@ -1,26 +1,33 @@
-import { USUARIO } from '../../typeorm/entities/usuario'
 import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories'
 interface IPromise {
     error: boolean,
-    message: USUARIO[],
+    message: [] | string,
     status: number
 }
 
 export class ListUserAprovSoliService {
-  public async execute (): Promise<IPromise> {
-    const users = await UsuarioRepository.find({
-      select: {
-        USUA_COD: true,
-        USUA_SIGLA: true
-      },
-      where: {
-        usua_aprova_solic: 'S'
-      }
-    })
-    return ({
-      message: users,
-      error: false,
-      status: 200
-    })
+  public async execute (database: string): Promise<IPromise> {
+    try {
+      const users = await UsuarioRepository.query(`
+        USE [${database}]
+        SELECT 
+          *
+        FROM
+          USUARIO
+        WHERE 
+          USUA_APROVA_SOLIC = 'S'
+      `)
+      return ({
+        message: users,
+        error: false,
+        status: 200
+      })
+    } catch (e) {
+      return ({
+        message: 'Internal  Server Error ' + e,
+        error: true,
+        status: 500
+      })
+    }
   }
 }

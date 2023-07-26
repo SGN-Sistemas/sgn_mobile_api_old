@@ -1,5 +1,6 @@
-export const selectAllSetorCompras = () => {
+export const selectAllSetorCompras = (database: string) => {
   return `
+        USE [${database}]
         SELECT
             SECO_DESC,
             SECO_COD
@@ -8,8 +9,9 @@ export const selectAllSetorCompras = () => {
   `
 }
 
-export const selectSetorCompraUsua = (USUA_COD: string) => {
+export const selectSetorCompraUsua = (USUA_COD: string, database: string) => {
   return `
+        USE [${database}]
         SELECT
             SECO_DESC,
             SECO_COD

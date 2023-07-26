@@ -1,68 +1,41 @@
 import { PedidoEstoqueRepository } from '../../typeorm/repository/pedidoEstoqueRepositories'
-import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
-import { UsuarioRepository } from '../../typeorm/repository/usuarioRepositories'
 import { attContratoCompraServico, countNumAprov } from '../../queries/serviceContract'
-dotenv.config()
+import { verifyUserApproval } from '../../utils/verifyUser'
 
 interface ICocsResponse {
     status: number;
     message: string;
     erro: boolean;
 }
-interface IdecodeAcessToken {
-  refreshToken: string,
-  USUA_SIGLA: string,
-  codUser: string
-}
+
 export class ApprovalServiceContract {
-  public async execute (TOKEN: string, ass: string, codCocs: string, password:string, valTotal: string): Promise<ICocsResponse> {
-    const secretAcess = process.env.TOKEN_SECRET_ACESS + ''
+  public async execute (sigla: string, ass: string, codCocs: string, password:string, valTotal: string, database: string): Promise<ICocsResponse> {
+    try {
+      const {
+        error,
+        message,
+        status,
+        USUA_VALOR_APROVA_CONT_SERV
+      } = await verifyUserApproval(sigla, password, database)
 
-    const decodeToken = jwt.verify(TOKEN, secretAcess) as IdecodeAcessToken
+      if (error) {
+        return ({
+          message,
+          erro: error,
+          status
+        })
+      }
 
-    const cod = parseInt(decodeToken.codUser)
+      if (Number(USUA_VALOR_APROVA_CONT_SERV) < parseFloat(valTotal)) {
+        return ({
+          message: `Contrato ${codCocs} não pode ser aprovado valor acima do de aprovação do úsuario`,
+          erro: true,
+          status: 403
+        })
+      }
 
-    const existsUser = await UsuarioRepository.findOneBy({ USUA_COD: cod })
-
-    if (!existsUser) {
-      return ({
-        status: 400,
-        message: 'Codigo incorreto',
-        erro: true
-      })
-    }
-
-    const passwordBD = existsUser.USUA_SENHA_APP
-
-    const comparePassword = await bcrypt.compare(password, passwordBD)
-
-    if (!comparePassword) {
-      return ({
-        message: 'Senha incorreta',
-        erro: true,
-        status: 400
-      })
-    }
-
-    if (existsUser.USUA_BLOQ !== 'N') {
-      return ({
-        message: 'Úsuario bloqueado',
-        erro: true,
-        status: 400
-      })
-    }
-
-    if (existsUser.USUA_VALOR_APROVA_CONT_SERV < parseFloat(valTotal)) {
-      return ({
-        message: `Contrato ${codCocs} não pode ser aprovado valor acima do de aprovação do úsuario`,
-        erro: true,
-        status: 401
-      })
-    }
-
-    const selectPageNumAprova = await PedidoEstoqueRepository.query(`
+      const selectPageNumAprova = await PedidoEstoqueRepository.query(`
+      USE [${database}]
       SELECT 
         PAG2_NUM_APROVACOES_CONTR,
         PAG2_TODAS_APROVACOES_CONTR
@@ -70,34 +43,41 @@ export class ApprovalServiceContract {
         PARAMETROS_GERAIS_2
     `)
 
-    const sql = countNumAprov(codCocs)
+      const sql = countNumAprov(codCocs, database)
 
-    const selectQtdAprova = await PedidoEstoqueRepository.query(sql)
+      const selectQtdAprova = await PedidoEstoqueRepository.query(sql)
 
-    let statusSQL = ''
+      let statusSQL = ''
 
-    if (selectPageNumAprova[0].PAG2_TODAS_APROVACOES_CONTR === 'S') {
-      if (selectPageNumAprova[0].PAG2_NUM_APROVACOES_CONTR === 1) {
-        statusSQL = "COCS_STATUS = 'AP',"
-      } else if (selectPageNumAprova[0].PAG2_NUM_APROVACOES_CONTR === 2 && selectQtdAprova[0].NUM === 1) {
-        statusSQL = "COCS_STATUS = 'AP',"
-      } else if (selectPageNumAprova[0].PAG2_NUM_APROVACOES_CONTR === 3 && selectQtdAprova[0].NUM === 2) {
-        statusSQL = "COCS_STATUS = 'AP',"
-      } else if (selectPageNumAprova[0].PAG2_NUM_APROVACOES_CONTR === 4 && selectQtdAprova[0].NUM === 3) {
+      if (selectPageNumAprova[0].PAG2_TODAS_APROVACOES_CONTR === 'S') {
+        if (selectPageNumAprova[0].PAG2_NUM_APROVACOES_CONTR === 1) {
+          statusSQL = "COCS_STATUS = 'AP',"
+        } else if (selectPageNumAprova[0].PAG2_NUM_APROVACOES_CONTR === 2 && selectQtdAprova[0].NUM === 1) {
+          statusSQL = "COCS_STATUS = 'AP',"
+        } else if (selectPageNumAprova[0].PAG2_NUM_APROVACOES_CONTR === 3 && selectQtdAprova[0].NUM === 2) {
+          statusSQL = "COCS_STATUS = 'AP',"
+        } else if (selectPageNumAprova[0].PAG2_NUM_APROVACOES_CONTR === 4 && selectQtdAprova[0].NUM === 3) {
+          statusSQL = "COCS_STATUS = 'AP',"
+        }
+      } else {
         statusSQL = "COCS_STATUS = 'AP',"
       }
-    } else {
-      statusSQL = "COCS_STATUS = 'AP',"
-    }
 
-    const sql2 = attContratoCompraServico(codCocs, ass, statusSQL)
-    await PedidoEstoqueRepository.query(
-      sql2
-    )
-    return {
-      status: 200,
-      message: `Contrato ${codCocs} aprovado com sucesso`,
-      erro: false
+      const sql2 = attContratoCompraServico(codCocs, ass, statusSQL, database)
+      await PedidoEstoqueRepository.query(
+        sql2
+      )
+      return {
+        status: 200,
+        message: `Contrato ${codCocs} aprovado com sucesso`,
+        erro: false
+      }
+    } catch (e) {
+      return ({
+        message: 'Internal server error' + e,
+        erro: true,
+        status: 500
+      })
     }
   }
 }

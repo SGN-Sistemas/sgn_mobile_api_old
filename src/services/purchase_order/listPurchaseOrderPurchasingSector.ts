@@ -25,7 +25,9 @@ export class ListPurchaseOrderPurchasingSector {
     try {
       const query2 = selectSoliCompSetorCompras(cod, secoDesc, '1', database)
       const query1 = selectSoliCompSetorCompras(cod, secoDesc, '2', database)
-
+      console.log('====================================')
+      console.log(query1)
+      console.log('====================================')
       const listPurchaseOrder1 = await PedidoEstoqueRepository.query(query1)
       const listPurchaseOrder2 = await PedidoEstoqueRepository.query(query2)
 

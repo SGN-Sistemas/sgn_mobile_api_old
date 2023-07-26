@@ -6,6 +6,6 @@ export class CrControllers {
     const { almoCod } = request.params
     const listCrService = new ListCrService()
     const listCrServiceExec = await listCrService.execute(request.user_cod, almoCod, request.database)
-    return response.json(listCrServiceExec)
+    return response.status(listCrServiceExec.status).json(listCrServiceExec.message)
   }
 }

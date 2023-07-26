@@ -12,11 +12,37 @@ interface iArrayPurchaseWorksheet {
 }
 
 export class ListPurcahseWorksheet {
-  public async execute (cod: string, database: string) {
+  public async execute (cod: string, database: string, queryString: string) {
     try {
-      const selectWorksheet = selectPurchaseWorksheet(cod, '1', database)
-      const selectWorksheet2 = selectPurchaseWorksheet(cod, '2', database)
+      const selectWorksheet = selectPurchaseWorksheet(
+        cod,
+        '1',
+        database,
+        queryString,
+        `
+        AND 
+          PLAC_ASSINATURA_1 != 'S'
+        `
+      )
+      const selectWorksheet2 = selectPurchaseWorksheet(
+        cod,
+        '2',
+        database,
+        queryString,
+        `
+        AND 
+          PLAC_ASSINATURA_1 = 'S'
+        AND 
+          PLAC_ASSINATURA_2 !=  'S'
+        `
+      )
 
+      console.log('====================================')
+      console.log(selectWorksheet2)
+      console.log('====================================')
+      console.log('====================================')
+      console.log(selectWorksheet)
+      console.log('====================================')
       const selectWorksheetExec = await PedidoEstoqueRepository.query(selectWorksheet)
       const selectWorksheetExec2 = await PedidoEstoqueRepository.query(selectWorksheet2)
 
@@ -35,7 +61,7 @@ export class ListPurcahseWorksheet {
       })
     } catch (e) {
       return ({
-        message: 'Internal server error',
+        message: 'Internal server error' + e,
         status: 500
       })
     }
