@@ -7,6 +7,7 @@ import AppError from '../errors/AppError'
 import { GenerateTokenService } from '../services/user/GenerateTokenService'
 import { TradeTokenAppService } from '../services/user/tradeTokenApp'
 import { ListUserAprovSoliService } from '../services/user/listAprovSoli'
+import { VerifyModule } from '../services/user/verifyModule'
 
 export default class UserController {
   public async index (request: Request, response:Response): Promise<Response> {
@@ -91,6 +92,15 @@ export default class UserController {
   ): Promise<Response> {
     const listUserAprovSoliService = new ListUserAprovSoliService()
     const listUserAprovSoliServiceExec = await listUserAprovSoliService.execute(request.database)
-    return response.json({ listUserAprovSoliServiceExec })
+    return response.status(listUserAprovSoliServiceExec.status).json({ listUserAprovSoliServiceExec })
+  }
+
+  public async ListVerifyModule (
+    request: Request,
+    response: Response
+  ): Promise<Response> {
+    const verifyModule = new VerifyModule()
+    const verifyModuleExec = await verifyModule.execute(request.database, request.user_cod)
+    return response.status(verifyModuleExec.status).json(verifyModuleExec.message)
   }
 }

@@ -53,10 +53,10 @@ export class ListResultCenterService {
 
       const verifyCR = await UsuarioRepository.query(selectCRUsuaQuery)
 
-      let cods = ''
+      let cods = '0'
 
       verifyCR.forEach((element: IArray) => {
-        if (cods === '') {
+        if (cods === '0') {
           cods = element.USCR_CERE_COD
         } else {
           cods = cods + ',' + element.USCR_CERE_COD
@@ -64,7 +64,9 @@ export class ListResultCenterService {
       })
 
       const selectCereQuery = selectCere(cods, '', database)
-
+      console.log('====================================')
+      console.log(selectCereQuery)
+      console.log('====================================')
       const resultQueryCereSelect = await UsuarioRepository.query(selectCereQuery)
 
       return {
@@ -72,10 +74,10 @@ export class ListResultCenterService {
         message: resultQueryCereSelect,
         status: 200
       }
-    } catch {
+    } catch (e) {
       return {
         error: true,
-        message: 'Internal server error',
+        message: 'Internal server error' + e,
         status: 500
       }
     }

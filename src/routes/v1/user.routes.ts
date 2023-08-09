@@ -16,4 +16,6 @@ routerUser.post('/login', users.login)
 routerUser.get('/acessToken', isAuthenticatedRefresh, users.generateToken)
 
 routerUser.get('/usuarioAprovSolic', isAuthenticatedAcess, users.ListUserAprovSoli)
+
+routerUser.get('/modulo', isAuthenticatedAcess, users.ListVerifyModule)
 // ${url}${version}/
